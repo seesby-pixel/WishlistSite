@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WishlistSite</title>
+</head>
+<body>
+  <h1>Coming Soon: WishlistSite</h1>
+</body>
+</html>
