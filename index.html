@@ -1,30 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WishlistSite</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WishLink</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>WishlistSite</h1>
-    <nav>
-      <a href="wishlist.html">Create a Wishlist</a>
-    </nav>
+    <h1>🎁 WishLink</h1>
+    <p>Create and share wishlists for any occasion</p>
   </header>
 
   <main>
-    <section class="hero">
-      <h2>Your gifts, your way</h2>
-      <p>Create a wishlist and share it with friends and family. Works for any occasion.</p>
-      <a class="cta" href="wishlist.html">Create Your Wishlist</a>
+    <section class="create">
+      <h2>Add an item</h2>
+      <input id="productUrl" type="text" placeholder="Paste Amazon link here..." />
+      <input id="note" type="text" placeholder="Add a short note (optional)" />
+      <button id="addItem">Add to Wishlist</button>
+    </section>
+
+    <section class="wishlist">
+      <h2>Your Wishlist</h2>
+      <div id="wishlistItems"></div>
+    </section>
+
+    <section class="share">
+      <h2>Share</h2>
+      <button id="shareList">Copy Share Link</button>
+      <p id="shareMessage"></p>
     </section>
   </main>
 
   <footer>
-    <p>WishlistSite &copy; 2025</p>
+    <p>Built with ❤️ using Amazon affiliate links</p>
   </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
-
