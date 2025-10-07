@@ -1,91 +1,362 @@
-* {
-  box-sizing: border-box;
-}
-
+/* ===== General Body & Font ===== */
 body {
-  font-family: "Inter", system-ui, sans-serif;
-  background: #f8fafc;
-  color: #222;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-header {
-  text-align: center;
-  padding: 2rem 1rem;
-  background: #ffffff;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-}
-
-header h1 {
-  margin: 0;
-  color: #0073e6;
-}
-
-main {
-  flex: 1;
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-section {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
-}
-
-h2 {
-  margin-top: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background-color: #f5f7fa;
   color: #333;
 }
 
-input {
-  width: 100%;
-  padding: 0.7rem;
-  margin-bottom: 0.7rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
+/* ===== Title ===== */
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: #222;
 }
 
-button {
-  background: #0073e6;
+/* ===== Navigation ===== */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+nav button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+nav button:hover {
+  background-color: #0056b3;
+}
+
+/* ===== Input Container ===== */
+.input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-container input[type="text"] {
+  flex: 1 1 60%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.2s;
+}
+
+.input-container input[type="text"]:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.input-container button {
+  flex: 1 1 35%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.input-container button:hover {
+  background-color: #0056b3;
+}
+
+/* ===== Wishlist Items ===== */
+ul#wishlistContainer {
+  list-style: none;
+  padding: 0;
+}
+
+li.wishlist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  margin-bottom: 12px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.2s;
+  opacity: 1;
+  gap: 12px;
+  min-height: 100px;
+}
+
+li.wishlist-item.removing {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+li.wishlist-item:hover {
+  transform: translateY(-2px);
+}
+
+/* Purchased state */
+li.wishlist-item.purchased {
+  background-color: #6c757d;
+  color: #f1f1f1;
+}
+
+/* Product info section */
+li.wishlist-item .item-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 12px;
+}
+
+li.wishlist-item img.product-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 6px;
+  margin-right: 12px;
+}
+
+/* Links */
+li.wishlist-item a {
+  text-decoration: none;
+  color: #007bff;
+  word-break: break-word;
+  flex: 1;
+}
+
+li.wishlist-item a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Buttons ===== */
+li.wishlist-item .button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 110px;
+}
+
+li.wishlist-item .button-group > * + * {
+  margin-top: 6px;
+}
+
+li.wishlist-item button,
+li.wishlist-item a.buy-now-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 110px;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
   color: white;
   border: none;
-  padding: 0.8rem 1.2rem;
-  border-radius: 8px;
-  font-size: 1rem;
   cursor: pointer;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #005bb5;
-}
-
-.item {
-  background: #f1f5f9;
-  padding: 1rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-}
-
-.item a {
-  color: #0073e6;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-footer {
+  box-sizing: border-box;
   text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: #555;
+  white-space: nowrap;
+  transition: background-color 0.2s, transform 0.1s ease;
 }
+
+li.wishlist-item button:hover,
+li.wishlist-item a.buy-now-btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Remove button */
+li.wishlist-item button.remove-btn {
+  background-color: #495057;
+}
+li.wishlist-item button.remove-btn:hover {
+  background-color: #a71d2a;
+}
+
+/* Purchased button */
+li.wishlist-item button.purchased-btn {
+  background-color: #6c757d;
+}
+li.wishlist-item button.purchased-btn:hover {
+  background-color: #5a6268;
+}
+
+/* Buy Now button */
+li.wishlist-item a.buy-now-btn {
+  background-color: #28a745;
+  text-decoration: none;
+}
+li.wishlist-item a.buy-now-btn:hover {
+  background-color: #1e7e34;
+}
+
+/* ===== Share Wishlist Button ===== */
+#shareList {
+  margin-top: 20px;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#shareList:hover {
+  background-color: #1e7e34;
+}
+
+/* ===== Share Message ===== */
+#shareMessage {
+  margin-top: 12px;
+  font-weight: bold;
+  color: #28a745;
+  word-break: break-word;
+}
+
+/* ===== Empty Wishlist Message ===== */
+#emptyMessage {
+  text-align: center;
+  color: #555;
+  font-style: italic;
+  margin-top: 15px;
+}
+
+/* ===== Toast Notification ===== */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #28a745;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  font-weight: bold;
+  z-index: 1000;
+  animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  10% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+  .input-container {
+    flex-direction: column;
+  }
+
+  .input-container input,
+  .input-container button {
+    flex: 1 1 100%;
+  }
+
+  li.wishlist-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  li.wishlist-item .item-info {
+    margin-bottom: 8px;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  li.wishlist-item img.product-image {
+    margin-bottom: 0;
+    margin-right: 12px;
+  }
+
+  li.wishlist-item .button-group {
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+  }
+
+  li.wishlist-item .button-group > * + * {
+    margin-top: 0;
+  }
+
+  li.wishlist-item button,
+  li.wishlist-item a.buy-now-btn {
+    width: 48%;
+    margin: 0;
+  }
+}
+
+/* ===== Additions for home/create/view pages ===== */
+.page-section {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.menu-buttons button {
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color .2s;
+}
+.menu-buttons button:hover { background-color: #0056b3; }
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.form-stack input[type="text"],
+.form-stack input[type="password"] {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.form-stack button {
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #28a745;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color .2s;
+}
+.form-stack button:hover { background-color: #1e7e34; }
+
+.error-text { color: #c0392b; text-align: center; }

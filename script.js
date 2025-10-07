@@ -1,56 +1,191 @@
-// Simple wishlist storage using localStorage
-const wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
-const wishlistContainer = document.getElementById("wishlistItems");
+import { collection, addDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-function renderWishlist() {
-  wishlistContainer.innerHTML = "";
-  wishlistItems.forEach((item, index) => {
-    const div = document.createElement("div");
-    div.className = "item";
-    div.innerHTML = `
-      <a href="${item.url}" target="_blank">${item.title}</a>
-      <p>${item.note || ""}</p>
-      <button onclick="removeItem(${index})">Remove</button>
-    `;
-    wishlistContainer.appendChild(div);
+const db = window.db;
+const listsRef = collection(db, "wishlists");
+
+let wishlistItems = [];
+
+const nameInput = document.getElementById("itemName");
+const urlInput = document.getElementById("itemURL");
+const addBtn = document.getElementById("addItemBtn");
+const listContainer = document.getElementById("wishlistContainer");
+const emptyMsg = document.getElementById("emptyMessage");
+const shareBtn = document.getElementById("shareList");
+const shareMsg = document.getElementById("shareMessage");
+
+async function fetchAmazonInfo(url) {
+  try {
+    const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+    const data = await response.json();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(data.contents, "text/html");
+
+    const title = doc.querySelector("#productTitle")?.textContent?.trim() || "Unnamed Product";
+    const image = doc.querySelector("#imgTagWrapperId img")?.src || "";
+
+    return { title, image };
+  } catch (e) {
+    return { title: "Unnamed Product", image: "" };
+  }
+}
+
+if (addBtn) {
+  addBtn.addEventListener("click", async () => {
+    const url = urlInput.value.trim();
+    if (!url) {
+      alert("Please enter a valid Amazon URL.");
+      return;
+    }
+
+    const { title, image } = await fetchAmazonInfo(url);
+
+    wishlistItems.push({ name: title, url, image });
+    renderWishlist();
+
+    nameInput.value = "";
+    urlInput.value = "";
   });
-  localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
 }
 
-function removeItem(index) {
-  wishlistItems.splice(index, 1);
-  renderWishlist();
-}
+function renderWishlist(sharedView = false) {
+  if (!listContainer) return;
 
-document.getElementById("addItem").addEventListener("click", () => {
-  const url = document.getElementById("productUrl").value.trim();
-  const note = document.getElementById("note").value.trim();
-  if (!url || !url.includes("amazon.")) {
-    alert("Please enter a valid Amazon link");
-    return;
+  listContainer.innerHTML = "";
+
+  if (wishlistItems.length === 0) {
+    emptyMsg.style.display = "block";
+  } else {
+    emptyMsg.style.display = "none";
   }
 
-  const title = url.split("/")[3] || "Amazon Product";
-  wishlistItems.push({ url, title, note });
-  renderWishlist();
+  wishlistItems.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.className = "wishlist-item";
 
-  document.getElementById("productUrl").value = "";
-  document.getElementById("note").value = "";
-});
+    const infoDiv = document.createElement("div");
+    infoDiv.className = "item-info";
 
-document.getElementById("shareList").addEventListener("click", () => {
-  const shareData = encodeURIComponent(JSON.stringify(wishlistItems));
-  const shareUrl = `${window.location.origin}${window.location.pathname}?list=${shareData}`;
-  navigator.clipboard.writeText(shareUrl);
-  document.getElementById("shareMessage").textContent = "Link copied! Share it with your friends 🎁";
-});
+    if (item.image) {
+      const img = document.createElement("img");
+      img.src = item.image;
+      img.alt = item.name;
+      img.className = "product-image";
+      infoDiv.appendChild(img);
+    }
 
-// Load wishlist if shared
-const params = new URLSearchParams(window.location.search);
-if (params.has("list")) {
-  const listData = JSON.parse(decodeURIComponent(params.get("list")));
-  localStorage.setItem("wishlist", JSON.stringify(listData));
-  location.href = window.location.origin + window.location.pathname;
+    const linkText = document.createElement("span");
+    linkText.textContent = item.name;
+    infoDiv.appendChild(linkText);
+
+    li.appendChild(infoDiv);
+
+    if (sharedView) {
+      const buyBtn = document.createElement("a");
+      buyBtn.textContent = "Buy Now";
+      buyBtn.href = item.url;
+      buyBtn.target = "_blank";
+      buyBtn.className = "buy-now-btn";
+      li.appendChild(buyBtn);
+    } else {
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "Remove";
+      removeBtn.className = "remove-btn";
+      removeBtn.onclick = () => {
+        li.classList.add("removing");
+        setTimeout(() => {
+          wishlistItems.splice(index, 1);
+          renderWishlist();
+        }, 150);
+      };
+      li.appendChild(removeBtn);
+    }
+
+    listContainer.appendChild(li);
+  });
 }
 
-renderWishlist();
+if (shareBtn) {
+  shareBtn.addEventListener("click", async () => {
+    try {
+      const docRef = await addDoc(listsRef, {
+        wishlist: wishlistItems,
+        created: new Date().toISOString(),
+      });
+
+      const shareUrl = `${window.location.origin}${window.location.pathname}?id=${docRef.id}`;
+      navigator.clipboard.writeText(shareUrl);
+
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = "Wishlist saved! Link copied 🎁";
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+
+    } catch (e) {
+      alert("Error saving wishlist. Please try again.");
+    }
+  });
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  const code = params.get("code");
+  const pin = params.get("pin");
+
+  if (id) {
+    document.querySelector(".input-container").style.display = "none";
+    if (shareBtn) shareBtn.style.display = "none";
+
+    try {
+      const docRef = doc(window.db, "wishlists", id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        wishlistItems = docSnap.data().wishlist;
+        renderWishlist(true);
+      }
+    } catch (e) {}
+  } else if (code) {
+    try {
+      const docRef = doc(window.db, "wishlists", code);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        wishlistItems = data.wishlist || [];
+
+        const isOwner = pin && data.pin === pin;
+
+        if (!isOwner) {
+          document.querySelector(".input-container").style.display = "none";
+          if (shareBtn) shareBtn.style.display = "none";
+          renderWishlist(true);
+        } else {
+          renderWishlist(false);
+        }
+      }
+    } catch (e) {}
+  } else {
+    renderWishlist();
+  }
+});
+
+export async function codeExists(db, code) {
+  const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+  const snap = await getDoc(doc(db, "wishlists", code));
+  return snap.exists();
+}
+
+export async function createCodeDoc(db, code, pin) {
+  const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
+  await setDoc(doc(db, "wishlists", code), {
+    pin,
+    wishlist: [],
+    created: new Date().toISOString()
+  });
+}
+
+export function redirectToList(code, pin = "") {
+  const qs = pin ? `?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}`
+                 : `?code=${encodeURIComponent(code)}`;
+  window.location.href = `index.html${qs}`;
+}

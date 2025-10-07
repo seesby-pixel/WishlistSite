@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Wishlist</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>My Wishlist</h1>
+
+  <nav>
+    <button id="homeBtn">Home</button>
+  </nav>
+
+  <section id="myListPage">
+    <div class="input-container">
+      <input type="text" id="itemName" placeholder="Item name">
+      <input type="text" id="itemURL" placeholder="Amazon URL">
+      <button id="addItemBtn">Add Item</button>
+    </div>
+
+    <ul id="wishlistContainer"></ul>
+    <p id="emptyMessage">Your wishlist is empty. Add some items above!</p>
+
+    <button id="shareList">Share Wishlist</button>
+    <p id="shareMessage"></p>
+  </section>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBiawooDcVM2qkvP10BuRVDoxIqEXz15ac",
+      authDomain: "wishlistsite-c97bd.firebaseapp.com",
+      projectId: "wishlistsite-c97bd",
+      storageBucket: "wishlistsite-c97bd.firebasestorage.app",
+      messagingSenderId: "525857492319",
+      appId: "1:525857492319:web:25f40775bbe54312533aea",
+      measurementId: "G-YHB16ZT4ED"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const homeBtn = document.getElementById("homeBtn");
+    const inputContainer = document.querySelector(".input-container");
+    const addBtn = document.getElementById("addItemBtn");
+    const nameInput = document.getElementById("itemName");
+    const urlInput = document.getElementById("itemURL");
+    const listContainer = document.getElementById("wishlistContainer");
+    const emptyMsg = document.getElementById("emptyMessage");
+    const shareBtn = document.getElementById("shareList");
+
+    let wishlistItems = [];
+    let activeCode = null;
+    let ownerMode = false;
+
+    homeBtn.addEventListener("click", () => {
+      window.location.href = "home.html";
+    });
+
+    function getASIN(url) {
+      const match = url.match(/\/([A-Z0-9]{10})(?:[/?]|$)/i);
+      return match ? match[1] : null;
+    }
+
+    function getAmazonImageURL(url) {
+      const asin = getASIN(url);
+      if (!asin) return "https://via.placeholder.com/100";
+      return `https://images-na.ssl-images-amazon.com/images/P/${asin}.jpg`;
+    }
+
+    function renderWishlist(readOnly = false) {
+      listContainer.innerHTML = "";
+
+      if (wishlistItems.length === 0) {
+        emptyMsg.style.display = "block";
+      } else {
+        emptyMsg.style.display = "none";
+      }
+
+      wishlistItems.forEach((item, index) => {
+        const li = document.createElement("li");
+        li.className = "wishlist-item";
+
+        const infoDiv = document.createElement("div");
+        infoDiv.className = "item-info";
+
+        const img = document.createElement("img");
+        img.src = item.image;
+        img.alt = item.name;
+        img.className = "product-image";
+        img.onerror = () => { img.src = "https://via.placeholder.com/100"; };
+        infoDiv.appendChild(img);
+
+        const link = document.createElement("a");
+        link.href = item.url;
+        link.target = "_blank";
+        link.textContent = item.name;
+        infoDiv.appendChild(link);
+
+        li.appendChild(infoDiv);
+
+        const buttonsDiv = document.createElement("div");
+        buttonsDiv.className = "button-group";
+
+        if (readOnly) {
+          const buyBtn = document.createElement("a");
+          buyBtn.textContent = "Buy Now";
+          buyBtn.href = item.url;
+          buyBtn.target = "_blank";
+          buyBtn.className = "buy-now-btn";
+          buttonsDiv.appendChild(buyBtn);
+
+          const purchasedBtn = document.createElement("button");
+          purchasedBtn.textContent = "I've purchased";
+          purchasedBtn.className = "purchased-btn";
+          purchasedBtn.onclick = () => {
+            purchasedBtn.textContent = "Purchased!";
+            li.classList.add("purchased");
+            purchasedBtn.disabled = true;
+          };
+          buttonsDiv.appendChild(purchasedBtn);
+        } else {
+          const removeBtn = document.createElement("button");
+          removeBtn.textContent = "Remove";
+          removeBtn.className = "remove-btn";
+          removeBtn.onclick = () => {
+            li.classList.add("removing");
+            setTimeout(() => {
+              wishlistItems.splice(index, 1);
+              renderWishlist(false);
+            }, 150);
+          };
+          buttonsDiv.appendChild(removeBtn);
+        }
+
+        li.appendChild(buttonsDiv);
+        listContainer.appendChild(li);
+      });
+    }
+
+    if (addBtn) {
+      addBtn.addEventListener("click", () => {
+        let name = nameInput.value.trim();
+        const url = urlInput.value.trim();
+        if (!url) {
+          alert("Please enter both an item name and a valid Amazon URL.");
+          return;
+        }
+        const imageUrl = getAmazonImageURL(url);
+        if (!name) name = "Unknown Product";
+        wishlistItems.push({ name, url, image: imageUrl });
+        renderWishlist(false);
+        nameInput.value = "";
+        urlInput.value = "";
+      });
+    }
+
+    shareBtn.addEventListener("click", async () => {
+      if (!activeCode) return;
+      try {
+        if (ownerMode) {
+          await setDoc(doc(db, "wishlists", activeCode), {
+            wishlist: wishlistItems
+          }, { merge: true });
+
+          const shareUrl = `${window.location.origin}/list.html?code=${encodeURIComponent(activeCode)}`;
+          await navigator.clipboard.writeText(shareUrl);
+          showToast("Wishlist saved & link copied!");
+        } else {
+          const shareUrl = `${window.location.origin}/list.html?code=${encodeURIComponent(activeCode)}`;
+          await navigator.clipboard.writeText(shareUrl);
+          showToast("Link copied!");
+        }
+      } catch (e) {
+        alert("Error saving or copying the link.");
+      }
+    });
+
+    function showToast(message) {
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      const params = new URLSearchParams(window.location.search);
+      const codeParam = params.get("code");
+      const pinParam = params.get("pin");
+
+      if (!codeParam) return;
+
+      activeCode = codeParam;
+      try {
+        const docSnap = await getDoc(doc(db, "wishlists", activeCode));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          wishlistItems = Array.isArray(data.wishlist) ? data.wishlist : [];
+          ownerMode = pinParam && data.pin === pinParam;
+
+          if (!ownerMode) {
+            if (inputContainer) inputContainer.style.display = "none";
+            shareBtn.style.display = "none";
+            renderWishlist(true);
+          } else {
+            renderWishlist(false);
+          }
+        } else {
+          alert("List not found.");
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  </script>
+</body>
+</html>

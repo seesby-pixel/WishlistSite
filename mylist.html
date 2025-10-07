@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>View My List</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>View My List</h1>
+
+  <section class="page-section">
+    <div class="form-stack">
+      <input id="codeInput" type="text" placeholder="Unique code" />
+      <input id="pinInput" type="password" maxlength="4" placeholder="4-digit PIN" />
+      <button id="viewBtn">Access</button>
+      <div id="err" class="error-text" style="display:none;"></div>
+    </div>
+  </section>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBiawooDcVM2qkvP10BuRVDoxIqEXz15ac",
+      authDomain: "wishlistsite-c97bd.firebaseapp.com",
+      projectId: "wishlistsite-c97bd",
+      storageBucket: "wishlistsite-c97bd.firebasestorage.app",
+      messagingSenderId: "525857492319",
+      appId: "1:525857492319:web:25f40775bbe54312533aea",
+      measurementId: "G-YHB16ZT4ED"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const codeEl = document.getElementById('codeInput');
+    const pinEl  = document.getElementById('pinInput');
+    const btn    = document.getElementById('viewBtn');
+    const err    = document.getElementById('err');
+
+    function showErr(m){ err.textContent = m; err.style.display = 'block'; }
+
+    btn.addEventListener('click', async () => {
+      const code = codeEl.value.trim();
+      const pin  = pinEl.value.trim();
+
+      if (!code || !pin) return showErr('Please enter both code and PIN.');
+
+      const snap = await getDoc(doc(db, 'wishlists', code));
+      if (!snap.exists()) return showErr('No list found with that code.');
+
+      const data = snap.data();
+      if (data.pin !== pin) return showErr('Incorrect PIN.');
+
+      window.location.href = `list.html?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}`;
+    });
+  </script>
+</body>
+</html>
