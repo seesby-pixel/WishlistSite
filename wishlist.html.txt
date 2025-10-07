@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Wishlist - WishlistSite</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>WishlistSite</h1>
+    <nav>
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="wishlist-section">
+      <h2>Create Your Wishlist</h2>
+      <input type="text" id="product-url" placeholder="Paste Amazon product URL here">
+      <button id="add-product">Add Product</button>
+
+      <ul id="product-list">
+        <!-- Products will appear here -->
+      </ul>
+
+      <div id="share-link">
+        <p>Shareable link: <span id="wishlist-url">Coming soon</span></p>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

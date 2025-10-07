@@ -1,9 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WishlistSite</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Coming Soon: WishlistSite</h1>
+  <header>
+    <h1>WishlistSite</h1>
+    <nav>
+      <a href="wishlist.html">Create a Wishlist</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>Your gifts, your way</h2>
+      <p>Create a wishlist and share it with friends and family. Works for any occasion.</p>
+      <a class="cta" href="wishlist.html">Create Your Wishlist</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>WishlistSite &copy; 2025</p>
+  </footer>
 </body>
 </html>
+
