@@ -4,6 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Wishlist</title>
+
+  <!-- SEO -->
+  <meta name="description" content="Your wishlist — add items and share with friends.">
+  <meta property="og:title" content="My Wishlist">
+  <meta property="og:description" content="Add items and share your wishlist with friends and family.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,8 +29,13 @@
       <button id="addItemBtn">Add Item</button>
     </div>
 
+    <div id="loadingState" class="loading" style="display:none;">
+      <div class="spinner"></div>
+      <div>Loading your wishlist...</div>
+    </div>
+
     <ul id="wishlistContainer"></ul>
-    <p id="emptyMessage">Your wishlist is empty. Add some items above!</p>
+    <p id="emptyMessage" style="display:none;">This wishlist is empty. Add something above!</p>
 
     <button id="shareList">Share Wishlist</button>
     <p id="shareMessage"></p>
@@ -52,6 +66,7 @@
     const listContainer = document.getElementById("wishlistContainer");
     const emptyMsg = document.getElementById("emptyMessage");
     const shareBtn = document.getElementById("shareList");
+    const loadingState = document.getElementById("loadingState");
 
     let wishlistItems = [];
     let activeCode = null;
@@ -60,6 +75,15 @@
     homeBtn.addEventListener("click", () => {
       window.location.href = "home.html";
     });
+
+    function showToast(message, isError = false) {
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.style.backgroundColor = isError ? "#e74c3c" : "#28a745";
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
 
     function getASIN(url) {
       const match = url.match(/\/([A-Z0-9]{10})(?:[/?]|$)/i);
@@ -74,12 +98,7 @@
 
     function renderWishlist(readOnly = false) {
       listContainer.innerHTML = "";
-
-      if (wishlistItems.length === 0) {
-        emptyMsg.style.display = "block";
-      } else {
-        emptyMsg.style.display = "none";
-      }
+      emptyMsg.style.display = wishlistItems.length === 0 ? "block" : "none";
 
       wishlistItems.forEach((item, index) => {
         const li = document.createElement("li");
@@ -124,14 +143,22 @@
           };
           buttonsDiv.appendChild(purchasedBtn);
         } else {
+          // Owner controls: Edit + Remove
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.className = "edit-btn";
+          editBtn.onclick = () => enterEditMode(li, index);
+          buttonsDiv.appendChild(editBtn);
+
           const removeBtn = document.createElement("button");
           removeBtn.textContent = "Remove";
           removeBtn.className = "remove-btn";
           removeBtn.onclick = () => {
             li.classList.add("removing");
-            setTimeout(() => {
+            setTimeout(async () => {
               wishlistItems.splice(index, 1);
               renderWishlist(false);
+              await saveOwnerChanges();
             }, 150);
           };
           buttonsDiv.appendChild(removeBtn);
@@ -142,12 +169,97 @@
       });
     }
 
+    function enterEditMode(li, index) {
+      const item = wishlistItems[index];
+      const infoDiv = li.querySelector(".item-info");
+      const buttonsDiv = li.querySelector(".button-group");
+
+      // Build inline editor
+      infoDiv.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = item.image;
+      img.alt = item.name;
+      img.className = "product-image";
+      img.onerror = () => { img.src = "https://via.placeholder.com/100"; };
+
+      const nameInput = document.createElement("input");
+      nameInput.type = "text";
+      nameInput.value = item.name;
+      nameInput.style.flex = "1 1 auto";
+      nameInput.style.padding = "8px";
+      nameInput.style.border = "1px solid #ccc";
+      nameInput.style.borderRadius = "6px";
+
+      const urlInput = document.createElement("input");
+      urlInput.type = "text";
+      urlInput.value = item.url;
+      urlInput.style.flex = "1 1 auto";
+      urlInput.style.padding = "8px";
+      urlInput.style.border = "1px solid #ccc";
+      urlInput.style.borderRadius = "6px";
+
+      const editStack = document.createElement("div");
+      editStack.style.display = "flex";
+      editStack.style.flexDirection = "column";
+      editStack.style.gap = "8px";
+      editStack.style.flex = "1 1 auto";
+
+      editStack.appendChild(nameInput);
+      editStack.appendChild(urlInput);
+
+      infoDiv.appendChild(img);
+      infoDiv.appendChild(editStack);
+
+      // Replace buttons with Save/Cancel
+      buttonsDiv.innerHTML = "";
+      const saveBtn = document.createElement("button");
+      saveBtn.textContent = "Save";
+      saveBtn.className = "purchased-btn";
+      saveBtn.onclick = async () => {
+        const newName = nameInput.value.trim() || "Unknown Product";
+        const newURL = urlInput.value.trim();
+        if (!newURL) {
+          showToast("URL cannot be empty.", true);
+          return;
+        }
+        wishlistItems[index] = {
+          name: newName,
+          url: newURL,
+          image: getAmazonImageURL(newURL)
+        };
+        renderWishlist(false);
+        await saveOwnerChanges();
+      };
+
+      const cancelBtn = document.createElement("button");
+      cancelBtn.textContent = "Cancel";
+      cancelBtn.className = "remove-btn";
+      cancelBtn.onclick = () => renderWishlist(false);
+
+      buttonsDiv.appendChild(saveBtn);
+      buttonsDiv.appendChild(cancelBtn);
+    }
+
+    async function saveOwnerChanges() {
+      if (!activeCode || !ownerMode) return;
+      try {
+        await setDoc(doc(db, "wishlists", activeCode), {
+          wishlist: wishlistItems,
+          updated: new Date().toISOString()
+        }, { merge: true });
+        showToast("Changes saved!");
+      } catch (e) {
+        console.error(e);
+        showToast("Failed to save changes.", true);
+      }
+    }
+
     if (addBtn) {
-      addBtn.addEventListener("click", () => {
+      addBtn.addEventListener("click", async () => {
         let name = nameInput.value.trim();
         const url = urlInput.value.trim();
         if (!url) {
-          alert("Please enter both an item name and a valid Amazon URL.");
+          showToast("Please enter a valid Amazon URL.", true);
           return;
         }
         const imageUrl = getAmazonImageURL(url);
@@ -156,37 +268,28 @@
         renderWishlist(false);
         nameInput.value = "";
         urlInput.value = "";
+        await saveOwnerChanges();
       });
     }
 
     shareBtn.addEventListener("click", async () => {
       if (!activeCode) return;
       try {
+        const shareUrl = `${window.location.origin}/list.html?code=${encodeURIComponent(activeCode)}`;
+        await navigator.clipboard.writeText(shareUrl);
+        // If owner, ensure latest changes are saved, but do it silently
         if (ownerMode) {
           await setDoc(doc(db, "wishlists", activeCode), {
-            wishlist: wishlistItems
+            wishlist: wishlistItems,
+            updated: new Date().toISOString()
           }, { merge: true });
-
-          const shareUrl = `${window.location.origin}/list.html?code=${encodeURIComponent(activeCode)}`;
-          await navigator.clipboard.writeText(shareUrl);
-          showToast("Wishlist saved & link copied!");
-        } else {
-          const shareUrl = `${window.location.origin}/list.html?code=${encodeURIComponent(activeCode)}`;
-          await navigator.clipboard.writeText(shareUrl);
-          showToast("Link copied!");
         }
+        showToast("Link copied!");
       } catch (e) {
-        alert("Error saving or copying the link.");
+        console.error(e);
+        showToast("Could not copy link.", true);
       }
     });
-
-    function showToast(message) {
-      const toast = document.createElement("div");
-      toast.className = "toast";
-      toast.textContent = message;
-      document.body.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
-    }
 
     window.addEventListener("DOMContentLoaded", async () => {
       const params = new URLSearchParams(window.location.search);
@@ -196,12 +299,14 @@
       if (!codeParam) return;
 
       activeCode = codeParam;
+      loadingState.style.display = "flex";
+
       try {
-        const docSnap = await getDoc(doc(db, "wishlists", activeCode));
-        if (docSnap.exists()) {
-          const data = docSnap.data();
+        const snap = await getDoc(doc(db, "wishlists", activeCode));
+        if (snap.exists()) {
+          const data = snap.data();
           wishlistItems = Array.isArray(data.wishlist) ? data.wishlist : [];
-          ownerMode = pinParam && data.pin === pinParam;
+          ownerMode = !!(pinParam && data.pin === pinParam);
 
           if (!ownerMode) {
             if (inputContainer) inputContainer.style.display = "none";
@@ -211,10 +316,13 @@
             renderWishlist(false);
           }
         } else {
-          alert("List not found.");
+          showToast("List not found.", true);
         }
       } catch (e) {
         console.error(e);
+        showToast("Failed to load list.", true);
+      } finally {
+        loadingState.style.display = "none";
       }
     });
   </script>

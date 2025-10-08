@@ -3,6 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <title>View My List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <!-- SEO -->
+  <meta name="description" content="Enter your code and PIN to access your wishlist for editing.">
+  <meta property="og:title" content="View My Wishlist">
+  <meta property="og:description" content="Enter your code and PIN to access your wishlist for editing.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -10,8 +20,8 @@
 
   <section class="page-section">
     <div class="form-stack">
-      <input id="codeInput" type="text" placeholder="Unique code" />
-      <input id="pinInput" type="password" maxlength="4" placeholder="4-digit PIN" />
+      <input id="codeInput" type="text" placeholder="Unique code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input id="pinInput" type="password" maxlength="4" placeholder="4-digit PIN" autocomplete="off" inputmode="numeric" pattern="[0-9]*" />
       <button id="viewBtn">Access</button>
       <div id="err" class="error-text" style="display:none;"></div>
     </div>
@@ -39,20 +49,38 @@
     const err    = document.getElementById('err');
 
     function showErr(m){ err.textContent = m; err.style.display = 'block'; }
+    function clearErr(){ err.style.display = 'none'; err.textContent = ""; }
+    function validCode(code){ return /^[A-Za-z0-9]{3,24}$/.test(code); }
+    function validPin(pin){ return /^[0-9]{4}$/.test(pin); }
 
     btn.addEventListener('click', async () => {
+      clearErr();
       const code = codeEl.value.trim();
       const pin  = pinEl.value.trim();
 
-      if (!code || !pin) return showErr('Please enter both code and PIN.');
+      if (!validCode(code)) return showErr('Enter a valid code (3–24 letters/numbers).');
+      if (!validPin(pin)) return showErr('PIN must be exactly 4 digits.');
 
-      const snap = await getDoc(doc(db, 'wishlists', code));
-      if (!snap.exists()) return showErr('No list found with that code.');
-
-      const data = snap.data();
-      if (data.pin !== pin) return showErr('Incorrect PIN.');
-
-      window.location.href = `list.html?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}`;
+      btn.disabled = true; btn.textContent = "Checking...";
+      try {
+        const snap = await getDoc(doc(db, 'wishlists', code));
+        if (!snap.exists()) {
+          showErr('No list found with that code.');
+          btn.disabled = false; btn.textContent = "Access";
+          return;
+        }
+        const data = snap.data();
+        if (data.pin !== pin) {
+          showErr('Incorrect PIN.');
+          btn.disabled = false; btn.textContent = "Access";
+          return;
+        }
+        window.location.href = `list.html?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}`;
+      } catch (e) {
+        console.error(e);
+        showErr('Something went wrong. Please try again.');
+        btn.disabled = false; btn.textContent = "Access";
+      }
     });
   </script>
 </body>

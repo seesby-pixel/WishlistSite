@@ -148,7 +148,7 @@ li.wishlist-item .button-group {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  min-width: 110px;
+  min-width: 130px;
 }
 
 li.wishlist-item .button-group > * + * {
@@ -160,7 +160,7 @@ li.wishlist-item a.buy-now-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 130px;   /* ✅ fixed width so both buttons always match */
+  width: 130px;   /* fixed width so both buttons always match */
   height: 36px;
   font-size: 14px;
   font-weight: 600;
@@ -173,13 +173,14 @@ li.wishlist-item a.buy-now-btn {
   white-space: nowrap;
   transition: background-color 0.2s, transform 0.1s ease;
 }
+
 li.wishlist-item a.buy-now-btn {
-  display: inline-flex;
+  display: inline-flex;   /* ensure <a> renders same as button */
   align-items: center;
   justify-content: center;
   height: 36px;
-  line-height: 36px;  /* ✅ Ensures text is vertically centered */
-  padding: 0;        /* ✅ Removes default link padding differences */
+  line-height: 36px;      /* vertical text alignment */
+  padding: 0;             /* normalize link padding */
   text-decoration: none;
 }
 
@@ -204,10 +205,17 @@ li.wishlist-item button.purchased-btn:hover {
   background-color: #5a6268;
 }
 
+/* Edit button */
+li.wishlist-item button.edit-btn {
+  background-color: #17a2b8;
+}
+li.wishlist-item button.edit-btn:hover {
+  background-color: #117a8b;
+}
+
 /* Buy Now button */
 li.wishlist-item a.buy-now-btn {
   background-color: #28a745;
-  text-decoration: none;
 }
 li.wishlist-item a.buy-now-btn:hover {
   background-color: #1e7e34;
@@ -238,12 +246,32 @@ li.wishlist-item a.buy-now-btn:hover {
   word-break: break-word;
 }
 
-/* ===== Empty Wishlist Message ===== */
+/* ===== Empty / Loading ===== */
 #emptyMessage {
   text-align: center;
   color: #555;
   font-style: italic;
   margin-top: 15px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  color: #555;
+  margin: 12px 0 16px;
+}
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #ddd;
+  border-top-color: #28a745;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* ===== Toast Notification ===== */

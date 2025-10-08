@@ -3,6 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <title>View a Wishlist</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <!-- SEO -->
+  <meta name="description" content="Enter a code to view someone's wishlist.">
+  <meta property="og:title" content="View Wishlist">
+  <meta property="og:description" content="Enter a code to view someone's wishlist.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -10,7 +20,7 @@
 
   <section class="page-section">
     <div class="form-stack">
-      <input id="codeInput" type="text" placeholder="Unique code" />
+      <input id="codeInput" type="text" placeholder="Unique code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <button id="viewBtn">Open</button>
       <div id="err" class="error-text" style="display:none;"></div>
     </div>
@@ -37,15 +47,28 @@
     const err = document.getElementById('err');
 
     function showErr(m){ err.textContent = m; err.style.display = 'block'; }
+    function clearErr(){ err.style.display = 'none'; err.textContent = ""; }
+    function validCode(code){ return /^[A-Za-z0-9]{3,24}$/.test(code); }
 
     btn.addEventListener('click', async () => {
+      clearErr();
       const code = codeEl.value.trim();
-      if (!code) return showErr('Please enter a code.');
+      if (!validCode(code)) return showErr('Enter a valid code (3–24 letters/numbers).');
 
-      const snap = await getDoc(doc(db, 'wishlists', code));
-      if (!snap.exists()) return showErr('No list found with that code.');
-
-      window.location.href = `list.html?code=${encodeURIComponent(code)}`;
+      btn.disabled = true; btn.textContent = "Checking...";
+      try {
+        const snap = await getDoc(doc(db, 'wishlists', code));
+        if (!snap.exists()) {
+          showErr('No list found with that code.');
+          btn.disabled = false; btn.textContent = "Open";
+          return;
+        }
+        window.location.href = `list.html?code=${encodeURIComponent(code)}`;
+      } catch (e) {
+        console.error(e);
+        showErr('Something went wrong. Please try again.');
+        btn.disabled = false; btn.textContent = "Open";
+      }
     });
   </script>
 </body>

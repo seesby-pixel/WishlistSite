@@ -3,6 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <title>Create Your Wishlist</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <!-- SEO -->
+  <meta name="description" content="Choose a unique code and 4-digit PIN to create your wishlist.">
+  <meta property="og:title" content="Create Wishlist">
+  <meta property="og:description" content="Choose a unique code and 4-digit PIN to create your wishlist.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -10,14 +20,13 @@
 
   <section class="page-section">
     <div class="form-stack">
-      <input id="codeInput" type="text" placeholder="Unique code (letters/numbers)" />
-      <input id="pinInput" type="password" maxlength="4" placeholder="4-digit PIN" />
+      <input id="codeInput" type="text" placeholder="Unique code (letters/numbers)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+      <input id="pinInput" type="password" maxlength="4" placeholder="4-digit PIN" autocomplete="off" inputmode="numeric" pattern="[0-9]*" />
       <button id="createBtn">Create & Continue</button>
       <div id="err" class="error-text" style="display:none;"></div>
     </div>
   </section>
 
-  <!-- Firebase init -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
@@ -40,25 +49,46 @@
     const err = document.getElementById('err');
 
     function showErr(m){ err.textContent = m; err.style.display = 'block'; }
+    function clearErr(){ err.style.display = 'none'; err.textContent = ""; }
+
+    function validCode(code){
+      return /^[A-Za-z0-9]{3,24}$/.test(code);
+    }
+    function validPin(pin){
+      return /^[0-9]{4}$/.test(pin);
+    }
 
     btn.addEventListener('click', async () => {
+      clearErr();
       const code = codeEl.value.trim();
       const pin  = pinEl.value.trim();
 
-      if (!code || !/^[A-Za-z0-9]+$/.test(code)) return showErr('Code must be letters/numbers only.');
-      if (!pin || pin.length !== 4 || isNaN(pin)) return showErr('PIN must be a 4-digit number.');
+      if (!validCode(code)) return showErr('Code must be 3–24 letters/numbers, no spaces.');
+      if (!validPin(pin)) return showErr('PIN must be exactly 4 digits.');
 
-      const snap = await getDoc(doc(db, 'wishlists', code));
-      if (snap.exists()) return showErr('That code is already taken. Please choose another.');
+      btn.disabled = true;
+      btn.textContent = "Creating...";
 
-      await setDoc(doc(db, 'wishlists', code), {
-        pin,
-        wishlist: [],
-        created: new Date().toISOString()
-      });
+      try {
+        const snap = await getDoc(doc(db, 'wishlists', code));
+        if (snap.exists()) {
+          showErr('That code is already taken. Please choose another.');
+          btn.disabled = false; btn.textContent = "Create & Continue";
+          return;
+        }
 
-      // redirect into your original index.html in owner mode
-      location.href = `list.html?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}`;
+        await setDoc(doc(db, 'wishlists', code), {
+          pin,
+          wishlist: [],
+          created: new Date().toISOString()
+        });
+
+        location.href = `list.html?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}`;
+      } catch (e) {
+        showErr('Something went wrong. Please try again.');
+        console.error(e);
+        btn.disabled = false; btn.textContent = "Create & Continue";
+      }
     });
   </script>
 </body>
