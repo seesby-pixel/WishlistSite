@@ -173,6 +173,15 @@ li.wishlist-item a.buy-now-btn {
   white-space: nowrap;
   transition: background-color 0.2s, transform 0.1s ease;
 }
+li.wishlist-item a.buy-now-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  line-height: 36px;  /* ✅ Ensures text is vertically centered */
+  padding: 0;        /* ✅ Removes default link padding differences */
+  text-decoration: none;
+}
 
 li.wishlist-item button:hover,
 li.wishlist-item a.buy-now-btn:hover {
