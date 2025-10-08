@@ -160,7 +160,7 @@ li.wishlist-item a.buy-now-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 110px;
+  width: 130px;   /* ✅ fixed width so both buttons always match */
   height: 36px;
   font-size: 14px;
   font-weight: 600;
