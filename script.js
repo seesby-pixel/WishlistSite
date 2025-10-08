@@ -169,7 +169,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-/* === Safe helpers used by other pages — kept minimal and non-invasive === */
 export async function codeExists(db, code) {
   const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
   const snap = await getDoc(doc(db, "wishlists", code));

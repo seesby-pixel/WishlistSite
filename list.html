@@ -16,13 +16,19 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>My Wishlist</h1>
+  <h1 id="wishlistTitle">My Wishlist</h1>
 
   <nav>
+    <button id="backBtn">Back</button>
     <button id="homeBtn">Home</button>
   </nav>
 
   <section id="myListPage">
+    <div id="titleEditRow" class="input-container" style="display:none;">
+      <input type="text" id="titleEditInput" placeholder="Wishlist Name" maxlength="80">
+      <button id="titleSaveBtn">Save Title</button>
+    </div>
+
     <div class="input-container">
       <input type="text" id="itemName" placeholder="Item name">
       <input type="text" id="itemURL" placeholder="Amazon URL">
@@ -58,7 +64,13 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    const backBtn = document.getElementById("backBtn");
     const homeBtn = document.getElementById("homeBtn");
+    const titleEl = document.getElementById("wishlistTitle");
+    const titleEditRow = document.getElementById("titleEditRow");
+    const titleEditInput = document.getElementById("titleEditInput");
+    const titleSaveBtn = document.getElementById("titleSaveBtn");
+
     const inputContainer = document.querySelector(".input-container");
     const addBtn = document.getElementById("addItemBtn");
     const nameInput = document.getElementById("itemName");
@@ -71,10 +83,10 @@
     let wishlistItems = [];
     let activeCode = null;
     let ownerMode = false;
+    let listTitle = "My Wishlist";
 
-    homeBtn.addEventListener("click", () => {
-      window.location.href = "home.html";
-    });
+    backBtn.addEventListener("click", () => history.back());
+    homeBtn.addEventListener("click", () => { window.location.href = "home.html"; });
 
     function showToast(message, isError = false) {
       const toast = document.createElement("div");
@@ -96,6 +108,39 @@
       return `https://images-na.ssl-images-amazon.com/images/P/${asin}.jpg`;
     }
 
+    function applyTitle() {
+      titleEl.textContent = listTitle || "Wishlist";
+      if (ownerMode) {
+        titleEl.style.cursor = "pointer";
+        titleEl.title = "Click to edit title";
+        titleEl.onclick = () => {
+          titleEditRow.style.display = "flex";
+          titleEditInput.value = listTitle;
+          titleEditInput.focus();
+        };
+      } else {
+        titleEl.onclick = null;
+        titleEl.style.cursor = "default";
+      }
+    }
+
+    async function saveDoc(update) {
+      await setDoc(doc(db, "wishlists", activeCode), update, { merge: true });
+    }
+
+    async function saveOwnerChanges() {
+      if (!activeCode) return;
+      try {
+        await saveDoc({
+          wishlist: wishlistItems,
+          updated: new Date().toISOString()
+        });
+      } catch (e) {
+        console.error(e);
+        showToast("Failed to save changes.", true);
+      }
+    }
+
     function renderWishlist(readOnly = false) {
       listContainer.innerHTML = "";
       emptyMsg.style.display = wishlistItems.length === 0 ? "block" : "none";
@@ -103,6 +148,7 @@
       wishlistItems.forEach((item, index) => {
         const li = document.createElement("li");
         li.className = "wishlist-item";
+        if (item.purchased) li.classList.add("purchased");
 
         const infoDiv = document.createElement("div");
         infoDiv.className = "item-info";
@@ -134,16 +180,20 @@
           buttonsDiv.appendChild(buyBtn);
 
           const purchasedBtn = document.createElement("button");
-          purchasedBtn.textContent = "I've purchased";
-          purchasedBtn.className = "purchased-btn";
-          purchasedBtn.onclick = () => {
-            purchasedBtn.textContent = "Purchased!";
-            li.classList.add("purchased");
-            purchasedBtn.disabled = true;
+          purchasedBtn.textContent = item.purchased ? "Undo" : "I've purchased";
+          purchasedBtn.className = item.purchased ? "remove-btn" : "purchased-btn";
+          purchasedBtn.onclick = async () => {
+            wishlistItems[index].purchased = !wishlistItems[index].purchased;
+            renderWishlist(true);
+            try {
+              await saveOwnerChanges(); // allow viewers to persist purchase status
+              showToast(item.purchased ? "Marked as purchased." : "Marked as not purchased.");
+            } catch (e) {
+              showToast("Failed to update purchase state.", true);
+            }
           };
           buttonsDiv.appendChild(purchasedBtn);
         } else {
-          // Owner controls: Edit + Remove
           const editBtn = document.createElement("button");
           editBtn.textContent = "Edit";
           editBtn.className = "edit-btn";
@@ -174,7 +224,6 @@
       const infoDiv = li.querySelector(".item-info");
       const buttonsDiv = li.querySelector(".button-group");
 
-      // Build inline editor
       infoDiv.innerHTML = "";
       const img = document.createElement("img");
       img.src = item.image;
@@ -210,7 +259,6 @@
       infoDiv.appendChild(img);
       infoDiv.appendChild(editStack);
 
-      // Replace buttons with Save/Cancel
       buttonsDiv.innerHTML = "";
       const saveBtn = document.createElement("button");
       saveBtn.textContent = "Save";
@@ -218,14 +266,12 @@
       saveBtn.onclick = async () => {
         const newName = nameInput.value.trim() || "Unknown Product";
         const newURL = urlInput.value.trim();
-        if (!newURL) {
-          showToast("URL cannot be empty.", true);
-          return;
-        }
+        if (!newURL) { showToast("URL cannot be empty.", true); return; }
         wishlistItems[index] = {
           name: newName,
           url: newURL,
-          image: getAmazonImageURL(newURL)
+          image: getAmazonImageURL(newURL),
+          purchased: !!item.purchased
         };
         renderWishlist(false);
         await saveOwnerChanges();
@@ -240,50 +286,46 @@
       buttonsDiv.appendChild(cancelBtn);
     }
 
-    async function saveOwnerChanges() {
-      if (!activeCode || !ownerMode) return;
-      try {
-        await setDoc(doc(db, "wishlists", activeCode), {
-          wishlist: wishlistItems,
-          updated: new Date().toISOString()
-        }, { merge: true });
-        showToast("Changes saved!");
-      } catch (e) {
-        console.error(e);
-        showToast("Failed to save changes.", true);
-      }
-    }
-
     if (addBtn) {
       addBtn.addEventListener("click", async () => {
         let name = nameInput.value.trim();
         const url = urlInput.value.trim();
-        if (!url) {
-          showToast("Please enter a valid Amazon URL.", true);
-          return;
-        }
+        if (!url) { showToast("Please enter a valid Amazon URL.", true); return; }
         const imageUrl = getAmazonImageURL(url);
         if (!name) name = "Unknown Product";
-        wishlistItems.push({ name, url, image: imageUrl });
+        wishlistItems.push({ name, url, image: imageUrl, purchased: false });
         renderWishlist(false);
         nameInput.value = "";
         urlInput.value = "";
-        await saveOwnerChanges();
+        await saveOwnerChanges(); // autosave so shared link has ALL items
       });
     }
+
+    titleSaveBtn.addEventListener("click", async () => {
+      const newTitle = titleEditInput.value.trim() || "Wishlist";
+      listTitle = newTitle;
+      applyTitle();
+      titleEditRow.style.display = "none";
+      try {
+        await saveDoc({ title: listTitle, updated: new Date().toISOString() });
+        showToast("Title updated!");
+      } catch (e) {
+        console.error(e);
+        showToast("Failed to update title.", true);
+      }
+    });
 
     shareBtn.addEventListener("click", async () => {
       if (!activeCode) return;
       try {
         const shareUrl = `${window.location.origin}/list.html?code=${encodeURIComponent(activeCode)}`;
         await navigator.clipboard.writeText(shareUrl);
-        // If owner, ensure latest changes are saved, but do it silently
-        if (ownerMode) {
-          await setDoc(doc(db, "wishlists", activeCode), {
-            wishlist: wishlistItems,
-            updated: new Date().toISOString()
-          }, { merge: true });
-        }
+        // Save latest items/title when owner shares (safe no-op if no changes)
+        await saveDoc({
+          title: listTitle,
+          wishlist: wishlistItems,
+          updated: new Date().toISOString()
+        });
         showToast("Link copied!");
       } catch (e) {
         console.error(e);
@@ -305,14 +347,25 @@
         const snap = await getDoc(doc(db, "wishlists", activeCode));
         if (snap.exists()) {
           const data = snap.data();
-          wishlistItems = Array.isArray(data.wishlist) ? data.wishlist : [];
+          listTitle = data.title || "Wishlist";
+          wishlistItems = Array.isArray(data.wishlist) ? data.wishlist.map(it => ({
+            name: it.name,
+            url: it.url,
+            image: it.image,
+            purchased: !!it.purchased
+          })) : [];
           ownerMode = !!(pinParam && data.pin === pinParam);
 
+          applyTitle();
+
           if (!ownerMode) {
-            if (inputContainer) inputContainer.style.display = "none";
+            // Viewers: hide item input and share button, but allow purchase/undo
+            document.querySelectorAll(".input-container")[1]?.style?.setProperty("display","none");
             shareBtn.style.display = "none";
             renderWishlist(true);
           } else {
+            // Owners: can edit title and items
+            titleEditRow.style.display = "none"; // appears when clicking title
             renderWishlist(false);
           }
         } else {

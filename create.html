@@ -18,8 +18,14 @@
 <body>
   <h1>Create Your Wishlist</h1>
 
+  <nav>
+    <button onclick="history.back()">Back</button>
+    <button onclick="location.href='home.html'">Home</button>
+  </nav>
+
   <section class="page-section">
     <div class="form-stack">
+      <input id="titleInput" type="text" placeholder="Wishlist Name (e.g., Jack & Jill's Registry)" maxlength="80" />
       <input id="codeInput" type="text" placeholder="Unique code (letters/numbers)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
       <input id="pinInput" type="password" maxlength="4" placeholder="4-digit PIN" autocomplete="off" inputmode="numeric" pattern="[0-9]*" />
       <button id="createBtn">Create & Continue</button>
@@ -43,6 +49,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    const titleEl = document.getElementById('titleInput');
     const codeEl = document.getElementById('codeInput');
     const pinEl = document.getElementById('pinInput');
     const btn = document.getElementById('createBtn');
@@ -51,17 +58,14 @@
     function showErr(m){ err.textContent = m; err.style.display = 'block'; }
     function clearErr(){ err.style.display = 'none'; err.textContent = ""; }
 
-    function validCode(code){
-      return /^[A-Za-z0-9]{3,24}$/.test(code);
-    }
-    function validPin(pin){
-      return /^[0-9]{4}$/.test(pin);
-    }
+    function validCode(code){ return /^[A-Za-z0-9]{3,24}$/.test(code); }
+    function validPin(pin){ return /^[0-9]{4}$/.test(pin); }
 
     btn.addEventListener('click', async () => {
       clearErr();
-      const code = codeEl.value.trim();
-      const pin  = pinEl.value.trim();
+      const title = (titleEl.value || "").trim();
+      const code  = codeEl.value.trim();
+      const pin   = pinEl.value.trim();
 
       if (!validCode(code)) return showErr('Code must be 3–24 letters/numbers, no spaces.');
       if (!validPin(pin)) return showErr('PIN must be exactly 4 digits.');
@@ -79,6 +83,7 @@
 
         await setDoc(doc(db, 'wishlists', code), {
           pin,
+          title: title || "Wishlist",
           wishlist: [],
           created: new Date().toISOString()
         });
