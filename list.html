@@ -24,11 +24,13 @@
   </nav>
 
   <section id="myListPage">
+    <!-- Title edit (owner only) -->
     <div id="titleEditRow" class="input-container" style="display:none;">
       <input type="text" id="titleEditInput" placeholder="Wishlist Name" maxlength="80">
       <button id="titleSaveBtn">Save Title</button>
     </div>
 
+    <!-- Add row (owner only) -->
     <div id="addRow" class="input-container">
       <input type="text" id="itemName" placeholder="Item name">
       <input type="text" id="itemURL" placeholder="Amazon URL">
@@ -84,7 +86,6 @@
     let activeCode = null;
     let ownerMode = false;
     let listTitle = "My Wishlist";
-    let unsub = null;
 
     backBtn.addEventListener("click", () => history.back());
     homeBtn.addEventListener("click", () => {
@@ -184,13 +185,28 @@
           buttonsDiv.appendChild(buyBtn);
 
           const purchasedBtn = document.createElement("button");
-          purchasedBtn.textContent = item.purchased ? "Undo" : "I've purchased";
-          purchasedBtn.className = item.purchased ? "remove-btn" : "purchased-btn";
+
+          // 🔻 NEW: default text shows "Purchased!" when purchased; on hover shows "Undo"
+          if (item.purchased) {
+            purchasedBtn.textContent = "Purchased!";
+            purchasedBtn.className = "remove-btn"; // gray by default, red on hover (your CSS)
+            purchasedBtn.addEventListener("mouseenter", () => {
+              // only swap label if still purchased
+              if (wishlistItems[index]?.purchased) purchasedBtn.textContent = "Undo";
+            });
+            purchasedBtn.addEventListener("mouseleave", () => {
+              if (wishlistItems[index]?.purchased) purchasedBtn.textContent = "Purchased!";
+            });
+          } else {
+            purchasedBtn.textContent = "I've purchased";
+            purchasedBtn.className = "purchased-btn";
+          }
+
           purchasedBtn.onclick = async () => {
             wishlistItems[index].purchased = !wishlistItems[index].purchased;
-            renderWishlist(true);
+            renderWishlist(true); // rebuild button/labels/hover handlers
             try {
-              await saveOwnerChanges(); // viewers can persist purchase state
+              await saveOwnerChanges(); // persist so everyone sees the change
               showToast(wishlistItems[index].purchased ? "Marked as purchased." : "Marked as not purchased.");
             } catch (e) {
               showToast("Failed to update purchase state.", true);
