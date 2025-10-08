@@ -20,7 +20,7 @@
 
   <nav>
     <button onclick="history.back()">Back</button>
-    <button onclick="location.href='home.html'">Home</button>
+    <button id="homeBtn">Home</button>
   </nav>
 
   <section class="page-section">
@@ -31,6 +31,13 @@
       <div id="err" class="error-text" style="display:none;"></div>
     </div>
   </section>
+
+  <script>
+    document.getElementById('homeBtn').addEventListener('click', () => {
+      try { sessionStorage.setItem('cameFromInternal', '1'); } catch(e){}
+      location.href = 'home.html';
+    });
+  </script>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";

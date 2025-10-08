@@ -19,7 +19,7 @@
   <h1>Wishlist Hub</h1>
 
   <nav>
-    <button onclick="history.back()">Back</button>
+    <button id="backBtn" style="display:none;">Back</button>
   </nav>
 
   <section class="page-section">
@@ -29,5 +29,34 @@
       <button onclick="location.href='mylist.html'">View My List</button>
     </div>
   </section>
+
+  <script>
+    (function () {
+      const backBtn = document.getElementById('backBtn');
+
+      // Show Back if user came from another page on the same origin,
+      // or if other pages explicitly set a flag before sending them here.
+      let show = false;
+
+      try {
+        const ref = document.referrer ? new URL(document.referrer) : null;
+        const sameOriginRef = ref && ref.origin === location.origin;
+        const cameFromInternal = sessionStorage.getItem('cameFromInternal') === '1';
+
+        show = (sameOriginRef && history.length > 1) || cameFromInternal;
+
+        // Clear the one-time flag so a fresh/opened home won't keep showing Back
+        sessionStorage.removeItem('cameFromInternal');
+      } catch (e) {
+        // Fail-safe: keep hidden if anything is weird.
+        show = false;
+      }
+
+      if (show) {
+        backBtn.style.display = 'inline-block';
+        backBtn.addEventListener('click', () => history.back());
+      }
+    })();
+  </script>
 </body>
 </html>

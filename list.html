@@ -29,7 +29,7 @@
       <button id="titleSaveBtn">Save Title</button>
     </div>
 
-    <div class="input-container">
+    <div id="addRow" class="input-container">
       <input type="text" id="itemName" placeholder="Item name">
       <input type="text" id="itemURL" placeholder="Amazon URL">
       <button id="addItemBtn">Add Item</button>
@@ -49,7 +49,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBiawooDcVM2qkvP10BuRVDoxIqEXz15ac",
@@ -71,7 +71,7 @@
     const titleEditInput = document.getElementById("titleEditInput");
     const titleSaveBtn = document.getElementById("titleSaveBtn");
 
-    const inputContainer = document.querySelector(".input-container");
+    const addRow = document.getElementById("addRow");
     const addBtn = document.getElementById("addItemBtn");
     const nameInput = document.getElementById("itemName");
     const urlInput = document.getElementById("itemURL");
@@ -84,9 +84,13 @@
     let activeCode = null;
     let ownerMode = false;
     let listTitle = "My Wishlist";
+    let unsub = null;
 
     backBtn.addEventListener("click", () => history.back());
-    homeBtn.addEventListener("click", () => { window.location.href = "home.html"; });
+    homeBtn.addEventListener("click", () => {
+      try { sessionStorage.setItem('cameFromInternal','1'); } catch(e){}
+      window.location.href = "home.html";
+    });
 
     function showToast(message, isError = false) {
       const toast = document.createElement("div");
@@ -186,8 +190,8 @@
             wishlistItems[index].purchased = !wishlistItems[index].purchased;
             renderWishlist(true);
             try {
-              await saveOwnerChanges(); // allow viewers to persist purchase status
-              showToast(item.purchased ? "Marked as purchased." : "Marked as not purchased.");
+              await saveOwnerChanges(); // viewers can persist purchase state
+              showToast(wishlistItems[index].purchased ? "Marked as purchased." : "Marked as not purchased.");
             } catch (e) {
               showToast("Failed to update purchase state.", true);
             }
@@ -286,20 +290,18 @@
       buttonsDiv.appendChild(cancelBtn);
     }
 
-    if (addBtn) {
-      addBtn.addEventListener("click", async () => {
-        let name = nameInput.value.trim();
-        const url = urlInput.value.trim();
-        if (!url) { showToast("Please enter a valid Amazon URL.", true); return; }
-        const imageUrl = getAmazonImageURL(url);
-        if (!name) name = "Unknown Product";
-        wishlistItems.push({ name, url, image: imageUrl, purchased: false });
-        renderWishlist(false);
-        nameInput.value = "";
-        urlInput.value = "";
-        await saveOwnerChanges(); // autosave so shared link has ALL items
-      });
-    }
+    addBtn.addEventListener("click", async () => {
+      let name = nameInput.value.trim();
+      const url = urlInput.value.trim();
+      if (!url) { showToast("Please enter a valid Amazon URL.", true); return; }
+      const imageUrl = getAmazonImageURL(url);
+      if (!name) name = "Unknown Product";
+      wishlistItems.push({ name, url, image: imageUrl, purchased: false });
+      renderWishlist(false);
+      nameInput.value = "";
+      urlInput.value = "";
+      await saveOwnerChanges(); // autosave so shared link has ALL items
+    });
 
     titleSaveBtn.addEventListener("click", async () => {
       const newTitle = titleEditInput.value.trim() || "Wishlist";
@@ -318,14 +320,14 @@
     shareBtn.addEventListener("click", async () => {
       if (!activeCode) return;
       try {
-        const shareUrl = `${window.location.origin}/list.html?code=${encodeURIComponent(activeCode)}`;
-        await navigator.clipboard.writeText(shareUrl);
-        // Save latest items/title when owner shares (safe no-op if no changes)
+        // Save first to guarantee latest data is in Firestore
         await saveDoc({
           title: listTitle,
           wishlist: wishlistItems,
           updated: new Date().toISOString()
         });
+        const shareUrl = `${window.location.origin}/list.html?code=${encodeURIComponent(activeCode)}`;
+        await navigator.clipboard.writeText(shareUrl);
         showToast("Link copied!");
       } catch (e) {
         console.error(e);
@@ -337,44 +339,52 @@
       const params = new URLSearchParams(window.location.search);
       const codeParam = params.get("code");
       const pinParam = params.get("pin");
-
       if (!codeParam) return;
 
       activeCode = codeParam;
       loadingState.style.display = "flex";
 
       try {
-        const snap = await getDoc(doc(db, "wishlists", activeCode));
-        if (snap.exists()) {
+        const initialSnap = await getDoc(doc(db, "wishlists", activeCode));
+        if (!initialSnap.exists()) {
+          showToast("List not found.", true);
+          loadingState.style.display = "none";
+          return;
+        }
+        const initialData = initialSnap.data();
+        ownerMode = !!(pinParam && initialData.pin === pinParam);
+
+        addRow.style.display = ownerMode ? "flex" : "none";
+        titleEditRow.style.display = "none";
+        if (!ownerMode) shareBtn.style.display = "none";
+
+        const ref = doc(db, "wishlists", activeCode);
+        onSnapshot(ref, (snap) => {
+          if (!snap.exists()) {
+            showToast("List not found.", true);
+            loadingState.style.display = "none";
+            return;
+          }
           const data = snap.data();
           listTitle = data.title || "Wishlist";
           wishlistItems = Array.isArray(data.wishlist) ? data.wishlist.map(it => ({
             name: it.name,
             url: it.url,
-            image: it.image,
+            image: it.image || getAmazonImageURL(it.url || ""),
             purchased: !!it.purchased
           })) : [];
-          ownerMode = !!(pinParam && data.pin === pinParam);
 
           applyTitle();
-
-          if (!ownerMode) {
-            // Viewers: hide item input and share button, but allow purchase/undo
-            document.querySelectorAll(".input-container")[1]?.style?.setProperty("display","none");
-            shareBtn.style.display = "none";
-            renderWishlist(true);
-          } else {
-            // Owners: can edit title and items
-            titleEditRow.style.display = "none"; // appears when clicking title
-            renderWishlist(false);
-          }
-        } else {
-          showToast("List not found.", true);
-        }
+          renderWishlist(!ownerMode);
+          loadingState.style.display = "none";
+        }, (err) => {
+          console.error(err);
+          showToast("Failed to keep list in sync.", true);
+          loadingState.style.display = "none";
+        });
       } catch (e) {
         console.error(e);
         showToast("Failed to load list.", true);
-      } finally {
         loadingState.style.display = "none";
       }
     });
