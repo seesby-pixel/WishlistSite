@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="none">
+  <!-- Base background -->
+  <rect width="1440" height="900" fill="#fff8f6"/>
+
+  <!-- Top-left corner blobs -->
+  <path d="M0,0 C200,0 500,200 600,400 C700,600 400,500 0,400 Z"
+        fill="#f7c9b6"/>
+  <path d="M0,0 C150,100 300,300 350,500 C400,650 200,550 0,450 Z"
+        fill="#fde1e1"/>
+  <path d="M0,0 C100,50 180,200 220,380 C250,500 100,400 0,300 Z"
+        fill="#cbe5dd"/>
+
+  <!-- Bottom-right corner blobs -->
+  <path d="M1440,900 C1240,900 940,700 840,500 C740,300 1040,400 1440,500 Z"
+        fill="#fde1e1"/>
+  <path d="M1440,900 C1290,800 1140,600 1090,400 C1040,250 1240,350 1440,450 Z"
+        fill="#f7c9b6"/>
+  <path d="M1440,900 C1340,850 1260,700 1220,520 C1190,400 1340,500 1440,600 Z"
+        fill="#cbe5dd"/>
+</svg>

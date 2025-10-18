@@ -2,21 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Create Your Wishlist</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
-  <!-- SEO -->
-  <meta name="description" content="Choose a unique code and 4-digit PIN to create your wishlist.">
-  <meta property="og:title" content="Create Wishlist">
-  <meta property="og:description" content="Choose a unique code and 4-digit PIN to create your wishlist.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="">
-  <meta property="og:image" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create My List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <script async src="https://z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
 
   <link rel="stylesheet" href="style.css" />
+<!-- 📱 Prevent automatic dark mode adjustments on mobile -->
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#ffffff">
+<style>
+  :root {
+    color-scheme: light;
+  }
+
+  /* Fallback: force light mode even if the device is set to dark */
+  @media (prefers-color-scheme: dark) {
+    html, body {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+    }
+    input, select, textarea, button {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      border-color: #cccccc !important;
+    }
+  }
+</style>
+
+
 </head>
 <body>
-  <h1>Create Your Wishlist</h1>
+  <!-- 🎨 Theme decorations placeholder -->
+  <div id="theme-decorations"></div>
+
+  <h1>Create My List</h1>
 
   <nav>
     <button onclick="history.back()">Back</button>
@@ -25,9 +45,19 @@
 
   <section class="page-section">
     <div class="form-stack">
-      <input id="titleInput" type="text" placeholder="Wishlist Name (e.g., Jack & Jill's Registry)" maxlength="80" />
-      <input id="codeInput" type="text" placeholder="Unique code (letters/numbers)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-      <input id="pinInput" type="password" maxlength="4" placeholder="4-digit PIN" autocomplete="off" inputmode="numeric" pattern="[0-9]*" />
+      <input id="titleInput" type="text" placeholder="List Title (optional)" autocomplete="off" />
+      <input id="emailInput" type="text" placeholder="Your Email" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input id="codeInput" type="text" placeholder="Unique code (3–24 letters/numbers)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input id="pinInput" type="password" maxlength="6" placeholder="6-digit PIN" autocomplete="off" inputmode="numeric" pattern="[0-9]*" />
+
+      <select id="themeSelect" class="form-select">
+        <option value="default">Default</option>
+        <option value="christmas">Christmas</option>
+        <option value="elegant">Elegant</option>
+        <option value="pastel">Pastel</option>
+        <option value="babyshower">Baby Shower</option>
+      </select>
+
       <button id="createBtn">Create & Continue</button>
       <div id="err" class="error-text" style="display:none;"></div>
     </div>
@@ -56,52 +86,71 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const titleEl = document.getElementById('titleInput');
-    const codeEl = document.getElementById('codeInput');
-    const pinEl = document.getElementById('pinInput');
-    const btn = document.getElementById('createBtn');
-    const err = document.getElementById('err');
+    const titleEl = document.getElementById("titleInput");
+    const emailEl = document.getElementById("emailInput");
+    const codeEl  = document.getElementById("codeInput");
+    const pinEl   = document.getElementById("pinInput");
+    const themeEl = document.getElementById("themeSelect");
+    const btn     = document.getElementById("createBtn");
+    const err     = document.getElementById("err");
 
     function showErr(m){ err.textContent = m; err.style.display = 'block'; }
     function clearErr(){ err.style.display = 'none'; err.textContent = ""; }
-
+    function validEmail(email){ return (email||"").trim().length > 0; }
     function validCode(code){ return /^[A-Za-z0-9]{3,24}$/.test(code); }
-    function validPin(pin){ return /^[0-9]{4}$/.test(pin); }
+    function validPin(pin){ return /^[0-9]{6}$/.test(pin); }
 
     btn.addEventListener('click', async () => {
       clearErr();
-      const title = (titleEl.value || "").trim();
-      const code  = codeEl.value.trim();
+      const title = (titleEl.value || "").trim() || "Wishlist";
+      const email = (emailEl.value || "").trim().toLowerCase();
+      const code  = codeEl.value.trim().toLowerCase();
       const pin   = pinEl.value.trim();
+      const theme = themeEl.value;
 
-      if (!validCode(code)) return showErr('Code must be 3–24 letters/numbers, no spaces.');
-      if (!validPin(pin)) return showErr('PIN must be exactly 4 digits.');
+      if (!validEmail(email)) return showErr('Please enter your email.');
+      if (!validCode(code))  return showErr('Code must be 3–24 letters/numbers.');
+      if (!validPin(pin))    return showErr('PIN must be exactly 6 digits.');
 
       btn.disabled = true;
       btn.textContent = "Creating...";
 
       try {
-        const snap = await getDoc(doc(db, 'wishlists', code));
+        const ref = doc(db, 'wishlists', code);
+        const snap = await getDoc(ref);
         if (snap.exists()) {
-          showErr('That code is already taken. Please choose another.');
+          showErr('That code is already taken.');
           btn.disabled = false; btn.textContent = "Create & Continue";
           return;
         }
 
-        await setDoc(doc(db, 'wishlists', code), {
-          pin,
-          title: title || "Wishlist",
+        await setDoc(ref, {
+          email,
+          accessPin: pin,
+          title,
           wishlist: [],
+          theme,
           created: new Date().toISOString()
         });
 
-        location.href = `list.html?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}`;
+        // ✅ Store session with PIN included
+        sessionStorage.setItem('currentOwner', JSON.stringify({ code, email, pin }));
+        localStorage.setItem('isOwner', 'true');
+        localStorage.setItem('ownerCode', code);
+        // ✅ NEW LINE — persist email login like "View My List"
+        sessionStorage.setItem('loggedInEmail', email);
+
+        window.location.href = `list.html?code=${encodeURIComponent(code)}`;
       } catch (e) {
-        showErr('Something went wrong. Please try again.');
         console.error(e);
+        showErr('Something went wrong. Please try again.');
         btn.disabled = false; btn.textContent = "Create & Continue";
       }
     });
   </script>
+  <script type="module" src="script.js"></script>
+
+
 </body>
 </html>
+

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Friends</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+  <script async src="https://z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
+
+</style>
+
+
+</head>
+<body>
+  <!-- 🎨 Theme decorations placeholder -->
+  <div id="theme-decorations"></div>
+
+  <h1>My Friends</h1>
+  <nav>
+    <button onclick="location.href='home.html'">Home</button>
+  </nav>
+
+  <section class="page-section">
+    <!-- ✅ LOGIN PROMPT (shown when not logged in) -->
+    <div class="form-stack" id="loginRow" style="display:none;">
+      <input 
+        type="email" 
+        id="loginEmail" 
+        placeholder="Email"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      >
+      <input 
+        type="text" 
+        id="loginCode" 
+        placeholder="Your List Code"
+        autocomplete="off"
+      >
+      <input 
+        type="text" 
+        id="loginPin" 
+        placeholder="PIN" 
+        inputmode="numeric"
+        maxlength="6"
+        autocomplete="off"
+      >
+      <button id="loginBtn">Log In</button>
+      <div id="loginErr" class="error-text" style="display:none;"></div>
+    </div>
+
+    <!-- ✅ FRIENDS LIST SECTION (shown only after login) -->
+    <div id="friendsSection" style="display:none;">
+      <div class="form-stack">
+        <input type="text" id="friendTitle" placeholder="Custom Title (optional)">
+        <input type="text" id="friendCode" placeholder="Friend's Unique Name (code)">
+        <input 
+          type="text" 
+          id="friendPin" 
+          placeholder="6-digit PIN (required)" 
+          inputmode="numeric" 
+          pattern="[0-9]*" 
+          maxlength="6" 
+          required
+        >
+        <button id="addFriendBtn">Add Friend</button>
+      </div>
+      <ul id="friendsList"></ul>
+    </div>
+  </section>
+
+  <!-- ✅ Initialize Firebase (v11.0.1) BEFORE loading script.js -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBiawooDcVM2qkvP10BuRVDoxIqEXz15ac",
+      authDomain: "wishlistsite-c97bd.firebaseapp.com",
+      projectId: "wishlistsite-c97bd",
+      storageBucket: "wishlistsite-c97bd.firebasestorage.app",
+      messagingSenderId: "525857492319",
+      appId: "1:525857492319:web:25f40775bbe54312533aea",
+      measurementId: "G-YHB16ZT4ED"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    // script.js reads window.db immediately; make sure this exists first:
+    window.db = getFirestore(app);
+  </script>
+
+  <!-- ✅ Main site script (uses the IDs above and window.db) -->
+  <script type="module" src="script.js"></script>
+
+</body>
+</html>

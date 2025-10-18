@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8" />
   <title>View My List</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <script async src="https://z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
 
   <!-- SEO -->
   <meta name="description" content="Enter your code and PIN to access your wishlist for editing.">
@@ -12,10 +14,15 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="">
   <meta property="og:image" content="">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@500;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
 
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+    <!-- 🎨 Theme decorations placeholder -->
+    <div id="theme-decorations"></div>
   <h1>View My List</h1>
 
   <nav>
@@ -23,10 +30,24 @@
     <button id="homeBtn">Home</button>
   </nav>
 
+  <!-- Auto-redirect if an owner session exists this session -->
+  <script>
+    (function(){
+      try{
+        const co = JSON.parse(sessionStorage.getItem('currentOwner') || 'null');
+        if (co && co.code && !location.search.includes('code=')) {
+          location.href = 'list.html?code=' + encodeURIComponent(co.code);
+        }
+      }catch(e){}
+    })();
+  </script>
+
   <section class="page-section">
     <div class="form-stack">
+      <!-- Email as key (no strict validation) -->
+      <input id="emailInput" type="text" placeholder="Your Email (acts like a key)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input id="codeInput" type="text" placeholder="Unique code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input id="pinInput" type="password" maxlength="4" placeholder="4-digit PIN" autocomplete="off" inputmode="numeric" pattern="[0-9]*" />
+      <input id="pinInput" type="password" maxlength="6" placeholder="6-digit PIN" autocomplete="off" inputmode="numeric" pattern="[0-9]*" />
       <button id="viewBtn">Access</button>
       <div id="err" class="error-text" style="display:none;"></div>
     </div>
@@ -55,23 +76,27 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const codeEl = document.getElementById('codeInput');
-    const pinEl  = document.getElementById('pinInput');
-    const btn    = document.getElementById('viewBtn');
-    const err    = document.getElementById('err');
+    const emailEl = document.getElementById('emailInput');
+    const codeEl  = document.getElementById('codeInput');
+    const pinEl   = document.getElementById('pinInput');
+    const btn     = document.getElementById('viewBtn');
+    const err     = document.getElementById('err');
 
     function showErr(m){ err.textContent = m; err.style.display = 'block'; }
     function clearErr(){ err.style.display = 'none'; err.textContent = ""; }
     function validCode(code){ return /^[A-Za-z0-9]{3,24}$/.test(code); }
-    function validPin(pin){ return /^[0-9]{4}$/.test(pin); }
+    function validPin(pin){ return /^[0-9]{6}$/.test(pin); }
+    function validEmail(email){ return (email||"").trim().length > 0; } // relaxed
 
     btn.addEventListener('click', async () => {
       clearErr();
-      const code = codeEl.value.trim();
-      const pin  = pinEl.value.trim();
+      const email = emailEl.value.trim().toLowerCase();
+      const code  = codeEl.value.trim().toLowerCase();
+      const pin   = pinEl.value.trim();
 
-      if (!validCode(code)) return showErr('Enter a valid code (3–24 letters/numbers).');
-      if (!validPin(pin)) return showErr('PIN must be exactly 4 digits.');
+      if (!validEmail(email)) return showErr('Please enter your email/key.');
+      if (!validCode(code))   return showErr('Enter a valid code (3–24 letters/numbers).');
+      if (!validPin(pin))     return showErr('PIN must be exactly 6 digits.');
 
       btn.disabled = true; btn.textContent = "Checking...";
       try {
@@ -82,12 +107,24 @@
           return;
         }
         const data = snap.data();
-        if (data.pin !== pin) {
-          showErr('Incorrect PIN.');
+        if (((data.email||"").toLowerCase() !== email) || data.accessPin !== pin) {
+          showErr('Email or PIN is incorrect.');
           btn.disabled = false; btn.textContent = "Access";
           return;
         }
-        window.location.href = `list.html?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}`;
+
+        // ✅ Establish this-session owner context (authoritative)
+        sessionStorage.setItem('currentOwner', JSON.stringify({ code, email }));
+
+        // (Optional convenience) remember owners per device (not authoritative)
+        try {
+          const map = JSON.parse(localStorage.getItem('owners')||'{}');
+          map[code] = email; // case-insensitive email already lowercased
+          localStorage.setItem('owners', JSON.stringify(map));
+        } catch(e){}
+
+        // Redirect WITHOUT pin in URL (pin does not confer ownership)
+        window.location.href = `list.html?code=${encodeURIComponent(code)}`;
       } catch (e) {
         console.error(e);
         showErr('Something went wrong. Please try again.');
@@ -95,5 +132,8 @@
       }
     });
   </script>
+<script type="module" src="script.js"></script>
+
+
 </body>
 </html>

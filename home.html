@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wishlist Hub</title>
+<div id="logo-container">
+  <div id="siteLogo"></div>
+</div>
+
+  <script async src="https://z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
 
   <!-- SEO / Social -->
   <meta name="description" content="Create and share wishlists easily with friends and family.">
@@ -12,12 +17,19 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="">
   <meta property="og:image" content="">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@500;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<!-- 📱 Prevent automatic dark mode adjustments on mobile -->
+<meta name="theme-color" content="#ffffff">
+
+</style>
+
 
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Wishlist Hub</h1>
-
+    <!-- 🎨 Theme decorations placeholder -->
+    <div id="theme-decorations"></div>
   <nav>
     <button id="backBtn" style="display:none;">Back</button>
   </nav>
@@ -27,36 +39,31 @@
       <button onclick="location.href='create.html'">Create My List</button>
       <button onclick="location.href='view.html'">View Someone's List</button>
       <button onclick="location.href='mylist.html'">View My List</button>
+      <button onclick="location.href='friends.html'">My Friends</button>
     </div>
   </section>
 
   <script>
     (function () {
       const backBtn = document.getElementById('backBtn');
-
-      // Show Back if user came from another page on the same origin,
-      // or if other pages explicitly set a flag before sending them here.
       let show = false;
-
       try {
         const ref = document.referrer ? new URL(document.referrer) : null;
         const sameOriginRef = ref && ref.origin === location.origin;
         const cameFromInternal = sessionStorage.getItem('cameFromInternal') === '1';
-
         show = (sameOriginRef && history.length > 1) || cameFromInternal;
-
-        // Clear the one-time flag so a fresh/opened home won't keep showing Back
         sessionStorage.removeItem('cameFromInternal');
       } catch (e) {
-        // Fail-safe: keep hidden if anything is weird.
         show = false;
       }
-
       if (show) {
         backBtn.style.display = 'inline-block';
         backBtn.addEventListener('click', () => history.back());
       }
     })();
   </script>
+<script type="module" src="script.js"></script>
+
+
 </body>
 </html>

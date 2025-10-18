@@ -1,14 +1,56 @@
-/* ===== General Body & Font ===== */
-body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 0 20px;
-  background-color: #f5f7fa;
-  color: #333;
+/* ==========================================================
+   GLOBAL BASE STYLES
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Merriweather:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Great+Vibes&family=Playfair+Display:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600&display=swap');
+
+   body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 0 20px;
+    background-color: #f5f7fa;
+    color: #333;
+  }
+  
+/* ===========================
+   Responsive Site Logo
+   =========================== */
+#logo-container {
+  text-align: center;
+  margin: 10px 0;
 }
 
-/* ===== Title ===== */
+#site-logo {
+  max-width: 280px;       /* prevents it from being too large on big screens */
+  width: 50%;             /* responsive size relative to screen */
+  height: auto;           /* keeps the aspect ratio */
+}
+
+@media (max-width: 600px) {
+  #site-logo {
+    max-width: 200px;     /* slightly smaller on mobile */
+    width: 70%;
+  }
+}
+
+  #theme-decorations {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+/* Global decorations container */
+#theme-decorations {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0; /* above page background, below UI */
+}
+
 h1 {
   text-align: center;
   margin-bottom: 30px;
@@ -16,73 +58,65 @@ h1 {
   color: #222;
 }
 
-/* ===== Navigation ===== */
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 25px;
-}
+  
+  /* ==========================================================
+     NAVIGATION & INPUTS
+     ========================================================== */
+  
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+  }
+  nav button {
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  nav button:hover { background-color: #0056b3; }
+  
+  .input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .input-container input[type="text"] {
+    flex: 1 1 60%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border-color 0.2s;
+  }
+  .input-container input[type="text"]:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  .input-container button {
+    flex: 1 1 35%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.2s;
+  }
+  .input-container button:hover { background-color: #0056b3; }
+  
+ /* ========================================================== 
+   WISHLIST ITEMS & BUTTONS
+   ========================================================== */
 
-nav button {
-  padding: 10px 20px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-nav button:hover {
-  background-color: #0056b3;
-}
-
-/* ===== Input Container ===== */
-.input-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.input-container input[type="text"] {
-  flex: 1 1 60%;
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  transition: border-color 0.2s;
-}
-
-.input-container input[type="text"]:focus {
-  outline: none;
-  border-color: #007bff;
-}
-
-.input-container button {
-  flex: 1 1 35%;
-  padding: 12px 15px;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  transition: background-color 0.2s;
-}
-
-.input-container button:hover {
-  background-color: #0056b3;
-}
-
-/* ===== Wishlist Items ===== */
-ul#wishlistContainer {
-  list-style: none;
-  padding: 0;
-}
-
+ul#wishlistContainer { list-style: none; padding: 0; }
 li.wishlist-item {
   display: flex;
   align-items: center;
@@ -93,34 +127,22 @@ li.wishlist-item {
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.2s;
-  opacity: 1;
   gap: 12px;
   min-height: 100px;
+  opacity: 1;
 }
-
 li.wishlist-item.removing {
   opacity: 0;
   transform: translateX(50px);
 }
+li.wishlist-item:hover { transform: translateY(-2px); }
 
-li.wishlist-item:hover {
-  transform: translateY(-2px);
-}
-
-/* Purchased state */
-li.wishlist-item.purchased {
-  background-color: #6c757d;
-  color: #f1f1f1;
-}
-
-/* Product info section */
 li.wishlist-item .item-info {
   display: flex;
   align-items: center;
   flex: 1;
   gap: 12px;
 }
-
 li.wishlist-item img.product-image {
   width: 80px;
   height: 80px;
@@ -129,19 +151,14 @@ li.wishlist-item img.product-image {
   margin-right: 12px;
 }
 
-/* Links */
 li.wishlist-item a {
-  text-decoration: none;
-  color: #007bff;
-  word-break: break-word;
   flex: 1;
+  color: #007bff;
+  text-decoration: none;
+  word-break: break-word;
 }
+li.wishlist-item a:hover { text-decoration: underline; }
 
-li.wishlist-item a:hover {
-  text-decoration: underline;
-}
-
-/* ===== Buttons ===== */
 li.wishlist-item .button-group {
   display: flex;
   flex-direction: column;
@@ -150,18 +167,15 @@ li.wishlist-item .button-group {
   gap: 6px;
   min-width: 130px;
 }
-
-li.wishlist-item .button-group > * + * {
-  margin-top: 6px;
-}
+li.wishlist-item .button-group > * + * { margin-top: 6px; }
 
 li.wishlist-item button,
 li.wishlist-item a.buy-now-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 130px;   /* fixed width so both buttons always match */
-  height: 36px;
+  width: 130px;
+  min-height: 48px;
   font-size: 14px;
   font-weight: 600;
   border-radius: 6px;
@@ -170,58 +184,44 @@ li.wishlist-item a.buy-now-btn {
   cursor: pointer;
   box-sizing: border-box;
   text-align: center;
-  white-space: nowrap;
   transition: background-color 0.2s, transform 0.1s ease;
 }
 
-li.wishlist-item a.buy-now-btn {
-  display: inline-flex;   /* ensure <a> renders same as button */
-  align-items: center;
-  justify-content: center;
-  height: 36px;
-  line-height: 36px;      /* vertical text alignment */
-  padding: 0;             /* normalize link padding */
-  text-decoration: none;
-}
-
-li.wishlist-item button:hover,
-li.wishlist-item a.buy-now-btn:hover {
-  transform: translateY(-1px);
-}
-
-/* Remove button */
-li.wishlist-item button.remove-btn {
-  background-color: #495057;
-}
-li.wishlist-item button.remove-btn:hover {
-  background-color: #a71d2a;
-}
-
-/* Purchased button */
-li.wishlist-item button.purchased-btn {
-  background-color: #6c757d;
-}
-li.wishlist-item button.purchased-btn:hover {
-  background-color: #5a6268;
-}
-
-/* Edit button */
-li.wishlist-item button.edit-btn {
-  background-color: #17a2b8;
-}
-li.wishlist-item button.edit-btn:hover {
-  background-color: #117a8b;
-}
-
-/* Buy Now button */
-li.wishlist-item a.buy-now-btn {
+/* ✅ BASE COLORS — apply only when no theme is active */
+body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
   background-color: #28a745;
 }
-li.wishlist-item a.buy-now-btn:hover {
+body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn:hover {
   background-color: #1e7e34;
 }
 
-/* ===== Share Wishlist Button ===== */
+body:not([class*="theme-"]) li.wishlist-item button.edit-btn {
+  background-color: #17a2b8;
+}
+body:not([class*="theme-"]) li.wishlist-item button.edit-btn:hover {
+  background-color: #117a8b;
+}
+
+body:not([class*="theme-"]) li.wishlist-item button.remove-btn {
+  background-color: #495057;
+}
+body:not([class*="theme-"]) li.wishlist-item button.remove-btn:hover {
+  background-color: #a71d2a;
+}
+
+body:not([class*="theme-"]) li.wishlist-item button.purchased-btn {
+  background-color: #6c757d;
+}
+body:not([class*="theme-"]) li.wishlist-item button.purchased-btn:hover {
+  background-color: #5a6268;
+}
+
+li.wishlist-item.purchased {
+  background-color: #6c757d;
+  color: #f1f1f1;
+}
+
+/* Share List Button */
 #shareList {
   margin-top: 20px;
   padding: 12px 20px;
@@ -233,12 +233,9 @@ li.wishlist-item a.buy-now-btn:hover {
   cursor: pointer;
   transition: background-color 0.2s;
 }
-
-#shareList:hover {
+body:not([class*="theme-"]) #shareList:hover {
   background-color: #1e7e34;
 }
-
-/* ===== Share Message ===== */
 #shareMessage {
   margin-top: 12px;
   font-weight: bold;
@@ -246,15 +243,1403 @@ li.wishlist-item a.buy-now-btn:hover {
   word-break: break-word;
 }
 
-/* ===== Empty / Loading ===== */
-#emptyMessage {
+  /* ==========================================================
+     EMPTY STATES, LOADING, TOAST, RESPONSIVE
+     ========================================================== */
+  
+  #emptyMessage {
+    text-align: center;
+    color: #555;
+    font-style: italic;
+    margin-top: 15px;
+  }
+  .loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    color: #555;
+    margin: 12px 0 16px;
+  }
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ddd;
+    border-top-color: #28a745;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    font-weight: bold;
+    z-index: 1000;
+    animation: fadeInOut 3s forwards;
+  }
+  @keyframes fadeInOut {
+    0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  }
+  
+  @media (max-width: 600px) {
+    .input-container { flex-direction: column; }
+    .input-container input, .input-container button { flex: 1 1 100%; }
+    li.wishlist-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    li.wishlist-item .button-group { width: 100%; gap: 8px; }
+    li.wishlist-item button, li.wishlist-item a.buy-now-btn {
+      width: 100%; height: 44px; font-size: 15px;
+    }
+  }
+  
+  /* ==========================================================
+     PAGE FORMS & GENERAL STYLING
+     ========================================================== */
+  
+  .page-section { text-align: center; margin-top: 40px; }
+  .menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  .menu-buttons button {
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color .2s;
+  }
+  .menu-buttons button:hover { background-color: #0056b3; }
+  
+  .form-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+  .form-stack input[type="text"],
+  .form-stack input[type="password"],
+  .form-stack input[type="email"],
+  .form-stack select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .form-stack button {
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color .2s;
+  }
+  .form-stack button:hover { background-color: #1e7e34; }
+  .error-text { color: #c0392b; text-align: center; }
+  
+  /* ==========================================================
+     THEMES — BASE DESIGN (Christmas, Elegant, Bubblegum, Pastel)
+     ========================================================== */
+  
+  body.theme-christmas,
+  body.theme-elegant,
+  body.theme-bubblegum,
+  body.theme-pastel {
+    transition: all 0.5s ease-in-out;
+  }
+  
+/* === 🎄 CHRISTMAS THEME — top-anchored PNG cover; animated snow injected inline === */
+
+body.theme-christmas {
+  background: url('assets/xmas-bg.png?v=9') top center / cover no-repeat fixed;
+  background-color: #0f0f0f;
+  color: #2e2e2e;
+  font-family: 'Cinzel Decorative', serif;
+}
+
+/* ✅ Overlay host for animated snow (your script injects SVG here) */
+#theme-decorations {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+#theme-decorations .christmas-decor > svg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;           /* ✅ prevent squishing */
+  min-height: 100vh;      /* ensure coverage */
+  object-fit: cover;      /* maintain aspect ratio nicely */
+}
+
+@media (max-width: 600px) {
+  #theme-decorations .christmas-decor > svg {
+    height: 100vh;        /* fills vertically on mobile */
+    width: auto;          /* avoids horizontal squish */
+  }
+}
+
+/* ——— Typography & links ——— */
+body.theme-christmas h1 {
+  color: #b71c1c;
+  text-shadow: 0 2px 3px rgba(255,255,255,0.8);
+}
+body.theme-christmas a {
+  color: #b71c1c;
+  font-weight: 600;
+}
+body.theme-christmas a:hover {
+  color: #2e7d32;
+}
+
+/* =========================================================
+   BUTTONS — Unified Christmas styling
+   ========================================================= */
+
+/* 🟥 Primary buttons (Buy / Add / Share / Generic buttons) */
+body.theme-christmas a.buy-now-btn,
+body.theme-christmas #addItemBtn,
+body.theme-christmas #shareList,
+body.theme-christmas button:not(.remove-btn):not(.edit-btn):not(.home-btn):not(.back-btn) {
+  background: linear-gradient(to bottom, #c62828, #8b0000);
+  border: 2px solid #2e7d32;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+body.theme-christmas a.buy-now-btn:hover,
+body.theme-christmas #addItemBtn:hover,
+body.theme-christmas #shareList:hover,
+body.theme-christmas button:not(.remove-btn):not(.edit-btn):not(.home-btn):not(.back-btn):hover {
+  background: linear-gradient(to bottom, #b71c1c, #6a0000);
+}
+
+/* 🟩 Remove Button — green default, red on hover */
+body.theme-christmas .remove-btn {
+  background: #2e7d32;
+  border: 2px solid #2e7d32;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+body.theme-christmas .remove-btn:hover {
+  background: #b71c1c;
+  border-color: #8b0000;
+}
+
+/* ✏️ Edit Button — green default, red on hover */
+body.theme-christmas .edit-btn {
+  background: #2e7d32;
+  border: 2px solid #2e7d32;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+body.theme-christmas .edit-btn:hover {
+  background: #b71c1c;
+  border-color: #8b0000;
+}
+
+/* 🏠 Home / Back Buttons — green default, red on hover */
+body.theme-christmas .home-btn,
+body.theme-christmas .back-btn {
+  background: #2e7d32;
+  border: 2px solid #2e7d32;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+body.theme-christmas .home-btn:hover,
+body.theme-christmas .back-btn:hover {
+  background: #b71c1c;
+  border-color: #8b0000;
+}
+
+/* Optional global hover fallback for buttons */
+body.theme-christmas button:hover {
+  cursor: pointer;
+}
+
+/* ——— Purchased Button (kept neutral gray) ——— */
+body.theme-christmas .purchased-btn {
+  background: #6c757d;
+  color: #fff;
+}
+
+/* ——— Inputs ——— */
+body.theme-christmas input,
+body.theme-christmas select {
+  border: 1px solid #b71c1c;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(183,28,28,0.15);
+}
+
+/* ——— List items ——— */
+body.theme-christmas li.wishlist-item {
+  border-left: 6px solid #2e7d32;
+  background: #fff;
+}
+/* 🌟 Purchased state for Christmas theme */
+body.theme-christmas li.wishlist-item.purchased {
+  background-color: #f7e9b3;  /* light warm gold */
+  color: #4b3f22;             /* dark brown text for contrast */
+}
+
+body.theme-christmas li.wishlist-item.purchased .purchased-btn {
+  background: #d4af37;        /* rich Christmas gold */
+  border: 2px solid #b8860b;  /* slightly darker gold border */
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+body.theme-christmas li.wishlist-item.purchased .purchased-btn:hover {
+  background: #b8860b;        /* deep gold on hover */
+  border-color: #8b7500;
+}
+/* Only show snowflakes when christmas theme is active */
+.christmas-decor {
+  display: none;
+}
+
+.theme-christmas .christmas-decor {
+  display: block;
+}
+
+/* 🖥️ Optional: ultra-wide screens; still top-anchored cover */
+@media (min-width: 2000px) {
+  body.theme-christmas {
+    background-position: top center;
+    background-size: cover;     /* keep filling the viewport from the top */
+    background-repeat: no-repeat;
+  }
+}
+
+
+
+/* ===========================
+   🌟 Elegant Theme (Bright Polished Gold)
+   =========================== */
+
+
+.theme-elegant {
+  background-color: #ffffff;
+  background-image: url('./assets/elegant-bg.png');
+  background-size: cover;              /* ✅ fills full screen */
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-attachment: fixed;
+  color: #2e2e2e;
+  font-family: 'Dancing Script', cursive;  /* 🪶 Elegant body font */
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+
+/* ===========================
+   Title
+   =========================== */
+.theme-elegant #wishlistTitle {
+  display: block;
+  margin: 0 auto 20px;
+  text-align: center;
+  font-family: 'Dancing Script', cursive;    /* ✨ Elegant cursive title */
+  font-size: 2.8rem;
+  letter-spacing: 1px;
+  text-transform: none;                  /* no forced caps */
+  color: #000000;
+  border-bottom: 2px solid #D4AF37;
+  padding-bottom: 10px;
+}
+
+
+/* ===========================
+   Global Font
+   =========================== */
+.theme-elegant button,
+.theme-elegant input,
+.theme-elegant select,
+.theme-elegant a {
+  font-family: 'Dancing Script', cursive;
+}
+
+/* ===========================
+   Product Links
+   =========================== */
+.theme-elegant .item-info a {
+  color: #D4AF37;
+  text-decoration: none;
+}
+.theme-elegant .item-info a:hover {
+  color: #BFA030;
+  text-decoration: underline;
+}
+
+/* ===========================
+   Buttons (Gold / Silver styling)
+   =========================== */
+
+/* Gold background, silver border */
+.theme-elegant button,
+.theme-elegant .gold-btn {
+  background-color: #D4AF37;
+  color: #ffffff;
+  border: 1.5px solid #c0c0c0;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.theme-elegant button:hover,
+.theme-elegant .gold-btn:hover {
+  background-color: #BFA030;
+  color: #fff;
+}
+
+/* Silver background, gold border — Buy Now */
+.theme-elegant .silver-btn,
+.theme-elegant a.buy-now-btn {
+  background-color: #f0f0f0;
+  color: #000;
+  border: 1.5px solid #D4AF37;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: center;
+  display: inline-block;
+  white-space: nowrap;
+}
+.theme-elegant .silver-btn:hover,
+.theme-elegant a.buy-now-btn:hover {
+  background-color: #D4AF37;
+  color: #ffffff;
+}
+
+/* ===========================
+   Share List Button
+   =========================== */
+.theme-elegant #shareList {
+  background-color: #f0f0f0;
+  color: #111;
+  border: 1.5px solid #D4AF37;
+}
+.theme-elegant #shareList:hover {
+  background-color: #D4AF37;
+  color: #ffffff;
+}
+
+/* ===========================
+   Edit and Remove Buttons
+   =========================== */
+
+/* Edit (gold w/ silver border) */
+.theme-elegant .edit-btn {
+  background-color: #D4AF37;
+  color: #ffffff;
+  border: 1.5px solid #c0c0c0;
+  white-space: nowrap;
+}
+.theme-elegant .edit-btn:hover {
+  background-color: #BFA030;
+  color: #fff;
+}
+
+/* Remove (silver w/ gold border) */
+.theme-elegant .remove-btn {
+  background-color: #f0f0f0;
+  color: #111;
+  border: 1.5px solid #D4AF37;
+  white-space: nowrap;
+}
+.theme-elegant .remove-btn:hover {
+  background-color: #D4AF37;
+  color: #fff;
+}
+
+/* ===========================
+   I've Purchased Button
+   =========================== */
+.theme-elegant .purchased-btn {
+  background-color: #f0f0f0;
+  color: #111;
+  border: 1.5px solid #D4AF37;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.theme-elegant .purchased-btn:hover {
+  background-color: #D4AF37;
+  color: #ffffff;
+}
+
+/* ===========================
+   Inputs
+   =========================== */
+.theme-elegant input[type="text"],
+.theme-elegant select {
+  background-color: #ffffffd8;
+  border: 1px solid #D4AF37;
+  color: #2e2e2e;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 6px;
+}
+.theme-elegant input[type="text"]:focus,
+.theme-elegant select:focus {
+  outline: none;
+  border-color: #BFA030;
+  box-shadow: 0 0 5px rgba(191, 160, 48, 0.4);
+}
+
+/* ===========================
+   Wishlist Items
+   =========================== */
+.theme-elegant .wishlist-item {
+  background-color: #ffffffcc;
+  border: 1px solid #e6ddc5;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  padding: 15px;
+  border-radius: 10px;
+  transition: box-shadow 0.25s ease;
+}
+.theme-elegant .wishlist-item:hover {
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+/* ===========================
+   Links
+   =========================== */
+.theme-elegant a {
+  color: #2e2e2e;
+  text-decoration: none;
+}
+.theme-elegant a:hover {
+  color: #D4AF37;
+}
+
+/* ===========================
+   Decorative Accent
+   =========================== */
+.theme-elegant #theme-decorations::before {
+  content: "";
+  display: block;
+  width: 70%;
+  max-width: 400px;
+  height: 1px;
+  margin: 0 auto 20px;
+  background: linear-gradient(to right, transparent, #D4AF37, transparent);
+}
+
+/* ✅ Force Elegant styling for Buy Now even when disabled */
+.theme-elegant a.buy-now-btn,
+.theme-elegant a.buy-now-btn:disabled,
+.theme-elegant a.buy-now-btn[disabled] {
+  background-color: #f0f0f0 !important;
+  color: #000 !important;
+  border: 1.5px solid #D4AF37 !important;
+  opacity: 1 !important;
+  cursor: pointer;
+}
+.theme-elegant a.buy-now-btn:hover {
+  background-color: #D4AF37 !important;
+  color: #ffffff !important;
+}
+
+  /* === 🍬 BUBBLEGUM THEME === */
+  body.theme-bubblegum {
+    background: linear-gradient(to bottom right, #fff0f6, #f0f8ff);
+    color: #444;
+    font-family: "Poppins", sans-serif;
+  }
+  body.theme-bubblegum h1 { color: #e38ab2; }
+  body.theme-bubblegum a { color: #f497b6; font-weight: 600; }
+  body.theme-bubblegum a:hover { color: #a8d8ea; }
+  
+  body.theme-bubblegum a.buy-now-btn { background: #f497b6; color: #fff; }
+  body.theme-bubblegum .purchased-btn { background: #a8d8ea; color: #fff; }
+  
+  body.theme-bubblegum button,
+  body.theme-bubblegum a.buy-now-btn {
+    background: linear-gradient(to right, #f497b6, #a8d8ea);
+    color: #fff;
+    border-radius: 8px;
+  }
+  body.theme-bubblegum button:hover { background: linear-gradient(to right, #f78ca0, #99ccee); }
+  body.theme-bubblegum .remove-btn { background: #f497b6; }
+  body.theme-bubblegum #addItemBtn,
+  body.theme-bubblegum #shareList { background: #f497b6; }
+  
+  body.theme-bubblegum input, body.theme-bubblegum select {
+    border: 1px solid #e38ab2;
+    background: #fffafd;
+  }
+  
+  /* === 🌸 PASTEL THEME (Cute soft aesthetic + full button coverage) === */
+  body.theme-pastel {
+    background: linear-gradient(to bottom right, #FFF8F5, #FFF4F2);
+    color: #594f4f;
+    font-family: "Fredoka", "Baloo 2", "Quicksand", cursive;
+  }
+  
+  /* Make the cute font apply to everything within the theme */
+  body.theme-pastel * {
+    font-family: "Fredoka", "Baloo 2", "Quicksand", cursive !important;
+    letter-spacing: 0.3px;
+  }
+  
+  /* Headings & links */
+  body.theme-pastel h1 {
+    color: #e49c9c;
+    font-weight: 600;
+  }
+  body.theme-pastel a {
+    color: #e49c9c;
+    font-weight: 600;
+  }
+  body.theme-pastel a:hover { color: #d28686; }
+  
+  /* Buttons on list items */
+  body.theme-pastel a.buy-now-btn {
+    background: #e49c9c !important;
+    color: #ffffff !important;
+    border-radius: 14px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+    transition: background-color 0.25s ease;
+  }
+  body.theme-pastel a.buy-now-btn:hover { background: #d28686 !important; }
+  
+  body.theme-pastel .purchased-btn {
+    background: #c8ded9 !important;
+    color: #3c3c3c !important;
+    border-radius: 14px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+  }
+  body.theme-pastel .purchased-btn:hover { background: #b4d0c8 !important; }
+  
+  body.theme-pastel .remove-btn {
+    background: #f4c9c9 !important;
+    color: #594f4f !important;
+    border-radius: 14px !important;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+  }
+  body.theme-pastel .remove-btn:hover { background: #eeb8b8 !important; }
+  
+  body.theme-pastel .edit-btn {
+    background: #d8a8e3 !important;
+    color: #ffffff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+  }
+  body.theme-pastel .edit-btn:hover { background: #c78fd4 !important; }
+  
+  /* Global buttons within pastel sections */
+  body.theme-pastel #addItemBtn,
+  body.theme-pastel #shareList,
+  body.theme-pastel .menu-buttons button,
+  body.theme-pastel nav button,
+  body.theme-pastel .input-container button {
+    background: #e49c9c !important;
+    color: #ffffff !important;
+    border-radius: 14px !important;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.06);
+    border: none !important;
+    transition: filter 0.2s ease;
+  }
+  body.theme-pastel #addItemBtn:hover,
+  body.theme-pastel #shareList:hover,
+  body.theme-pastel .menu-buttons button:hover,
+  body.theme-pastel nav button:hover,
+  body.theme-pastel .input-container button:hover {
+    filter: brightness(0.96);
+  }
+  
+  /* Inputs */
+  body.theme-pastel input,
+  body.theme-pastel select {
+    border: 2px solid #f4c9c9;
+    background: #ffffff;
+    color: #594f4f;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(234, 176, 212, 0.15);
+  }
+  body.theme-pastel input::placeholder { color: #d9a4a4; }
+  
+  /* Purchased item styling */
+  body.theme-pastel li.wishlist-item.purchased {
+    background: #fef7f5;
+    color: #594f4f;
+    border-left: 6px solid #c8ded9;
+  }
+  body.theme-pastel li.wishlist-item.purchased button {
+    background: #c8ded9 !important;
+    color: #3c3c3c !important;
+  }
+  
+  /* Toast & spinner */
+  body.theme-pastel .toast {
+    background: #e49c9c !important;
+    color: #ffffff !important;
+    font-weight: 600;
+  }
+  body.theme-pastel .spinner { border-top-color: #e49c9c !important; }
+  
+  /* Dropdown */
+  body.theme-pastel select {
+    border: 2px solid #f4c9c9;
+    background-color: #ffffff;
+    color: #594f4f;
+    box-shadow: 0 2px 4px rgba(242,191,215,0.2);
+  }
+  body.theme-pastel select:hover,
+  body.theme-pastel select:active {
+    background-color: #fff8f7;
+    box-shadow: 0 0 6px rgba(242, 191, 215, 0.4);
+    border-color: #e49c9c;
+  
+  }
+  body.theme-pastel::before {
+    top: -80px;
+    left: -80px;
+    transform: rotate(15deg);
+  }
+  body.theme-pastel::after {
+    bottom: -80px;
+    right: -80px;
+    transform: rotate(-20deg);
+  }
+  
+  body.theme-pastel {
+    background: url('assets/pastel-bg.svg') no-repeat center center fixed;
+    background-size: cover;
+    background-color: #fff8f6;
+  }
+  
+/* ===========================
+   🍼 Baby Shower Theme
+   =========================== */
+
+
+/* ===========================
+   🍼 Baby Shower Theme Background
+   =========================== */
+.theme-babyshower {
+  background-color: #ffffff;                       /* white base */
+  background-image: url('./assets/babyshower-stars.png'); /* your star image file */
+  background-repeat: repeat;                       /* tile the image */
+  background-size: auto;                           /* keep original size (best for patterns) */
+  background-position: center top;                 /* start from top center */
+  background-attachment: fixed;                    /* stays fixed while scrolling */
+}
+
+/* ===========================
+   Title
+   =========================== */
+.theme-babyshower #wishlistTitle {
+  display: block;
+  margin: 0 auto 20px;
+  text-align: center;
+  font-size: 2.2rem;
+  letter-spacing: 1px;
+  text-transform: none;
+  color: #4a4a4a;
+  padding-bottom: 10px;
+  border-bottom: 3px dotted #A7D8F2; /* baby blue accent line */
+}
+
+/* ===========================
+   Global Font
+   =========================== */
+.theme-babyshower,
+.theme-babyshower * {
+  font-family: 'Patrick hand', sans-serif !important;
+}
+
+/* ===========================
+   Product Links
+   =========================== */
+.theme-babyshower .item-info a {
+  color: #A7D8F2; /* baby blue */
+  text-decoration: none;
+}
+.theme-babyshower .item-info a:hover {
+  color: #F7C8D0; /* baby pink */
+  text-decoration: underline;
+}
+
+/* ===========================
+   Buttons
+   =========================== */
+
+/* Generic Button Style */
+.theme-babyshower button,
+.theme-babyshower .blue-btn {
+  background-color: #A7D8F2;
+  color: #ffffff;
+  border: 2px solid #8cc8e9;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.theme-babyshower button:hover,
+.theme-babyshower .blue-btn:hover {
+  background-color: #8cc8e9;
+  color: #fff;
+}
+
+/* Pink Button Variant */
+.theme-babyshower .pink-btn,
+.theme-babyshower #addItemBtn { /* 👈 Add Items button now pink */
+  background-color: #F7C8D0;
+  color: #ffffff;
+  border: 2px solid #f2aebb;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.theme-babyshower .pink-btn:hover,
+.theme-babyshower #addItemBtn:hover {
+  background-color: #f2aebb;
+  color: #fff;
+}
+
+/* ===========================
+   Buy Now Button
+   =========================== */
+.theme-babyshower a.buy-now-btn {
+  background-color: #A7D8F2;
+  color: #000;
+  border: 2px solid #8cc8e9;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: center;
+  display: inline-block;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.theme-babyshower a.buy-now-btn:hover {
+  background-color: #8cc8e9;
+  color: #fff;
+}
+
+/* ===========================
+   Share List Button
+   =========================== */
+.theme-babyshower #shareList {
+  background-color: #F7C8D0;
+  color: #000;
+  border: 2px solid #f2aebb;
+  border-radius: 20px;
+}
+.theme-babyshower #shareList:hover {
+  background-color: #f2aebb;
+  color: #ffffff;
+}
+
+/* ===========================
+   Edit and Remove Buttons
+   =========================== */
+
+/* Edit (blue) */
+.theme-babyshower .edit-btn {
+  background-color: #A7D8F2;
+  color: #ffffff;
+  border: 2px solid #8cc8e9;
+  white-space: nowrap;
+}
+.theme-babyshower .edit-btn:hover {
+  background-color: #8cc8e9;
+  color: #fff;
+}
+
+/* Remove (pink) */
+.theme-babyshower .remove-btn {
+  background-color: #F7C8D0;
+  color: #ffffff;
+  border: 2px solid #f2aebb;
+  white-space: nowrap;
+}
+.theme-babyshower .remove-btn:hover {
+  background-color: #f2aebb;
+  color: #fff;
+}
+
+/* ===========================
+   I've Purchased Button (Updated shape only)
+   =========================== */
+.theme-babyshower .purchased-btn {
+  background-color: #F7C8D0;
+  color: #ffffff;
+  border: 2px dashed #F7C8D0;
+  border-radius: 8px; /* 👈 changed from 20px to match other buttons */
+  padding: 10px 20px;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.theme-babyshower .purchased-btn:hover {
+  background-color: #f2aebb;
+  color: #ffffff;
+}
+.theme-babyshower .wishlist-item.purchased .purchased-btn {
+  background-color: #ffffff;
+  color: #F7C8D0;
+  border: 2px dashed #F7C8D0;
+  border-radius: 8px; /* 👈 ensure shape stays consistent after clicked */
+}
+
+
+/* ===========================
+   Inputs
+   =========================== */
+.theme-babyshower input[type="text"],
+.theme-babyshower select {
+  background-color: #ffffffd8;
+  border: 2px solid #F7C8D0; /* 👈 pink instead of blue */
+  color: #4a4a4a;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 15px;
+}
+.theme-babyshower input[type="text"]:focus,
+.theme-babyshower select:focus {
+  outline: none;
+  border-color: #F7C8D0;
+  box-shadow: 0 0 6px rgba(247, 200, 208, 0.6);
+}
+
+/* ===========================
+   Wishlist Items
+   =========================== */
+.theme-babyshower .wishlist-item {
+  background-color: #ffffffcc;
+  border: 2px dashed #A7D8F2;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  padding: 15px;
+  border-radius: 20px;
+  transition: box-shadow 0.25s ease, background-color 0.25s ease;
+}
+.theme-babyshower .wishlist-item:hover {
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+.theme-babyshower .wishlist-item.purchased {
+  background-color: #ffe6ef; /* 👈 pink background when purchased */
+}
+
+/* ===========================
+   Links
+   =========================== */
+.theme-babyshower a {
+  color: #4a4a4a;
+  text-decoration: none;
+}
+.theme-babyshower a:hover {
+  color: #F7C8D0;
+}
+
+/* ===========================
+   Decorative Accent
+   =========================== */
+.theme-babyshower #theme-decorations::before {
+  content: "";
+  display: block;
+  width: 80%;
+  max-width: 400px;
+  height: 2px;
+  margin: 0 auto 20px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    #A7D8F2,
+    #F7C8D0,
+    transparent
+  );
+  border-radius: 10px;
+}
+/* ===========================
+   Toast Overrides Per Theme
+   =========================== */
+
+/* 🍼 Baby Shower */
+body.theme-babyshower .toast {
+  background-color: #F7C8D0 !important;
+  color: #ffffff !important;
+  border: 2px dashed #F7C8D0 !important;
+  font-family: 'Bubblegum Sans', cursive;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* 🎄 Christmas */
+body.theme-christmas .toast {
+  background-color: #d62d20 !important;
+  color: #ffffff !important;
+  border: 2px solid #b71c1c !important;
+  font-family: 'Cinzel Decorative', serif;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* 🌸 Pastel */
+body.theme-pastel .toast {
+  background-color: #f8d7e3 !important;
+  color: #4a4a4a !important;
+  border: 2px solid #f3c0d2 !important;
+  font-family: 'Quicksand', sans-serif;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* 🕊 Elegant */
+body.theme-elegant .toast {
+  background-color: #444 !important;
+  color: #ffffff !important;
+  border: 2px solid #222 !important;
+  font-family: 'Playfair Display', serif;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+/* === Force select to match input fields on mobile === */
+select {
+  -webkit-appearance: menulist;    /* Remove default iOS/Android arrow & style */
+  -moz-appearance: menulist;
+  appearance: menulist;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 15px;
+  border: 2px solid currentColor;
+  background-color: #ffffffd8;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Optional: add a custom arrow icon */
+select::-ms-expand {
+  display: none;
+}
+/* ==== Inline Modal (theme-aware) ==== */
+.wl-modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,.45);
+  display: none; align-items: center; justify-content: center; z-index: 9999;
+}
+.wl-modal {
+  max-width: 520px; width: calc(100% - 40px);
+  background: #fff; color: #222; border-radius: 14px; padding: 22px 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25); text-align: center;
+}
+.wl-modal h3 { margin: 0 0 10px; font-size: 1.15rem; }
+.wl-modal p { margin: 8px 0 18px; line-height: 1.4; }
+.wl-modal .wl-actions { display: flex; gap: 10px; justify-content: center; }
+.wl-btn {
+  border: 0; border-radius: 10px; padding: 10px 14px; cursor: pointer;
+}
+.wl-btn-primary { background: #0d6efd; color: #fff; }
+.wl-btn-ghost { background: #f1f3f5; color: #111; }
+
+/* Theme accents */
+body.theme-christmas .wl-modal      { border: 2px solid #c49a00; }
+body.theme-pastel .wl-modal         { border: 2px solid #b497d6; }
+body.theme-bubblegum .wl-modal      { border: 2px solid #ff5fbf; }
+body.theme-elegant .wl-modal        { border: 1px solid #e6e6e6; }
+body.theme-babyshower .wl-modal     { border: 2px solid #7ec8ff; }
+
+/* Show */
+.wl-modal-backdrop.is-open { display: flex; }
+/* Centered toast */
+#toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 10px;
+  font-size: 16px;
+  text-align: center;
+  max-width: 300px;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+#toast.show {
+  opacity: 1;
+}
+/* === Toast positioning override === */
+#toast, .toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+#toast.show, .toast.show {
+  opacity: 1;
+}
+/* 🌸 Pastel Theme — Form Stack Buttons */
+body.theme-pastel .form-stack button {
+  background: #e49c9c !important;
+  color: #ffffff !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.06);
+  border: none !important;
+  transition: filter 0.2s ease;
+}
+body.theme-pastel .form-stack button:hover {
+  filter: brightness(0.96);
+}
+
+/* 🎄 Christmas Theme — Form Stack Buttons */
+body.theme-christmas .form-stack button {
+  background: linear-gradient(to bottom, #c62828, #8b0000);
+  border: 2px solid #2e7d32;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+body.theme-christmas .form-stack button:hover {
+  background: linear-gradient(to bottom, #b71c1c, #6a0000);
+}
+
+/* 🕊 Elegant Theme — Form Stack Buttons */
+body.theme-elegant .form-stack button {
+  background-color: #D4AF37;
+  color: #ffffff;
+  border: 1.5px solid #c0c0c0;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 15px;
+  transition: all 0.25s ease;
+}
+body.theme-elegant .form-stack button:hover {
+  background-color: #BFA030;
+  color: #fff;
+}
+
+/* 🍬 Bubblegum Theme — Form Stack Buttons */
+body.theme-bubblegum .form-stack button {
+  background: linear-gradient(to right, #f497b6, #a8d8ea);
+  color: #fff;
+  border-radius: 8px;
+}
+body.theme-bubblegum .form-stack button:hover {
+  background: linear-gradient(to right, #f78ca0, #99ccee);
+}
+
+/* 🍼 Baby Shower Theme — Form Stack Buttons */
+body.theme-babyshower .form-stack button {
+  background-color: #A7D8F2;
+  color: #ffffff;
+  border: 2px solid #8cc8e9;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+body.theme-babyshower .form-stack button:hover {
+  background-color: #8cc8e9;
+}
+/* ==========================================================
+   🌊 MODERN NEUTRAL DEFAULT THEME — Full Replacement
+   ========================================================== */
+
+/* === Global Base === */
+body:not([class*="theme-"]) {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background: linear-gradient(to bottom right, #f9fafc, #eef1f5);
+  color: #2c2c2c;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* === Logo === */
+body:not([class*="theme-"]) #logo-container {
+  text-align: center;
+  margin: 30px 0;
+}
+body:not([class*="theme-"]) #site-logo {
+  max-width: 280px;
+  width: 50%;
+  height: auto;
+}
+@media (max-width: 600px) {
+  body:not([class*="theme-"]) #site-logo {
+    max-width: 200px;
+    width: 70%;
+  }
+}
+
+/* === Titles === */
+body:not([class*="theme-"]) h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1f2d3d;
+  letter-spacing: 0.5px;
+}
+
+/* === Navigation === */
+body:not([class*="theme-"]) nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+body:not([class*="theme-"]) nav button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 6px;
+  transition: background 0.2s, transform 0.1s;
+  cursor: pointer;
+}
+body:not([class*="theme-"]) nav button:hover {
+  background: #1e4fc6;
+  transform: translateY(-2px);
+}
+
+/* === Input Section === */
+body:not([class*="theme-"]) .input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+body:not([class*="theme-"]) .input-container input[type="text"] {
+  flex: 1 1 60%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #d0d6e2;
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+body:not([class*="theme-"]) .input-container input[type="text"]:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
+}
+body:not([class*="theme-"]) .input-container button {
+  flex: 1 1 35%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #2563eb;
+  color: white;
+  transition: background-color 0.2s, transform 0.1s;
+}
+body:not([class*="theme-"]) .input-container button:hover {
+  background-color: #1e4fc6;
+  transform: translateY(-2px);
+}
+
+/* === Wishlist Items === */
+body:not([class*="theme-"]) ul#wishlistContainer {
+  list-style: none;
+  padding: 0;
+}
+body:not([class*="theme-"]) li.wishlist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  margin-bottom: 12px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.2s ease;
+  gap: 12px;
+  min-height: 100px;
+  opacity: 1;
+}
+body:not([class*="theme-"]) li.wishlist-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+body:not([class*="theme-"]) li.wishlist-item.removing {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+body:not([class*="theme-"]) li.wishlist-item .item-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 12px;
+}
+body:not([class*="theme-"]) li.wishlist-item img.product-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+body:not([class*="theme-"]) li.wishlist-item a {
+  flex: 1;
+  color: #2563eb;
+  text-decoration: none;
+  word-break: break-word;
+}
+body:not([class*="theme-"]) li.wishlist-item a:hover {
+  text-decoration: underline;
+}
+
+/* === Wishlist Item Buttons === */
+body:not([class*="theme-"]) li.wishlist-item .button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 130px;
+}
+body:not([class*="theme-"]) li.wishlist-item button,
+body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  min-height: 48px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color 0.2s, transform 0.1s ease;
+}
+
+/* Buy Now */
+body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
+  background-color: #2563eb;
+}
+body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn:hover {
+  background-color: #1e4fc6;
+  transform: translateY(-2px);
+}
+
+/* Edit */
+body:not([class*="theme-"]) li.wishlist-item button.edit-btn {
+  background-color: #3da5f4;
+}
+body:not([class*="theme-"]) li.wishlist-item button.edit-btn:hover {
+  background-color: #2b93e3;
+}
+
+/* Remove */
+body:not([class*="theme-"]) li.wishlist-item button.remove-btn {
+  background-color: #6c757d;
+}
+body:not([class*="theme-"]) li.wishlist-item button.remove-btn:hover {
+  background-color: #555b61;
+}
+
+/* Purchased */
+body:not([class*="theme-"]) li.wishlist-item button.purchased-btn {
+  background-color: #9ea4aa;
+}
+body:not([class*="theme-"]) li.wishlist-item button.purchased-btn:hover {
+  background-color: #7f8489;
+}
+
+/* Purchased State */
+body:not([class*="theme-"]) li.wishlist-item.purchased {
+  background-color: #f0f4fa;
+  color: #2c2c2c;
+  border-left: 6px solid #2563eb;
+}
+body:not([class*="theme-"]) li.wishlist-item.purchased .purchased-btn {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+/* === Share Button & Message === */
+body:not([class*="theme-"]) #shareList {
+  margin-top: 20px;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #2563eb;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+body:not([class*="theme-"]) #shareList:hover {
+  background-color: #1e4fc6;
+}
+body:not([class*="theme-"]) #shareMessage {
+  margin-top: 12px;
+  font-weight: bold;
+  color: #2563eb;
+  word-break: break-word;
+}
+
+/* === Empty State === */
+body:not([class*="theme-"]) #emptyMessage {
   text-align: center;
   color: #555;
   font-style: italic;
   margin-top: 15px;
 }
 
-.loading {
+/* === Loading Spinner === */
+body:not([class*="theme-"]) .loading {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -262,11 +1647,11 @@ li.wishlist-item a.buy-now-btn:hover {
   color: #555;
   margin: 12px 0 16px;
 }
-.spinner {
-  width: 18px;
-  height: 18px;
+body:not([class*="theme-"]) .spinner {
+  width: 20px;
+  height: 20px;
   border: 3px solid #ddd;
-  border-top-color: #28a745;
+  border-top-color: #2563eb;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -274,13 +1659,13 @@ li.wishlist-item a.buy-now-btn:hover {
   to { transform: rotate(360deg); }
 }
 
-/* ===== Toast Notification ===== */
-.toast {
+/* === Toast === */
+body:not([class*="theme-"]) .toast {
   position: fixed;
-  bottom: 20px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  background-color: #28a745;
+  transform: translate(-50%, -50%);
+  background-color: #2563eb;
   color: white;
   padding: 12px 20px;
   border-radius: 8px;
@@ -289,111 +1674,196 @@ li.wishlist-item a.buy-now-btn:hover {
   z-index: 1000;
   animation: fadeInOut 3s forwards;
 }
-
 @keyframes fadeInOut {
-  0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
-  10% { opacity: 1; transform: translateX(-50%) translateY(0); }
-  90% { opacity: 1; transform: translateX(-50%) translateY(0); }
-  100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  0% { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
+  10%, 90% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
 }
 
-/* ===== Responsive ===== */
+/* === Forms & Menus === */
+body:not([class*="theme-"]) .menu-buttons button,
+body:not([class*="theme-"]) .form-stack button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  transition: background-color 0.2s, transform 0.1s;
+}
+body:not([class*="theme-"]) .menu-buttons button:hover,
+body:not([class*="theme-"]) .form-stack button:hover {
+  background-color: #1e4fc6;
+  transform: translateY(-2px);
+}
+body:not([class*="theme-"]) .form-stack input[type="text"],
+body:not([class*="theme-"]) .form-stack input[type="password"],
+body:not([class*="theme-"]) .form-stack input[type="email"],
+body:not([class*="theme-"]) .form-stack select {
+  background-color: #ffffff;
+  border: 2px solid #d0d6e2;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+body:not([class*="theme-"]) .form-stack input:focus,
+body:not([class*="theme-"]) .form-stack select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
+}
+body:not([class*="theme-"]) .error-text {
+  color: #c0392b;
+  text-align: center;
+}
+
+/* === Responsive === */
 @media (max-width: 600px) {
-  .input-container {
+  body:not([class*="theme-"]) .input-container {
     flex-direction: column;
   }
-
-  .input-container input,
-  .input-container button {
+  body:not([class*="theme-"]) .input-container input,
+  body:not([class*="theme-"]) .input-container button {
     flex: 1 1 100%;
   }
-
-  li.wishlist-item {
+  body:not([class*="theme-"]) li.wishlist-item {
     flex-direction: column;
     align-items: flex-start;
   }
-
-  li.wishlist-item .item-info {
-    margin-bottom: 8px;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  li.wishlist-item img.product-image {
-    margin-bottom: 0;
-    margin-right: 12px;
-  }
-
-  li.wishlist-item .button-group {
-    flex-direction: row;
-    justify-content: center;
+  body:not([class*="theme-"]) li.wishlist-item .button-group {
     width: 100%;
+    gap: 8px;
   }
-
-  li.wishlist-item .button-group > * + * {
-    margin-top: 0;
-  }
-
-  li.wishlist-item button,
-  li.wishlist-item a.buy-now-btn {
-    width: 48%;
-    margin: 0;
+  body:not([class*="theme-"]) li.wishlist-item button,
+  body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
+    width: 100%;
+    height: 44px;
+    font-size: 15px;
   }
 }
+/* ==============================
+   LOGO STYLING + GLOW EFFECT
+   ============================== */
+#siteLogo {
+  display: block;
+  margin: 0 auto;
+  width: 220px; /* adjust if needed */
+  height: 140px; /* adjust if needed */
+  background-color: var(--themeColor);
+  -webkit-mask: url("assets/logo.svg") no-repeat center / contain;
+  mask: url("assets/logo.svg") no-repeat center / contain;
+  filter: drop-shadow(0 0 12px var(--logoGlow));
+}
 
-/* ===== Additions for home/create/view pages ===== */
-.page-section {
+/* ==============================
+   THEME COLORS & GLOW
+   ============================== */
+body:not([class*="theme-"]) {
+  --themeColor: #2563EB;
+  --logoGlow: rgba(37, 99, 235, 0.5);
+}
+
+body.theme-christmas {
+  --themeColor: #FFFFFF;
+  --logoGlow: rgba(117, 110, 110, 0.8);
+}
+
+body.theme-elegant {
+  --themeColor: #2C2C2C; /* dark contrast color */
+  --logoGlow: rgba(232, 201, 122, 0.6); /* soft gold glow */
+}
+
+body.theme-bubblegum {
+  --themeColor: #8DE2E2;
+  --logoGlow: rgba(141, 226, 226, 0.6);
+}
+
+body.theme-pastel {
+  --themeColor: #A3E6E6;
+  --logoGlow: rgba(163, 230, 230, 0.6);
+}
+
+body.theme-babyshower {
+  --themeColor: #A7D8F2;
+  --logoGlow: rgba(167, 216, 242, 0.6);
+}
+
+.affiliate-footer {
   text-align: center;
-  margin-top: 40px;
+  font-size: 0.8rem;
+  padding: 15px 10px;
+  margin-top: 30px;
+  color: #555;
+  opacity: 0.85;
 }
 
-.menu-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  max-width: 280px;
-  margin: 0 auto;
+.footer-logo-container {
+  margin-bottom: 8px;
 }
 
-.menu-buttons button {
-  padding: 12px;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
-  background-color: #007bff;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color .2s;
+.footer-logo {
+  height: 125px;          /* adjust this size as you like */
+  width: auto;
+  opacity: 0.9;
 }
-.menu-buttons button:hover { background-color: #0056b3; }
-
-.form-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 320px;
-  margin: 0 auto;
+/* ============================
+   The bubble
+   ============================ */
+.affiliate-bubble {
+  display: inline-block;
+  max-width: 90%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-.form-stack input[type="text"],
-.form-stack input[type="password"] {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 6px;
+/* ============================
+   Theme-specific colors
+   ============================ */
+
+/* Default (no theme) */
+body:not([class*="theme-"]) .affiliate-bubble {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #333;
   border: 1px solid #ccc;
-  text-align: center;
 }
 
-.form-stack button {
-  padding: 12px;
-  font-size: 16px;
-  border: none;
-  border-radius: 6px;
-  background-color: #28a745;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color .2s;
+/* 🎄 Christmas */
+body.theme-christmas .affiliate-bubble {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #b71c1c;
+  border: 1px solid #2e7d32;
 }
-.form-stack button:hover { background-color: #1e7e34; }
 
-.error-text { color: #c0392b; text-align: center; }
+/* ✨ Elegant */
+body.theme-elegant .affiliate-bubble {
+  background-color: rgba(255, 255, 255, 0.88);
+  color: #000;
+  border: 1px solid #D4AF37;
+}
+
+/* 🍬 Bubblegum */
+body.theme-bubblegum .affiliate-bubble {
+  background-color: rgba(255, 255, 255, 0.88);
+  color: #e84a9e;
+  border: 1px solid #e84a9e;
+}
+
+/* 🌸 Pastel */
+body.theme-pastel .affiliate-bubble {
+  background-color: rgba(255, 255, 255, 0.88);
+  color: #333;
+  border: 1px solid #f0b6c1;
+}
+
+/* 🍼 Baby Shower */
+body.theme-babyshower .affiliate-bubble {
+  background-color: rgba(255, 255, 255, 0.88);
+  color: #4682B4; /* a soft baby blue */
+  border: 1px solid #87CEFA;
+}

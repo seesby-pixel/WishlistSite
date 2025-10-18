@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Wishlist</title>
+  <script async src="https://z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
 
   <!-- SEO -->
   <meta name="description" content="Your wishlist — add items and share with friends.">
@@ -12,10 +14,17 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="">
   <meta property="og:image" content="">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@500;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+</style>
+
 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 🎨 Theme decorations placeholder -->
+    <div id="theme-decorations"></div>
   <h1 id="wishlistTitle">My Wishlist</h1>
 
   <nav>
@@ -24,6 +33,18 @@
   </nav>
 
   <section id="myListPage">
+    <!-- NEW: Theme selector (owner only) -->
+    <div id="themeRow" class="input-container" style="display:none;">
+      <label for="themeSelect" style="align-self:center;">Theme:</label>
+      <select id="themeSelect">
+        <option value="default">Default Theme</option>
+        <option value="christmas">Christmas 🎄</option>
+        <option value="elegant">Elegant 💍</option>
+        <option value="pastel">Pastel 🌸</option>
+        <option value="babyshower">Baby Shower 🍼</option>
+      </select>
+    </div>
+
     <!-- Title edit (owner only) -->
     <div id="titleEditRow" class="input-container" style="display:none;">
       <input type="text" id="titleEditInput" placeholder="Wishlist Name" maxlength="80">
@@ -82,10 +103,15 @@
     const shareBtn = document.getElementById("shareList");
     const loadingState = document.getElementById("loadingState");
 
+    // NEW: theme controls
+    const themeRow = document.getElementById("themeRow");
+    const themeSelect = document.getElementById("themeSelect");
+
     let wishlistItems = [];
     let activeCode = null;
     let ownerMode = false;
     let listTitle = "My Wishlist";
+    let activeTheme = "default";
 
     backBtn.addEventListener("click", () => history.back());
     homeBtn.addEventListener("click", () => {
@@ -102,15 +128,78 @@
       setTimeout(() => toast.remove(), 3000);
     }
 
-    function getASIN(url) {
+    // ✅ Fast ASIN image builder
+    function extractASIN(url) {
       const match = url.match(/\/([A-Z0-9]{10})(?:[/?]|$)/i);
       return match ? match[1] : null;
     }
 
-    function getAmazonImageURL(url) {
-      const asin = getASIN(url);
-      if (!asin) return "https://via.placeholder.com/100";
-      return `https://images-na.ssl-images-amazon.com/images/P/${asin}.jpg`;
+    function buildAmazonImageURL(url) {
+      const asin = extractASIN(url);
+      return asin
+        ? `https://images-na.ssl-images-amazon.com/images/P/${asin}.jpg`
+        : "https://via.placeholder.com/100";
+    }
+
+    // ✅ Background fallback to upgrade images for tricky long URLs (non-blocking)
+    async function fetchAmazonImageFallback(url) {
+      try {
+        const asin = extractASIN(url);
+        const normalized = asin ? `https://www.amazon.ca/dp/${asin}` : url;
+        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(normalized)}`;
+        const resp = await fetch(proxyUrl);
+        const data = await resp.json();
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data.contents, "text/html");
+
+        // Try common <img> spots
+        const imgEl = doc.querySelector("#imgTagWrapperId img, #landingImage, img[data-old-hires]");
+        let src = imgEl ? (imgEl.getAttribute("src") || imgEl.getAttribute("data-old-hires") || "") : "";
+
+        // data-a-dynamic-image JSON
+        if (!src) {
+          const landing = doc.querySelector("#landingImage");
+          const daiRaw = landing?.getAttribute("data-a-dynamic-image");
+          if (daiRaw) {
+            try {
+              const daiJson = JSON.parse(daiRaw.replace(/&quot;/g, '"'));
+              const keys = Object.keys(daiJson || {});
+              if (keys.length) src = keys[0];
+            } catch {}
+          }
+        }
+
+        // Inline hiRes/large image references
+        if (!src) {
+          const hiRes = data.contents.match(/"hiRes"\s*:\s*"(https:\/\/m\.media-amazon\.com\/images\/I\/[^"]+?\.jpg[^"]*)"/);
+          if (hiRes && hiRes[1]) src = hiRes[1];
+        }
+        if (!src) {
+          const large = data.contents.match(/"large"\s*:\s*"(https:\/\/m\.media-amazon\.com\/images\/I\/[^"]+?\.jpg[^"]*)"/);
+          if (large && large[1]) src = large[1];
+        }
+
+        // Any CDN jpg
+        if (!src) {
+          const anyCdn = data.contents.match(/https:\/\/m\.media-amazon\.com\/images\/I\/[A-Za-z0-9._%\-]+\.jpg[^"')]*/);
+          if (anyCdn && anyCdn[0]) src = anyCdn[0];
+        }
+
+        return src || "";
+      } catch {
+        return "";
+      }
+    }
+
+    async function backgroundEnhanceAmazonImage(url, index) {
+      const better = await fetchAmazonImageFallback(url);
+      if (!better) return;
+      if (!wishlistItems[index]) return;
+      if (wishlistItems[index].image === better) return;
+      wishlistItems[index].image = better;
+      renderWishlist(false);
+      try { await saveOwnerChanges(); } catch {}
     }
 
     function applyTitle() {
@@ -153,7 +242,8 @@
       wishlistItems.forEach((item, index) => {
         const li = document.createElement("li");
         li.className = "wishlist-item";
-        if (item.purchased) li.classList.add("purchased");
+
+        if (item.purchased && readOnly) li.classList.add("purchased");
 
         const infoDiv = document.createElement("div");
         infoDiv.className = "item-info";
@@ -162,6 +252,7 @@
         img.src = item.image;
         img.alt = item.name;
         img.className = "product-image";
+        img.loading = "lazy"; // ✅ lazy-load for speed
         img.onerror = () => { img.src = "https://via.placeholder.com/100"; };
         infoDiv.appendChild(img);
 
@@ -185,13 +276,10 @@
           buttonsDiv.appendChild(buyBtn);
 
           const purchasedBtn = document.createElement("button");
-
-          // 🔻 NEW: default text shows "Purchased!" when purchased; on hover shows "Undo"
           if (item.purchased) {
             purchasedBtn.textContent = "Purchased!";
-            purchasedBtn.className = "remove-btn"; // gray by default, red on hover (your CSS)
+            purchasedBtn.className = "remove-btn";
             purchasedBtn.addEventListener("mouseenter", () => {
-              // only swap label if still purchased
               if (wishlistItems[index]?.purchased) purchasedBtn.textContent = "Undo";
             });
             purchasedBtn.addEventListener("mouseleave", () => {
@@ -201,12 +289,11 @@
             purchasedBtn.textContent = "I've purchased";
             purchasedBtn.className = "purchased-btn";
           }
-
           purchasedBtn.onclick = async () => {
             wishlistItems[index].purchased = !wishlistItems[index].purchased;
-            renderWishlist(true); // rebuild button/labels/hover handlers
+            renderWishlist(true);
             try {
-              await saveOwnerChanges(); // persist so everyone sees the change
+              await saveOwnerChanges();
               showToast(wishlistItems[index].purchased ? "Marked as purchased." : "Marked as not purchased.");
             } catch (e) {
               showToast("Failed to update purchase state.", true);
@@ -290,11 +377,13 @@
         wishlistItems[index] = {
           name: newName,
           url: newURL,
-          image: getAmazonImageURL(newURL),
+          image: buildAmazonImageURL(newURL),
           purchased: !!item.purchased
         };
         renderWishlist(false);
         await saveOwnerChanges();
+        // ✅ Upgrade image in background
+        backgroundEnhanceAmazonImage(newURL, index);
       };
 
       const cancelBtn = document.createElement("button");
@@ -308,15 +397,27 @@
 
     addBtn.addEventListener("click", async () => {
       let name = nameInput.value.trim();
-      const url = urlInput.value.trim();
-      if (!url) { showToast("Please enter a valid Amazon URL.", true); return; }
-      const imageUrl = getAmazonImageURL(url);
-      if (!name) name = "Unknown Product";
+    let url = urlInput.value.trim();
+if (!url) { showToast("Please enter a valid Amazon URL.", true); return; }
+
+// Clean + attach affiliate tag before saving (uses script.js’s function)
+try {
+  url = await window.processAmazonLink(url);
+} catch (e) {
+  showToast(e.message || "Invalid Amazon URL.", true);
+  return;
+}
+
+const imageUrl = buildAmazonImageURL(url); // instant
+if (!name) name = "Unknown Product";
+
       wishlistItems.push({ name, url, image: imageUrl, purchased: false });
       renderWishlist(false);
+      // ✅ Upgrade image in background without blocking UX
+      backgroundEnhanceAmazonImage(url, wishlistItems.length - 1);
       nameInput.value = "";
       urlInput.value = "";
-      await saveOwnerChanges(); // autosave so shared link has ALL items
+      await saveOwnerChanges(); // keep your autosave behavior
     });
 
     titleSaveBtn.addEventListener("click", async () => {
@@ -334,30 +435,72 @@
     });
 
     shareBtn.addEventListener("click", async () => {
-      if (!activeCode) return;
+  if (!activeCode) {
+    if (typeof showToast === "function") showToast("No list code to share.", true);
+    return;
+  }
+
+  // Build URL that works under subfolders too
+  const base = location.pathname.replace(/[^/]+$/, "");
+  const shareUrl = `${location.origin}${base}list.html?code=${encodeURIComponent(activeCode)}`;
+
+  let copied = false;
+  try {
+    await navigator.clipboard.writeText(shareUrl);
+    copied = true;
+  } catch {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = shareUrl;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      copied = true;
+    } catch {}
+  }
+  if (typeof showToast === "function") showToast(copied ? "Link copied!" : "Could not copy link", !copied);
+
+  try {
+    await saveDoc({
+      title: listTitle,
+      wishlist: wishlistItems,
+      updated: new Date().toISOString(),
+    });
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+
+    // THEME: apply/remove body class
+    function applyTheme(theme) {
+      document.body.classList.remove("theme-christmas","theme-elegant","theme-pastel","theme-babyshower");
+      if (theme && theme !== "default") document.body.classList.add(`theme-${theme}`);
+    }
+
+    themeSelect?.addEventListener("change", async () => {
+      const newTheme = themeSelect.value;
+      applyTheme(newTheme);
       try {
-        // Save first to guarantee latest data is in Firestore
-        await saveDoc({
-          title: listTitle,
-          wishlist: wishlistItems,
-          updated: new Date().toISOString()
-        });
-        const shareUrl = `${window.location.origin}/list.html?code=${encodeURIComponent(activeCode)}`;
-        await navigator.clipboard.writeText(shareUrl);
-        showToast("Link copied!");
+        await saveDoc({ theme: newTheme, updated: new Date().toISOString() });
+        showToast("Theme updated!");
       } catch (e) {
         console.error(e);
-        showToast("Could not copy link.", true);
+        showToast("Failed to update theme.", true);
       }
     });
 
     window.addEventListener("DOMContentLoaded", async () => {
       const params = new URLSearchParams(window.location.search);
       const codeParam = params.get("code");
-      const pinParam = params.get("pin");
       if (!codeParam) return;
 
-      activeCode = codeParam;
+      // Case-insensitive code
+      activeCode = (codeParam || "").toLowerCase();
       loadingState.style.display = "flex";
 
       try {
@@ -368,12 +511,41 @@
           return;
         }
         const initialData = initialSnap.data();
-        ownerMode = !!(pinParam && initialData.pin === pinParam);
 
+        // ✅ Authoritative, permanent rule:
+        // Owner ONLY if sessionStorage.currentOwner.code matches this code.
+        let currentOwner = null;
+        try { currentOwner = JSON.parse(sessionStorage.getItem('currentOwner') || 'null'); } catch(e){ currentOwner = null; }
+        ownerMode = !!(currentOwner && currentOwner.code && currentOwner.code === activeCode);
+
+        // UI based on owner mode
         addRow.style.display = ownerMode ? "flex" : "none";
         titleEditRow.style.display = "none";
+        themeRow.style.display = ownerMode ? "flex" : "none";
         if (!ownerMode) shareBtn.style.display = "none";
 
+        // Optional: Logout (clears only this-session ownership)
+        if (ownerMode && !document.querySelector(".logout-btn")) {
+  const logoutBtn = document.createElement("button");
+  logoutBtn.textContent = "Logout";
+  logoutBtn.className = "logout-btn";
+  Object.assign(logoutBtn.style, {
+    position: "fixed", top: "14px", right: "14px", zIndex: 1000,
+    background: "#495057", color: "#fff", border: "none",
+    padding: "8px 14px", borderRadius: "6px", cursor: "pointer",
+    boxShadow: "0 2px 6px rgba(0,0,0,.15)"
+  });
+  logoutBtn.addEventListener("click", () => {
+    const confirmLogout = confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      sessionStorage.removeItem('currentOwner');
+      window.location.href = "home.html";
+    }
+  });
+  document.body.appendChild(logoutBtn);
+}
+
+        // Live sync
         const ref = doc(db, "wishlists", activeCode);
         onSnapshot(ref, (snap) => {
           if (!snap.exists()) {
@@ -383,10 +555,15 @@
           }
           const data = snap.data();
           listTitle = data.title || "Wishlist";
+          const theme = data.theme || "default";
+          activeTheme = theme;
+          applyTheme(theme);
+          if (themeSelect) themeSelect.value = theme;
+
           wishlistItems = Array.isArray(data.wishlist) ? data.wishlist.map(it => ({
             name: it.name,
             url: it.url,
-            image: it.image || getAmazonImageURL(it.url || ""),
+            image: it.image || "https://via.placeholder.com/100",
             purchased: !!it.purchased
           })) : [];
 
@@ -404,6 +581,10 @@
         loadingState.style.display = "none";
       }
     });
+    
   </script>
+  
+<script type="module" src="script.js"></script>
+
 </body>
 </html>

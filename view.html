@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8" />
   <title>View a Wishlist</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <script async src="https://z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US"></script>
 
   <!-- SEO -->
-  <meta name="description" content="Enter a code to view someone's wishlist.">
+  <meta name="description" content="Enter a code and PIN to view someone's wishlist.">
   <meta property="og:title" content="View Wishlist">
-  <meta property="og:description" content="Enter a code to view someone's wishlist.">
+  <meta property="og:description" content="Enter a code and PIN to view someone's wishlist.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="">
   <meta property="og:image" content="">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweat...;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+</style>
+
 
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+    <!-- 🎨 Theme decorations placeholder -->
+    <div id="theme-decorations"></div>
+  <script>
+    /* Always force guest mode when using "View someone’s list" */
+    try{ localStorage.setItem('isOwner','false'); }catch(e){}
+  </script>
+
   <h1>View a Wishlist</h1>
 
   <nav>
@@ -26,6 +40,7 @@
   <section class="page-section">
     <div class="form-stack">
       <input id="codeInput" type="text" placeholder="Unique code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input id="pinInput" type="password" maxlength="6" placeholder="6-digit PIN (optional)" autocomplete="off" inputmode="numeric" pattern="[0-9]*" />
       <button id="viewBtn">Open</button>
       <div id="err" class="error-text" style="display:none;"></div>
     </div>
@@ -54,18 +69,23 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const codeEl = document.getElementById('codeInput');
-    const btn = document.getElementById('viewBtn');
-    const err = document.getElementById('err');
+    const codeEl  = document.getElementById('codeInput');
+    const pinEl   = document.getElementById('pinInput');
+    const btn     = document.getElementById('viewBtn');
+    const err     = document.getElementById('err');
 
     function showErr(m){ err.textContent = m; err.style.display = 'block'; }
     function clearErr(){ err.style.display = 'none'; err.textContent = ""; }
     function validCode(code){ return /^[A-Za-z0-9]{3,24}$/.test(code); }
+    function validPin(pin){ return pin === "" || /^[0-9]{6}$/.test(pin); }
 
     btn.addEventListener('click', async () => {
       clearErr();
-      const code = codeEl.value.trim();
+      const code  = codeEl.value.trim().toLowerCase();
+      const pin   = pinEl.value.trim();
+
       if (!validCode(code)) return showErr('Enter a valid code (3–24 letters/numbers).');
+      if (!validPin(pin)) return showErr('PIN must be exactly 6 digits or empty.');
 
       btn.disabled = true; btn.textContent = "Checking...";
       try {
@@ -75,7 +95,12 @@
           btn.disabled = false; btn.textContent = "Open";
           return;
         }
-        window.location.href = `list.html?code=${encodeURIComponent(code)}`;
+        // Force guest mode for view flow
+        localStorage.setItem("isOwner", "false");
+
+        const qs = pin ? `?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}` 
+                       : `?code=${encodeURIComponent(code)}`;
+        window.location.href = `list.html${qs}`;
       } catch (e) {
         console.error(e);
         showErr('Something went wrong. Please try again.');
@@ -83,5 +108,8 @@
       }
     });
   </script>
+<script type="module" src="script.js"></script>
+
+
 </body>
 </html>
