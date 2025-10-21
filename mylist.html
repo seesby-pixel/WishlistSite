@@ -36,7 +36,7 @@
       try{
         const co = JSON.parse(sessionStorage.getItem('currentOwner') || 'null');
         if (co && co.code && !location.search.includes('code=')) {
-          location.href = 'list.html?code=' + encodeURIComponent(co.code);
+          location.href = '/list?code=' + encodeURIComponent(co.code);
         }
       }catch(e){}
     })();
@@ -56,7 +56,7 @@
   <script>
     document.getElementById('homeBtn').addEventListener('click', () => {
       try { sessionStorage.setItem('cameFromInternal', '1'); } catch(e){}
-      location.href = 'home.html';
+      location.href = '/home';
     });
   </script>
 

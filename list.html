@@ -116,7 +116,7 @@
     backBtn.addEventListener("click", () => history.back());
     homeBtn.addEventListener("click", () => {
       try { sessionStorage.setItem('cameFromInternal','1'); } catch(e){}
-      window.location.href = "home.html";
+      window.location.href = "/home";
     });
 
     function showToast(message, isError = false) {
@@ -442,7 +442,7 @@ if (!name) name = "Unknown Product";
 
   // Build URL that works under subfolders too
   const base = location.pathname.replace(/[^/]+$/, "");
-  const shareUrl = `${location.origin}${base}list.html?code=${encodeURIComponent(activeCode)}`;
+  const shareUrl = `${location.origin}${base}/list?code=${encodeURIComponent(activeCode)}`;
 
   let copied = false;
   try {
@@ -539,7 +539,7 @@ if (!name) name = "Unknown Product";
     const confirmLogout = confirm("Are you sure you want to log out?");
     if (confirmLogout) {
       sessionStorage.removeItem('currentOwner');
-      window.location.href = "home.html";
+      window.location.href = "/home";
     }
   });
   document.body.appendChild(logoutBtn);

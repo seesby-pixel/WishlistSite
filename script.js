@@ -238,7 +238,7 @@ function showLogoutButton() {
       localStorage.removeItem("ownerCode");
       localStorage.removeItem("ownerEmail");
       sessionStorage.removeItem("currentOwner");
-      window.location.href = "home.html";
+      window.location.href = "/home";
     }
   });
 
@@ -576,7 +576,7 @@ if (shareBtn) {
         return;
       }
 
-      const u = new URL("list.html", window.location.href);
+      const u = new URL("/list", window.location.href);
       u.search = "";
       u.searchParams.set("code", codeToShare);
       const shareUrl = u.toString();
@@ -817,7 +817,7 @@ if (window.location.pathname.endsWith('friends.html')) {
       openBtn.textContent = 'View';
       openBtn.className = 'edit-btn';
       openBtn.onclick = () => {
-        let url = `list.html?code=${encodeURIComponent(f.code)}`;
+        let url = `/list?code=${encodeURIComponent(f.code)}`;
         if (f.pin) url += `&pin=${encodeURIComponent(f.pin)}`;
         location.href = url;
       };
