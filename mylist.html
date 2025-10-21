@@ -124,7 +124,7 @@
         } catch(e){}
 
         // Redirect WITHOUT pin in URL (pin does not confer ownership)
-        window.location.href = `list.html?code=${encodeURIComponent(code)}`;
+        window.location.href = `/list?code=${encodeURIComponent(code)}`;
       } catch (e) {
         console.error(e);
         showErr('Something went wrong. Please try again.');

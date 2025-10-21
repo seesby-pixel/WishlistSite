@@ -660,7 +660,7 @@ export async function createCodeDoc(db, code, pin) {
 export function redirectToList(code, pin = "") {
   const qs = pin ? `?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}`
                  : `?code=${encodeURIComponent(code)}`;
-  window.location.href = `list.html${qs}`;
+  window.location.href = `/list${qs}`;
 }
 
 /* ======================================================
@@ -859,7 +859,7 @@ if (window.location.pathname.endsWith('friends.html')) {
   }
 }
 // ==============================
-// 🦘 Inject Kangaroo Logo + Affiliate Bubble
+// 🦘 Kangaroo Footer + Always show Privacy on root or home
 // ==============================
 document.addEventListener('DOMContentLoaded', () => {
   const footer = document.createElement('footer');
@@ -875,18 +875,13 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
 
   document.body.appendChild(footer);
-});
-// ==============================
-// 📄 Append Privacy Policy link below footer (home only)
-// ==============================
-document.addEventListener('DOMContentLoaded', () => {
-  if (!/\/home\.html($|\?)/.test(location.pathname)) return;
 
-  const privacyLink = document.createElement('div');
-  privacyLink.className = 'footer-legal';
-  privacyLink.innerHTML = `
-    <a href="privacy.html">Privacy Policy</a>
-  `;
-
-  document.body.appendChild(privacyLink);
+  // ✅ Detect both https://wisharu.com and /home.html
+  const pathname = location.pathname;
+  if (pathname === '/' || /\/home\.html($|\?)/.test(pathname)) {
+    const privacyLink = document.createElement('div');
+    privacyLink.className = 'footer-legal';
+    privacyLink.innerHTML = `<a href="privacy.html">Privacy Policy</a>`;
+    footer.after(privacyLink);
+  }
 });

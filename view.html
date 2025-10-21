@@ -100,7 +100,7 @@
 
         const qs = pin ? `?code=${encodeURIComponent(code)}&pin=${encodeURIComponent(pin)}` 
                        : `?code=${encodeURIComponent(code)}`;
-        window.location.href = `list.html${qs}`;
+        window.location.href = `/list${qs}`;
       } catch (e) {
         console.error(e);
         showErr('Something went wrong. Please try again.');
