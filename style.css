@@ -1867,3 +1867,16 @@ body.theme-babyshower .affiliate-bubble {
   color: #4682B4; /* a soft baby blue */
   border: 1px solid #87CEFA;
 }
+/* ==========================
+   📄 Footer Legal Link
+========================== */
+.footer-legal {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.footer-legal a {
+  color: #555;
+  text-decoration: underline;
+}

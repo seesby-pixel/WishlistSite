@@ -562,32 +562,27 @@ function enforceAffiliateOnRenderedLinks() {
 }
 
 
-/* ======================================================
-   📤 Share list (owner only)
-========================================================= */
-/* ======================================================
-   📤 Share list (owner only) — FIXED
-========================================================= */
 if (shareBtn) {
   shareBtn.addEventListener("click", async () => {
     try {
-      const existingCode = localStorage.getItem("ownerCode");
-      if (!existingCode) {
+      // 🧭 Always prioritize the code from the current URL
+      const params = new URLSearchParams(window.location.search);
+      const codeFromUrl = params.get("code");
+
+      const codeToShare = codeFromUrl || localStorage.getItem("ownerCode");
+
+      if (!codeToShare) {
         showToast("No wishlist to share yet.");
         return;
       }
 
-      // Build a safe absolute link to the shared view
-      // Use list.html and ?code= to match your loader & friends flow
       const u = new URL("list.html", window.location.href);
       u.search = "";
-      u.searchParams.set("code", existingCode);
+      u.searchParams.set("code", codeToShare);
       const shareUrl = u.toString();
 
-      let copied = await copyToClipboard(shareUrl);
-      if (typeof showToast === "function") {
-        showToast(copied ? "Link copied!" : "Could not copy link");
-      }
+      const copied = await copyToClipboard(shareUrl);
+      showToast(copied ? "Link copied!" : "Could not copy link");
     } catch (e) {
       console.error(e);
     }
@@ -880,4 +875,18 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
 
   document.body.appendChild(footer);
+});
+// ==============================
+// 📄 Append Privacy Policy link below footer (home only)
+// ==============================
+document.addEventListener('DOMContentLoaded', () => {
+  if (!/\/home\.html($|\?)/.test(location.pathname)) return;
+
+  const privacyLink = document.createElement('div');
+  privacyLink.className = 'footer-legal';
+  privacyLink.innerHTML = `
+    <a href="privacy.html">Privacy Policy</a>
+  `;
+
+  document.body.appendChild(privacyLink);
 });
