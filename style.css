@@ -1880,3 +1880,38 @@ body.theme-babyshower .affiliate-bubble {
   color: #555;
   text-decoration: underline;
 }
+/* ===============================
+   🗑️ Delete Account Button Style
+   =============================== */
+.danger-btn {
+  background-color: #c0392b;
+  color: #fff;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 15px;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+.danger-btn:hover {
+  background-color: #a93226;
+}
+
+/* Theme overrides */
+body.theme-christmas .danger-btn {
+  background-color: #b71c1c;
+  border: 2px solid #8b0000;
+}
+body.theme-christmas .danger-btn:hover {
+  background-color: #8b0000;
+}
+
+body.theme-elegant .danger-btn {
+  background-color: #d9534f;
+  border: 1.5px solid #BFA030;
+}
+body.theme-elegant .danger-btn:hover {
+  background-color: #c9302c;
+}

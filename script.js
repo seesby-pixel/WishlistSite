@@ -885,3 +885,64 @@ document.addEventListener('DOMContentLoaded', () => {
     footer.after(privacyLink);
   }
 });
+// ===============================
+// 🗑️ Delete Account Functionality (Owner Only)
+// ===============================
+import { doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+
+// Only show the button if the user is the owner
+if (deleteAccountBtn) {
+  const isOwner = localStorage.getItem("isOwner") === "true";
+  if (!isOwner) {
+    deleteAccountBtn.style.display = "none";
+  } else {
+    deleteAccountBtn.addEventListener('click', async () => {
+      const confirmed = confirm("⚠️ Are you sure you want to permanently delete your account and wishlist? This cannot be undone.");
+      if (!confirmed) return;
+
+      try {
+        const code = localStorage.getItem("ownerCode");
+        if (!code) {
+          alert("No active account found.");
+          return;
+        }
+
+        const pin = prompt("Enter your 6-digit PIN to confirm deletion:");
+        if (!pin || !/^[0-9]{6}$/.test(pin)) {
+          alert("Invalid PIN.");
+          return;
+        }
+
+        const ref = doc(window.db, "wishlists", code);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+          alert("Account not found.");
+          return;
+        }
+
+        const data = snap.data();
+        if (data.pin !== pin) {
+          alert("Incorrect PIN.");
+          return;
+        }
+
+        await deleteDoc(ref);
+
+        // Clear local/session storage
+        localStorage.removeItem("isOwner");
+        localStorage.removeItem("ownerCode");
+        localStorage.removeItem("ownerEmail");
+        sessionStorage.removeItem("currentOwner");
+
+        alert("✅ Your account and wishlist have been permanently deleted.");
+        window.location.href = "/home";
+      } catch (e) {
+        console.error(e);
+        alert("❌ Failed to delete account. Please try again.");
+      }
+    });
+  }
+}
