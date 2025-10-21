@@ -1899,24 +1899,21 @@ body.theme-babyshower .affiliate-bubble {
   background-color: #a93226;
 }
 
-/* Theme overrides */
-body.theme-christmas .danger-btn {
-  background-color: #b71c1c;
-  border: 2px solid #8b0000;
-}
-body.theme-christmas .danger-btn:hover {
-  background-color: #8b0000;
+/* Align Share + Delete on the left and stack them */
+#shareList,
+#deleteAccountBtn {
+  display: inline-block;
+  float: left;      /* ignores parent text-align:center */
+  margin-left: 0;
 }
 
-body.theme-elegant .danger-btn {
-  background-color: #d9534f;
-  border: 1.5px solid #BFA030;
+#shareList {
+  margin-top: 20px; /* keep your existing spacing */
 }
-body.theme-elegant .danger-btn:hover {
-  background-color: #c9302c;
-}
+
 #deleteAccountBtn {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
+  margin-top: 8px;  /* small gap under Share */
+  clear: left;      /* forces it to sit directly beneath Share */
 }
+
+
