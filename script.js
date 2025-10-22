@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const isOwner = localStorage.getItem('isOwner') === 'true';
   // supports "/" and "/home" pretty URL
   const path = location.pathname.replace(/\/+$/, '');
-  const onHome = (path === '' || path === '/home');
+  const onHome = path.includes('home') || path === '';
 
   if (!isOwner || !onHome) return;
 
