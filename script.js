@@ -1,50 +1,5 @@
 import { collection, addDoc, doc, getDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-// Home-footer Delete Account (owner only)
-document.addEventListener('DOMContentLoaded', () => {
-const path = location.pathname.replace(/\/+$/, '');
-const onHome = path === '' || path === '/' || path === '/home';
-if (!onHome) return;
 
-
-  // Find the privacy footer (works for either id or class)
-  function tryInject() {
-    const footer = document.querySelector('.footer-legal, #privacy-footer');
-    if (!footer) return false;
-
-    // avoid dupes
-    if (footer.querySelector('#deleteAccountBtn')) return true;
-
-    // separator dot so it sits nicely beside the policy
-    const sep = document.createElement('span');
-    sep.className = 'footer-sep';
-    sep.textContent = ' • ';
-    footer.appendChild(sep);
-
-    // create the subtle footer action
-   // ✅ Create the subtle footer action as a link (matches Privacy Policy)
-const btn = document.createElement('a');
-btn.id = 'deleteAccountBtn';
-btn.className = 'footer-action';
-btn.href = '#';
-btn.textContent = 'Delete Account';
-footer.appendChild(btn);
-
-btn.addEventListener('click', (e) => {
-  e.preventDefault();
-  window.location.href = '/delete';
-});
-
-
-    return true;
-  }
-
-  // inject immediately if footer exists, otherwise wait for it (your policy is added by script)
-if (!tryInject()) {
-  const mo = new MutationObserver(() => { if (tryInject()) mo.disconnect(); });
-  // ✅ expanded to watch the entire document for late footer injection
-  mo.observe(document.body, { childList: true, subtree: true });
-}
-});
 
 // 🚀 Caching layer to avoid repeating expensive link processing
 const __urlFixCache = new Map();
