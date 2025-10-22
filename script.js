@@ -4,7 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!deleteAccountBtn) return;
 
   const isOwner = localStorage.getItem("isOwner") === "true";
-  if (!isOwner) {
+  const onBuilderPage = document.getElementById('itemURL') && document.getElementById('addItemBtn');
+
+  // Only show delete button if user is owner AND on builder page
+  if (!isOwner || !onBuilderPage) {
     deleteAccountBtn.style.display = "none";
     return;
   }
@@ -41,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       await deleteDoc(ref);
-
       localStorage.removeItem("isOwner");
       localStorage.removeItem("ownerCode");
       localStorage.removeItem("ownerEmail");
