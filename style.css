@@ -1880,22 +1880,21 @@ body.theme-babyshower .affiliate-bubble {
   opacity: 0.5;
 }
 
-.footer-legal #deleteAccountBtn,
-#privacy-footer #deleteAccountBtn {
+/* Footer Delete Account link to match Privacy Policy style */
+#deleteAccountBtn.footer-action {
   background: none;
   border: none;
-  color: #b71c1c;      /* matches your Christmas red text tone */
-  font-weight: 600;
+  color: inherit;
+  font-size: 14px;
+  font-weight: normal;
   text-decoration: underline;
   cursor: pointer;
   padding: 0;
-  font-size: 14px;
 }
 
-.footer-legal #deleteAccountBtn:hover,
-#privacy-footer #deleteAccountBtn:hover {
+#deleteAccountBtn.footer-action:hover {
   text-decoration: none;
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
 /* ==========================
