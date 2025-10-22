@@ -1,61 +1,65 @@
 import { collection, addDoc, doc, getDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 document.addEventListener('DOMContentLoaded', () => {
-  const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-  if (!deleteAccountBtn) return;
-
   const isOwner = localStorage.getItem("isOwner") === "true";
-  const onBuilderPage = document.getElementById('itemURL') && document.getElementById('addItemBtn');
+  const onHomePage = window.location.pathname === '/' || window.location.pathname === '/home';
 
-  // Only show delete button if user is owner AND on builder page
-  if (!isOwner || !onBuilderPage) {
-    deleteAccountBtn.style.display = "none";
-    return;
-  }
+  // If on home page and logged in as owner, inject delete button in the footer
+  if (isOwner && onHomePage) {
+    const footer = document.querySelector('.footer-legal') || document.querySelector('#privacy-footer');
+    if (footer) {
+      const deleteBtn = document.createElement('button');
+      deleteBtn.id = 'deleteAccountBtn';
+      deleteBtn.textContent = 'Delete Account';
+      deleteBtn.className = 'danger-btn';
 
-  deleteAccountBtn.addEventListener('click', async () => {
-    const confirmed = confirm("⚠️ Are you sure you want to permanently delete your account and wishlist? This cannot be undone.");
-    if (!confirmed) return;
+      footer.appendChild(deleteBtn);
 
-    try {
-      const code = localStorage.getItem("ownerCode");
-      if (!code) {
-        alert("No active account found.");
-        return;
-      }
+      deleteBtn.addEventListener('click', async () => {
+        const confirmed = confirm("⚠️ Are you sure you want to permanently delete your account and wishlist? This cannot be undone.");
+        if (!confirmed) return;
 
-      const pin = prompt("Enter your 6-digit PIN to confirm deletion:");
-      if (!pin || !/^[0-9]{6}$/.test(pin)) {
-        alert("Invalid PIN.");
-        return;
-      }
+        try {
+          const code = localStorage.getItem("ownerCode");
+          if (!code) {
+            alert("No active account found.");
+            return;
+          }
 
-      const ref = doc(window.db, "wishlists", code);
-      const snap = await getDoc(ref);
+          const pin = prompt("Enter your 6-digit PIN to confirm deletion:");
+          if (!pin || !/^[0-9]{6}$/.test(pin)) {
+            alert("Invalid PIN.");
+            return;
+          }
 
-      if (!snap.exists()) {
-        alert("Account not found.");
-        return;
-      }
+          const ref = doc(window.db, "wishlists", code);
+          const snap = await getDoc(ref);
 
-      const data = snap.data();
-      if (data.pin !== pin) {
-        alert("Incorrect PIN.");
-        return;
-      }
+          if (!snap.exists()) {
+            alert("Account not found.");
+            return;
+          }
 
-      await deleteDoc(ref);
-      localStorage.removeItem("isOwner");
-      localStorage.removeItem("ownerCode");
-      localStorage.removeItem("ownerEmail");
-      sessionStorage.removeItem("currentOwner");
+          const data = snap.data();
+          if (data.pin !== pin) {
+            alert("Incorrect PIN.");
+            return;
+          }
 
-      alert("✅ Your account and wishlist have been permanently deleted.");
-      window.location.href = "/home";
-    } catch (e) {
-      console.error(e);
-      alert("❌ Failed to delete account. Please try again.");
+          await deleteDoc(ref);
+          localStorage.removeItem("isOwner");
+          localStorage.removeItem("ownerCode");
+          localStorage.removeItem("ownerEmail");
+          sessionStorage.removeItem("currentOwner");
+
+          alert("✅ Your account and wishlist have been permanently deleted.");
+          window.location.href = "/home";
+        } catch (e) {
+          console.error(e);
+          alert("❌ Failed to delete account. Please try again.");
+        }
+      });
     }
-  });
+  }
 });
 
 // 🚀 Caching layer to avoid repeating expensive link processing

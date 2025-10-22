@@ -1880,43 +1880,19 @@ body.theme-babyshower .affiliate-bubble {
   color: #555;
   text-decoration: underline;
 }
-/* ===============================
-   🗑️ Delete Account Button Style
-   =============================== */
-.danger-btn {
+#deleteAccountBtn {
+  margin-left: 15px;
   background-color: #c0392b;
   color: #fff;
-  padding: 12px 20px;
-  font-size: 16px;
+  padding: 8px 14px;
+  font-size: 14px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  margin-top: 15px;
-  display: inline-block;
   transition: background-color 0.2s;
 }
-.danger-btn:hover {
+
+#deleteAccountBtn:hover {
   background-color: #a93226;
 }
-
-/* Align Share + Delete on the left and stack them */
-#shareList,
-#deleteAccountBtn {
-  float: left;
-  margin-left: 0;
-  position: relative;
-  z-index: 10;          /* makes sure they stay above decorations */
-  pointer-events: auto; /* ensures they remain clickable */
-}
-
-
-#shareList {
-  margin-top: 20px; /* keep your existing spacing */
-}
-
-#deleteAccountBtn {
-  margin-top: 8px;  /* small gap under Share */
-  clear: left;      /* forces it to sit directly beneath Share */
-}
-
 
