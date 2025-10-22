@@ -1,64 +1,74 @@
 import { collection, addDoc, doc, getDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+// Home-footer Delete Account (owner only)
 document.addEventListener('DOMContentLoaded', () => {
-  const isOwner = localStorage.getItem("isOwner") === "true";
-  const onHomePage = window.location.pathname === '/' || window.location.pathname === '/home';
+  const isOwner = localStorage.getItem('isOwner') === 'true';
+  // supports "/" and "/home" pretty URL
+  const path = location.pathname.replace(/\/+$/, '');
+  const onHome = (path === '' || path === '/home');
 
-  // If on home page and logged in as owner, inject delete button in the footer
-  if (isOwner && onHomePage) {
-    const footer = document.querySelector('.footer-legal') || document.querySelector('#privacy-footer');
-    if (footer) {
-      const deleteBtn = document.createElement('button');
-      deleteBtn.id = 'deleteAccountBtn';
-      deleteBtn.textContent = 'Delete Account';
-      deleteBtn.className = 'danger-btn';
+  if (!isOwner || !onHome) return;
 
-      footer.appendChild(deleteBtn);
+  // Find the privacy footer (works for either id or class)
+  function tryInject() {
+    const footer = document.querySelector('.footer-legal, #privacy-footer');
+    if (!footer) return false;
 
-      deleteBtn.addEventListener('click', async () => {
-        const confirmed = confirm("⚠️ Are you sure you want to permanently delete your account and wishlist? This cannot be undone.");
-        if (!confirmed) return;
+    // avoid dupes
+    if (footer.querySelector('#deleteAccountBtn')) return true;
 
-        try {
-          const code = localStorage.getItem("ownerCode");
-          if (!code) {
-            alert("No active account found.");
-            return;
-          }
+    // separator dot so it sits nicely beside the policy
+    const sep = document.createElement('span');
+    sep.className = 'footer-sep';
+    sep.textContent = ' • ';
+    footer.appendChild(sep);
 
-          const pin = prompt("Enter your 6-digit PIN to confirm deletion:");
-          if (!pin || !/^[0-9]{6}$/.test(pin)) {
-            alert("Invalid PIN.");
-            return;
-          }
+    // create the subtle footer action
+    const btn = document.createElement('button');
+    btn.id = 'deleteAccountBtn';
+    btn.className = 'footer-action';
+    btn.type = 'button';
+    btn.textContent = 'Delete Account';
+    footer.appendChild(btn);
 
-          const ref = doc(window.db, "wishlists", code);
-          const snap = await getDoc(ref);
+    // delete logic
+    btn.addEventListener('click', async () => {
+      if (!confirm('⚠️ Permanently delete your account and wishlist? This cannot be undone.')) return;
+      try {
+        const code = localStorage.getItem('ownerCode');
+        if (!code) { alert('No active account found.'); return; }
 
-          if (!snap.exists()) {
-            alert("Account not found.");
-            return;
-          }
+        const pin = prompt('Enter your 6-digit PIN to confirm deletion:');
+        if (!pin || !/^[0-9]{6}$/.test(pin)) { alert('Invalid PIN.'); return; }
 
-          const data = snap.data();
-          if (data.pin !== pin) {
-            alert("Incorrect PIN.");
-            return;
-          }
+        const ref = doc(window.db, 'wishlists', code);
+        const snap = await getDoc(ref);
+        if (!snap.exists()) { alert('Account not found.'); return; }
 
-          await deleteDoc(ref);
-          localStorage.removeItem("isOwner");
-          localStorage.removeItem("ownerCode");
-          localStorage.removeItem("ownerEmail");
-          sessionStorage.removeItem("currentOwner");
+        const data = snap.data();
+        if (data.pin !== pin) { alert('Incorrect PIN.'); return; }
 
-          alert("✅ Your account and wishlist have been permanently deleted.");
-          window.location.href = "/home";
-        } catch (e) {
-          console.error(e);
-          alert("❌ Failed to delete account. Please try again.");
-        }
-      });
-    }
+        await deleteDoc(ref);
+
+        localStorage.removeItem('isOwner');
+        localStorage.removeItem('ownerCode');
+        localStorage.removeItem('ownerEmail');
+        sessionStorage.removeItem('currentOwner');
+
+        alert('✅ Your account and wishlist have been permanently deleted.');
+        location.href = '/home';
+      } catch (e) {
+        console.error(e);
+        alert('❌ Failed to delete account. Please try again.');
+      }
+    });
+
+    return true;
+  }
+
+  // inject immediately if footer exists, otherwise wait for it (your policy is added by script)
+  if (!tryInject()) {
+    const mo = new MutationObserver(() => { if (tryInject()) mo.disconnect(); });
+    mo.observe(document.body, { childList: true, subtree: true });
   }
 });
 

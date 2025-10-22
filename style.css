@@ -1867,6 +1867,37 @@ body.theme-babyshower .affiliate-bubble {
   color: #4682B4; /* a soft baby blue */
   border: 1px solid #87CEFA;
 }
+/* Footer actions beside the Privacy Policy */
+.footer-legal, #privacy-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.footer-legal .footer-sep {
+  opacity: 0.5;
+}
+
+.footer-legal #deleteAccountBtn,
+#privacy-footer #deleteAccountBtn {
+  background: none;
+  border: none;
+  color: #b71c1c;      /* matches your Christmas red text tone */
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: 14px;
+}
+
+.footer-legal #deleteAccountBtn:hover,
+#privacy-footer #deleteAccountBtn:hover {
+  text-decoration: none;
+  opacity: 0.85;
+}
+
 /* ==========================
    📄 Footer Legal Link
 ========================== */
@@ -1880,19 +1911,3 @@ body.theme-babyshower .affiliate-bubble {
   color: #555;
   text-decoration: underline;
 }
-#deleteAccountBtn {
-  margin-left: 15px;
-  background-color: #c0392b;
-  color: #fff;
-  padding: 8px 14px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-#deleteAccountBtn:hover {
-  background-color: #a93226;
-}
-
