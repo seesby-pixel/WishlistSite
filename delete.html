@@ -80,10 +80,11 @@
         }
 
         const data = snap.data();
-        if (data.email?.toLowerCase() !== email || data.pin !== pin) {
-          showErr('Email, code, or PIN is incorrect.');
-          return;
-        }
+if (data.email?.toLowerCase() !== email || data.accessPin !== pin) {
+  showErr('Email, code, or PIN is incorrect.');
+  return;
+}
+
 
         if (!confirm('⚠️ This will permanently delete your wishlist and account.')) return;
 
