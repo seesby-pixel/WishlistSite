@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Delete Account</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- 🎨 Theme decorations placeholder -->
+  <div id="theme-decorations"></div>
+
+  <h1>Delete My Account</h1>
+
+  <nav>
+    <button onclick="history.back()">Back</button>
+    <button id="homeBtn">Home</button>
+  </nav>
+
+  <section class="page-section">
+    <div class="form-stack">
+      <input id="delEmail" type="email" placeholder="Your Email" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input id="delCode" type="text" placeholder="Your List Code" autocomplete="off" />
+      <input id="delPin" type="password" maxlength="6" placeholder="6-digit PIN" autocomplete="off" inputmode="numeric" pattern="[0-9]*" />
+      <button id="delBtn">Delete Account</button>
+      <div id="delErr" class="error-text" style="display:none;"></div>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('homeBtn').addEventListener('click', () => {
+      try { sessionStorage.setItem('cameFromInternal', '1'); } catch(e){}
+      location.href = '/home';
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBiawooDcVM2qkvP10BuRVDoxIqEXz15ac",
+      authDomain: "wishlistsite-c97bd.firebaseapp.com",
+      projectId: "wishlistsite-c97bd",
+      storageBucket: "wishlistsite-c97bd.firebasestorage.app",
+      messagingSenderId: "525857492319",
+      appId: "1:525857492319:web:25f40775bbe54312533aea",
+      measurementId: "G-YHB16ZT4ED"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const emailEl = document.getElementById('delEmail');
+    const codeEl = document.getElementById('delCode');
+    const pinEl = document.getElementById('delPin');
+    const btn = document.getElementById('delBtn');
+    const err = document.getElementById('delErr');
+
+    function showErr(msg){ err.textContent = msg; err.style.display = 'block'; }
+    function clearErr(){ err.textContent = ''; err.style.display = 'none'; }
+
+    btn.addEventListener('click', async () => {
+      clearErr();
+      const email = emailEl.value.trim().toLowerCase();
+      const code = codeEl.value.trim().toLowerCase();
+      const pin = pinEl.value.trim();
+
+      if (!email || !code || !/^[0-9]{6}$/.test(pin)) {
+        showErr('Please enter a valid email, list code, and 6-digit PIN.');
+        return;
+      }
+
+      try {
+        const ref = doc(db, 'wishlists', code);
+        const snap = await getDoc(ref);
+        if (!snap.exists()) {
+          showErr('Account not found.');
+          return;
+        }
+
+        const data = snap.data();
+        if (data.email?.toLowerCase() !== email || data.pin !== pin) {
+          showErr('Email, code, or PIN is incorrect.');
+          return;
+        }
+
+        if (!confirm('⚠️ This will permanently delete your wishlist and account.')) return;
+
+        await deleteDoc(ref);
+        localStorage.removeItem('isOwner');
+        localStorage.removeItem('ownerCode');
+        localStorage.removeItem('ownerEmail');
+        sessionStorage.removeItem('currentOwner');
+
+        alert('✅ Your account and wishlist have been permanently deleted.');
+        location.href = '/home';
+      } catch (e) {
+        console.error(e);
+        showErr('Failed to delete account. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>

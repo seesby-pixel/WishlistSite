@@ -31,37 +31,11 @@ btn.href = '#';
 btn.textContent = 'Delete Account';
 footer.appendChild(btn);
 
-btn.addEventListener('click', async (e) => {
+btn.addEventListener('click', (e) => {
   e.preventDefault();
-  if (!confirm('⚠️ Permanently delete your account and wishlist? This cannot be undone.')) return;
-  try {
-    const code = localStorage.getItem('ownerCode');
-    if (!code) { alert('No active account found.'); return; }
-
-    const pin = prompt('Enter your 6-digit PIN to confirm deletion:');
-    if (!pin || !/^[0-9]{6}$/.test(pin)) { alert('Invalid PIN.'); return; }
-
-    const ref = doc(window.db, 'wishlists', code);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) { alert('Account not found.'); return; }
-
-    const data = snap.data();
-    if (data.pin !== pin) { alert('Incorrect PIN.'); return; }
-
-    await deleteDoc(ref);
-
-    localStorage.removeItem('isOwner');
-    localStorage.removeItem('ownerCode');
-    localStorage.removeItem('ownerEmail');
-    sessionStorage.removeItem('currentOwner');
-
-    alert('✅ Your account and wishlist have been permanently deleted.');
-    location.href = '/home';
-  } catch (e) {
-    console.error(e);
-    alert('❌ Failed to delete account. Please try again.');
-  }
+  window.location.href = '/delete';
 });
+
 
     return true;
   }
