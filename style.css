@@ -1881,30 +1881,15 @@ body.theme-babyshower .affiliate-bubble {
 }
 
 #deleteAccountBtn.footer-action {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  color: inherit;
   text-decoration: underline;
   cursor: pointer;
-  appearance: none;
 }
 
 #deleteAccountBtn.footer-action:hover {
   text-decoration: none;
   opacity: 0.9;
 }
-/* Make delete account link follow the same theme styles as footer links */
-body.theme-christmas #deleteAccountBtn.footer-action,
-body.theme-elegant #deleteAccountBtn.footer-action,
-body.theme-bubblegum #deleteAccountBtn.footer-action,
-body.theme-pastel #deleteAccountBtn.footer-action,
-body.theme-babyshower #deleteAccountBtn.footer-action,
-body:not([class*="theme-"]) #deleteAccountBtn.footer-action {
-  color: inherit;
-  font-weight: inherit;
-}
+
 
 /* ==========================
    📄 Footer Legal Link

@@ -23,44 +23,45 @@ document.addEventListener('DOMContentLoaded', () => {
     footer.appendChild(sep);
 
     // create the subtle footer action
-    const btn = document.createElement('button');
-    btn.id = 'deleteAccountBtn';
-    btn.className = 'footer-action';
-    btn.type = 'button';
-    btn.textContent = 'Delete Account';
-    footer.appendChild(btn);
+   // ✅ Create the subtle footer action as a link (matches Privacy Policy)
+const btn = document.createElement('a');
+btn.id = 'deleteAccountBtn';
+btn.className = 'footer-action';
+btn.href = '#';
+btn.textContent = 'Delete Account';
+footer.appendChild(btn);
 
-    // delete logic
-    btn.addEventListener('click', async () => {
-      if (!confirm('⚠️ Permanently delete your account and wishlist? This cannot be undone.')) return;
-      try {
-        const code = localStorage.getItem('ownerCode');
-        if (!code) { alert('No active account found.'); return; }
+btn.addEventListener('click', async (e) => {
+  e.preventDefault();
+  if (!confirm('⚠️ Permanently delete your account and wishlist? This cannot be undone.')) return;
+  try {
+    const code = localStorage.getItem('ownerCode');
+    if (!code) { alert('No active account found.'); return; }
 
-        const pin = prompt('Enter your 6-digit PIN to confirm deletion:');
-        if (!pin || !/^[0-9]{6}$/.test(pin)) { alert('Invalid PIN.'); return; }
+    const pin = prompt('Enter your 6-digit PIN to confirm deletion:');
+    if (!pin || !/^[0-9]{6}$/.test(pin)) { alert('Invalid PIN.'); return; }
 
-        const ref = doc(window.db, 'wishlists', code);
-        const snap = await getDoc(ref);
-        if (!snap.exists()) { alert('Account not found.'); return; }
+    const ref = doc(window.db, 'wishlists', code);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) { alert('Account not found.'); return; }
 
-        const data = snap.data();
-        if (data.pin !== pin) { alert('Incorrect PIN.'); return; }
+    const data = snap.data();
+    if (data.pin !== pin) { alert('Incorrect PIN.'); return; }
 
-        await deleteDoc(ref);
+    await deleteDoc(ref);
 
-        localStorage.removeItem('isOwner');
-        localStorage.removeItem('ownerCode');
-        localStorage.removeItem('ownerEmail');
-        sessionStorage.removeItem('currentOwner');
+    localStorage.removeItem('isOwner');
+    localStorage.removeItem('ownerCode');
+    localStorage.removeItem('ownerEmail');
+    sessionStorage.removeItem('currentOwner');
 
-        alert('✅ Your account and wishlist have been permanently deleted.');
-        location.href = '/home';
-      } catch (e) {
-        console.error(e);
-        alert('❌ Failed to delete account. Please try again.');
-      }
-    });
+    alert('✅ Your account and wishlist have been permanently deleted.');
+    location.href = '/home';
+  } catch (e) {
+    console.error(e);
+    alert('❌ Failed to delete account. Please try again.');
+  }
+});
 
     return true;
   }
