@@ -1,12 +1,10 @@
 import { collection, addDoc, doc, getDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 // Home-footer Delete Account (owner only)
 document.addEventListener('DOMContentLoaded', () => {
-  const isOwner = localStorage.getItem('isOwner') === 'true';
-  // supports "/" and "/home" pretty URL
-  const path = location.pathname.replace(/\/+$/, '');
-  const onHome = path.includes('home') || path === '';
+const path = location.pathname.replace(/\/+$/, '');
+const onHome = path === '' || path === '/' || path === '/home';
+if (!onHome) return;
 
-  if (!isOwner || !onHome) return;
 
   // Find the privacy footer (works for either id or class)
   function tryInject() {
@@ -41,10 +39,11 @@ btn.addEventListener('click', (e) => {
   }
 
   // inject immediately if footer exists, otherwise wait for it (your policy is added by script)
-  if (!tryInject()) {
-    const mo = new MutationObserver(() => { if (tryInject()) mo.disconnect(); });
-    mo.observe(document.body, { childList: true, subtree: true });
-  }
+if (!tryInject()) {
+  const mo = new MutationObserver(() => { if (tryInject()) mo.disconnect(); });
+  // ✅ expanded to watch the entire document for late footer injection
+  mo.observe(document.body, { childList: true, subtree: true });
+}
 });
 
 // 🚀 Caching layer to avoid repeating expensive link processing
@@ -928,7 +927,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (pathname === '/' || pathname === '/home' || /\/home(\.html)?($|\?)/.test(pathname)) {
     const privacyLink = document.createElement('div');
     privacyLink.className = 'footer-legal';
-    privacyLink.innerHTML = `<a href="privacy.html">Privacy Policy</a>`;
+    privacyLink.innerHTML = `<a href="privacy.html">Privacy Policy</a> • <a href="/delete">Delete Account</a>`;
     footer.after(privacyLink);
   }
 });
