@@ -259,11 +259,25 @@
         img.onerror = () => { img.src = "https://via.placeholder.com/100"; };
         infoDiv.appendChild(img);
 
-        const link = document.createElement("a");
-        link.href = item.url;
-        link.target = "_blank";
-        link.textContent = item.name;
-        infoDiv.appendChild(link);
+const link = document.createElement("a");
+
+try {
+  let url = new URL(item.url);
+  if (url.hostname.includes("amazon.")) {
+    url.hostname = "www.amazon.com";
+    if (!url.searchParams.has("tag")) {
+      url.searchParams.set("tag", "giftwishlis01-20");
+    }
+  }
+  link.href = url.toString();
+} catch (err) {
+  link.href = item.url;
+}
+
+link.target = "_blank";
+link.textContent = item.name;
+infoDiv.appendChild(link);
+
 
         li.appendChild(infoDiv);
 

@@ -141,7 +141,18 @@
         // ✅ NEW LINE — persist email login like "View My List"
         sessionStorage.setItem('loggedInEmail', email);
 
-        window.location.href = `/list?code=${encodeURIComponent(code)}`;
+        // ✅ Open your affiliate-tagged Amazon homepage in a new tab
+// ✅ Open the Amazon homepage only for web users (not inside the mobile app)
+if (!window.Capacitor) {
+  // Delay slightly so the list page loads smoothly first
+  setTimeout(() => {
+    window.open("https://www.amazon.com/?tag=giftwishlis01-20", "_blank");
+  }, 1000);
+}
+
+// Then continue to their new list page
+window.location.href = `/list?code=${encodeURIComponent(code)}`;
+
       } catch (e) {
         console.error(e);
         showErr('Something went wrong. Please try again.');
