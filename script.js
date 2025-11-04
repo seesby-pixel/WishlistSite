@@ -239,8 +239,12 @@ function showLogoutButton() {
       localStorage.removeItem("ownerCode");
       localStorage.removeItem("ownerEmail");
       sessionStorage.removeItem("currentOwner");
-      window.open("https://www.amazon.com/?tag=giftwishlis01-20", "_blank");
-      window.location.href = "/home";
+      // ✅ Open Amazon first (with delay before redirect)
+window.open("https://www.amazon.com/?tag=giftwishlis01-20", "_blank");
+setTimeout(() => {
+  window.location.href = "/home";
+}, 800);
+
     }
   });
 
