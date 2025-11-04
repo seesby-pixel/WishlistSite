@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting to Amazon...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+  </style>
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const asin = params.get("asin");
+      const tag = "giftwishlis01-20"; // your affiliate tag
+      const delayMs = 700; // how long before trying to open the Amazon app
+
+      // Basic validation
+      if (!asin) {
+        document.body.innerHTML = "<p>Invalid link: missing ASIN.</p>";
+        return;
+      }
+
+      // Step 1️⃣: Build your Amazon .com affiliate link
+      // OneLink automatically handles redirection to local stores (CA, UK, etc.)
+      const amazonWeb = `https://www.amazon.com/dp/${asin}?tag=${tag}`;
+
+      // Step 2️⃣: Corresponding deep link (will only work if Amazon app is installed)
+      const amazonApp = `amazon://www.amazon.com/dp/${asin}`;
+
+      // Step 3️⃣: Open the Amazon web link first — this sets the affiliate tracking
+      window.location.replace(amazonWeb);
+
+      // Step 4️⃣: After a short delay, try to open the Amazon app
+      setTimeout(() => {
+        window.location.href = amazonApp;
+      }, delayMs);
+
+      // Optional: fallback after a few seconds if nothing happens
+      // (keeps user on web version if app doesn’t exist)
+      setTimeout(() => {
+        document.body.innerHTML = `
+          <p>If you are not redirected, <a href="${amazonWeb}">click here to view on Amazon</a>.</p>
+        `;
+      }, delayMs + 2500);
+    })();
+  </script>
+</head>
+<body>
+  <p>Redirecting to Amazon...</p>
+</body>
+</html>

@@ -302,6 +302,8 @@ async function processAmazonLink(inputUrl) {
   try {
     const u0 = new URL(inputUrl);
     if (u0.hostname.includes("amazon.")) {
+      u0.hostname = "www.amazon.com"; // normalize all Amazon domains to .com
+
       const m0 = u0.pathname.match(/\/(?:dp|gp\/product|product)\/([A-Z0-9]{10})/i);
       if (m0) {
         const origin0 = `${u0.protocol}//${u0.host}`;
@@ -489,18 +491,19 @@ async function renderWishlist(sharedView = false) {
 
   // Buttons based on role
   if (sharedView && !isOwner) {
-    const buyBtn = document.createElement("a");
-    buyBtn.textContent = "Buy Now";
+const buyBtn = document.createElement("a");
+buyBtn.textContent = "Buy Now";
 
-    try {
-      buyBtn.href = await processAmazonLink(item.url);
-    } catch {
-      buyBtn.href = item.url;
-    }
+// Extract ASIN from the item URL
+const asin = extractASIN(item.url);
 
-      buyBtn.target = "_blank";
-      buyBtn.className = "buy-now-btn";
-      li.appendChild(buyBtn);
+// Redirect through go.html for full affiliate tracking
+buyBtn.href = `https://wisharu.com/go.html?asin=${asin}`;
+
+buyBtn.target = "_blank";
+buyBtn.className = "buy-now-btn";
+li.appendChild(buyBtn);
+
 
       const purchasedBtn = document.createElement("button");
       purchasedBtn.textContent = item.purchased ? "Purchased!" : "I've Purchased";
