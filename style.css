@@ -2336,123 +2336,27 @@ body.theme-babyshower .affiliate-bubble {
 }
 
 /* ==========================================================
-   📱 FIX: Mobile Background Behavior (Without Breaking Desktop)
+   ✅ FINAL UNIVERSAL BACKGROUND FIX
    ========================================================== */
+
+/* --- Force all theme backgrounds to scale full screen on every device --- */
+html, body {
+  min-height: 100vh;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+}
+
+/* --- Mobile & App Fix: disable 'fixed' behavior that breaks stretch --- */
 @supports (-webkit-touch-callout: none) {
-  /* This only triggers on mobile Safari / iOS & Android WebKit */
-
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-
-  /* === Default Theme === */
-  body:not([class*="theme-"])::before {
-    background-image: url('./assets/default-bg.png');
-    background-color: #FCBE77;
-  }
-
-  /* === Christmas === */
-  body.theme-christmas::before {
-    background-image: url('./assets/xmas-bg.png?v=9');
-  }
-
-  /* === Elegant === */
-  body.theme-elegant::before {
-    background-image: url('./assets/elegant-bg.png');
-  }
-
-  /* === Pastel === */
-  body.theme-pastel::before {
-    background-image: url('./assets/pastel-bg.svg');
-  }
-
-  /* === Baby Shower === */
-  body.theme-babyshower::before {
-    background-image: url('./assets/babyshower-stars.png');
-  }
-
-  /* === Bubblegum === */
-  body.theme-bubblegum::before {
-    background-image: url('./assets/bubblegum-bg.png');
-  }
-
-  /* === Boy Boring === */
-  body.theme-boyboring::before {
-    background: #f9fafc !important;
-    background-image: none !important;
-  }
-}
-/* ==========================================================
-   ✅ MOBILE BACKGROUND FIX + FINAL COLOR ADJUSTMENTS
-   ========================================================== */
-
-/* Mobile & WebView fix — prevents backgrounds from scrolling away */
-@supports (-webkit-touch-callout: none) {
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-
-  /* Default theme (no theme class) */
-  body:not([class*="theme-"])::before {
-    background-image: url("./assets/default-bg.png");
-    background-color: #ffffff; /* white fallback behind image */
-  }
-
-  /* Boy Boring — solid gray background, no image */
-  body.theme-boyboring::before {
-    background: #f1f3f5 !important;
-    background-image: none !important;
-  }
-}
-/* ==========================================================
-   ✅ FINAL STABLE BACKGROUND FIX — Desktop Safe + Mobile Fixed
-   ========================================================== */
-
-/* 1️⃣  Revert desktop behaviour: make all body backgrounds normal again */
-body::before { content: none !important; }
-
-/* 2️⃣  True mobile-only pinned backgrounds */
-@media screen and (max-width: 1024px) {
-  @supports (-webkit-touch-callout: none) {
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-
-    /* Default theme image */
-    body:not([class*="theme-"])::before {
-      background-image: url("./assets/default-bg.png");
-      background-color: #ffffff; /* white fallback */
-    }
-
-    /* Boy Boring — solid neutral gray, no image */
-    body.theme-boyboring::before {
-      background: #f1f3f5 !important;
-      background-image: none !important;
-    }
+  html, body {
+    background-attachment: scroll !important;
   }
 }
 
-/* 3️⃣  Desktop fallback color for Boy Boring */
+/* --- Boy Boring: solid neutral gray, no image, no tint --- */
+html.theme-boyboring,
 body.theme-boyboring {
-  background: #f1f3f5 !important;
+  background: #f1f3f5 !important;   /* clean light gray */
+  background-image: none !important;
 }
