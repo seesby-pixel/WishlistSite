@@ -2334,3 +2334,62 @@ body.theme-babyshower .affiliate-bubble {
   line-height: 1.6;
   color: #333;
 }
+
+/* ==========================================================
+   📱 MOBILE BACKGROUND FIX — Keeps all theme backgrounds fixed
+   ========================================================== */
+@media (max-width: 1024px) {
+  html[class*="theme-"],
+  html:not([class*="theme-"]) {
+    background-attachment: scroll !important;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: inherit;
+  }
+
+  /* === Default Theme === */
+  body:not([class*="theme-"])::before {
+    background-image: url('./assets/default-bg.png');
+  }
+
+  /* === Christmas === */
+  body.theme-christmas::before {
+    background-image: url('./assets/xmas-bg.png?v=9');
+  }
+
+  /* === Elegant === */
+  body.theme-elegant::before {
+    background-image: url('./assets/elegant-bg.png');
+  }
+
+  /* === Pastel === */
+  body.theme-pastel::before {
+    background-image: url('./assets/pastel-bg.svg');
+  }
+
+  /* === Baby Shower === */
+  body.theme-babyshower::before {
+    background-image: url('./assets/babyshower-stars.png');
+  }
+
+  /* === Bubblegum === */
+  body.theme-bubblegum::before {
+    background-image: url('./assets/bubblegum-bg.png');
+  }
+
+  /* === Boy Boring === */
+  body.theme-boyboring::before {
+    background-image: none;
+    background-color: #ffffff;
+  }
+}
