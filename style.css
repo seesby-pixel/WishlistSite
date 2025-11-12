@@ -2393,3 +2393,17 @@ body.theme-babyshower .affiliate-bubble {
     background-color: #ffffff;
   }
 }
+/* === Boy Boring Theme: Force clean white/gray background === */
+html.theme-boyboring,
+body.theme-boyboring {
+  background: #f9fafc !important; /* soft neutral gray-white */
+  background-image: none !important;
+  background-color: #f9fafc !important;
+}
+
+@media (max-width: 1024px) {
+  body.theme-boyboring::before {
+    background: #f9fafc !important;
+    background-image: none !important;
+  }
+}
