@@ -2336,27 +2336,113 @@ body.theme-babyshower .affiliate-bubble {
 }
 
 /* ==========================================================
-   ✅ FINAL UNIVERSAL BACKGROUND FIX
+   ✅ UNIVERSAL FULLSCREEN BACKGROUND FIX (Desktop + Mobile)
    ========================================================== */
 
-/* --- Force all theme backgrounds to scale full screen on every device --- */
-html, body {
+/* Reset any pseudo background layers */
+body::before {
+  content: none !important;
+}
+
+/* Make sure the body is transparent so html controls background */
+body {
+  background: transparent !important;
+  min-height: 100dvh;
+}
+
+/* Base background behavior */
+html {
+  min-height: 100dvh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* === Default Theme (No theme class) === */
+html:not([class*="theme-"]) {
+  background-image: url("./assets/default-bg.png");
+  background-color: #ffffff; /* White fallback */
+}
+
+/* === Christmas Theme === */
+html.theme-christmas {
+  background-image: url("./assets/xmas-bg.png?v=9");
+  background-color: #000000;
+}
+
+/* === Elegant Theme === */
+html.theme-elegant {
+  background-image: url("./assets/elegant-bg.png");
+  background-color: #fef9e7;
+}
+
+/* === Pastel Theme === */
+html.theme-pastel {
+  background-image: url("./assets/pastel-bg.svg");
+  background-color: #ffffff;
+}
+
+/* === Baby Shower Theme === */
+html.theme-babyshower {
+  background-image: url("./assets/babyshower-stars.png");
+  background-color: #ffffff;
+}
+
+/* === Bubblegum Theme === */
+html.theme-bubblegum {
+  background-image: url("./assets/bubblegum-bg.png");
+  background-color: #ffffff;
+}
+
+/* === Boy Boring Theme (Solid gray, no image) === */
+html.theme-boyboring {
+  background: #f1f3f5 !important;
+  background-image: none !important;
+}
+
+/* === Mobile Behavior — keep same scaling, remove fixed attachment === */
+@media (max-width: 1024px) {
+  html {
+    background-attachment: scroll !important;
+    background-size: cover !important;
+    background-position: center !important;
+  }
+}
+/* ==========================================================
+   ✅ FINAL UNIVERSAL BACKGROUND FIX (Desktop + Mobile)
+   ========================================================== */
+
+/* Make the <body> transparent so <html> background controls coverage */
+body {
+  background: transparent !important;
+}
+
+/* Global full-viewport control */
+html {
+  height: 100%;
   min-height: 100vh;
   background-size: cover !important;
   background-repeat: no-repeat !important;
   background-position: center center !important;
+  background-attachment: scroll !important; /* prevents cut-off on mobile */
 }
 
-/* --- Mobile & App Fix: disable 'fixed' behavior that breaks stretch --- */
-@supports (-webkit-touch-callout: none) {
-  html, body {
-    background-attachment: scroll !important;
-  }
+/* Default theme (no class) — keep white fallback */
+html:not([class*="theme-"]) {
+  background-image: url("./assets/default-bg.png");
+  background-color: #ffffff !important;
 }
 
-/* --- Boy Boring: solid neutral gray, no image, no tint --- */
-html.theme-boyboring,
-body.theme-boyboring {
-  background: #f1f3f5 !important;   /* clean light gray */
+/* Each theme now uses the same fullscreen logic */
+html.theme-christmas { background-image: url("./assets/xmas-bg.png?v=9"); }
+html.theme-elegant { background-image: url("./assets/elegant-bg.png"); }
+html.theme-pastel { background-image: url("./assets/pastel-bg.svg"); }
+html.theme-babyshower { background-image: url("./assets/babyshower-stars.png"); }
+html.theme-bubblegum { background-image: url("./assets/bubblegum-bg.png"); }
+
+/* Boy Boring: plain neutral grey background, no gradient or peach */
+html.theme-boyboring {
+  background: #f1f3f5 !important;
   background-image: none !important;
 }
