@@ -2466,3 +2466,34 @@ html.theme-boyboring {
     background-attachment: scroll !important;
   }
 }
+/* ==========================================================
+   FULLSCREEN BACKGROUNDS (works when themes are on <body>)
+   ========================================================== */
+
+/* The content column can stay 700px — make body transparent */
+body { background: transparent !important; }
+
+/* Full-bleed background behavior on the viewport element */
+html {
+  min-height: 100dvh;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-attachment: scroll !important; /* consistent on mobile/desktop */
+}
+
+/* DEFAULT (no theme on body) */
+html:not(:has(body[class*="theme-"])) {
+  background-image: url("./assets/default-bg.png");
+  background-color: #ffffff;
+}
+
+/* THEMES — select html based on body’s theme class */
+html:has(body.theme-christmas)   { background-image: url("./assets/xmas-bg.png?v=9");  background-color:#ffffff; }
+html:has(body.theme-elegant)     { background-image: url("./assets/elegant-bg.png");   background-color:#ffffff; }
+html:has(body.theme-pastel)      { background-image: url("./assets/pastel-bg.svg");    background-color:#ffffff; }
+html:has(body.theme-babyshower)  { background-image: url("./assets/babyshower-stars.png"); background-color:#ffffff; }
+html:has(body.theme-bubblegum)   { background-image: url("./assets/bubblegum-bg.png"); background-color:#ffffff; }
+
+/* Boy Boring = solid neutral background (no image) */
+html:has(body.theme-boyboring)   { background-image: none !important; background-color: #f1f3f5 !important; }
