@@ -1401,13 +1401,13 @@ body:not([class*="theme-"]) {
   padding: 0 20px;
 
   /* 👇 BACKGROUND IMAGE SETTINGS 👇 */
-  background: url("assets/default-bg.png") center center / cover no-repeat fixed;
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  color: #2c2c2c;
-  transition: background-color 0.4s ease, color 0.4s ease;
+  background-image: url("./assets/default-bg.png");
+  background-size: cover;              /* fills the entire viewport */
+  background-repeat: no-repeat;        /* prevents tiling */
+  background-position: center center;  /* pins to the center */
+  background-attachment: fixed;        /* stays fixed on scroll */
+  background-color: #FEE1C8;           /* fallback peach if image fails */
+
 }
 
 /* === Ensure full viewport coverage and responsive center === */
