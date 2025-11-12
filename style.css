@@ -1388,19 +1388,20 @@ body.theme-babyshower .form-stack button {
 body.theme-babyshower .form-stack button:hover {
   background-color: #8cc8e9;
 }
+
 /* ==========================================================
-   🌊 MODERN NEUTRAL DEFAULT THEME — Full Replacement
+   🌈 NEW DEFAULT THEME — Peach + Powder Blue
    ========================================================== */
 
 /* === Global Base === */
 body:not([class*="theme-"]) {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-width: 700px;
   margin: 40px auto;
   padding: 0 20px;
-  background: linear-gradient(to bottom right, #f9fafc, #eef1f5);
+  background: linear-gradient(to bottom, #FEDCC5 50%, #C9E3F5 50%);
   color: #2c2c2c;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 /* === Logo === */
@@ -1412,6 +1413,7 @@ body:not([class*="theme-"]) #site-logo {
   max-width: 280px;
   width: 50%;
   height: auto;
+  filter: drop-shadow(0 0 10px rgba(255, 111, 97, 0.4));
 }
 @media (max-width: 600px) {
   body:not([class*="theme-"]) #site-logo {
@@ -1425,8 +1427,8 @@ body:not([class*="theme-"]) h1 {
   text-align: center;
   margin-bottom: 30px;
   font-size: 2rem;
-  font-weight: 600;
-  color: #1f2d3d;
+  font-weight: 700;
+  color: #FF6F61;
   letter-spacing: 0.5px;
 }
 
@@ -1438,17 +1440,17 @@ body:not([class*="theme-"]) nav {
   margin-bottom: 25px;
 }
 body:not([class*="theme-"]) nav button {
-  background: #2563eb;
+  background: #FF6F61;
   color: white;
   border: none;
   padding: 10px 20px;
   font-size: 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: background 0.2s, transform 0.1s;
   cursor: pointer;
 }
 body:not([class*="theme-"]) nav button:hover {
-  background: #1e4fc6;
+  background: #e85c4a;
   transform: translateY(-2px);
 }
 
@@ -1463,14 +1465,16 @@ body:not([class*="theme-"]) .input-container input[type="text"] {
   flex: 1 1 60%;
   padding: 12px;
   font-size: 16px;
-  border: 2px solid #d0d6e2;
+  border: 2px solid #C9E3F5;
   border-radius: 8px;
+  background-color: #fff;
+  color: #2c2c2c;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 body:not([class*="theme-"]) .input-container input[type="text"]:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
+  border-color: #FF6F61;
+  box-shadow: 0 0 6px rgba(255,111,97,0.3);
 }
 body:not([class*="theme-"]) .input-container button {
   flex: 1 1 35%;
@@ -1479,12 +1483,12 @@ body:not([class*="theme-"]) .input-container button {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background-color: #2563eb;
+  background-color: #FF6F61;
   color: white;
   transition: background-color 0.2s, transform 0.1s;
 }
 body:not([class*="theme-"]) .input-container button:hover {
-  background-color: #1e4fc6;
+  background-color: #e85c4a;
   transform: translateY(-2px);
 }
 
@@ -1500,16 +1504,17 @@ body:not([class*="theme-"]) li.wishlist-item {
   background-color: white;
   margin-bottom: 12px;
   padding: 12px 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.2s ease;
   gap: 12px;
   min-height: 100px;
   opacity: 1;
+  border-left: 6px solid #FF6F61;
 }
 body:not([class*="theme-"]) li.wishlist-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 body:not([class*="theme-"]) li.wishlist-item.removing {
   opacity: 0;
@@ -1526,15 +1531,19 @@ body:not([class*="theme-"]) li.wishlist-item img.product-image {
   width: 80px;
   height: 80px;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
 }
 body:not([class*="theme-"]) li.wishlist-item a {
   flex: 1;
-  color: #2563eb;
+  color: #FF6F61;
   text-decoration: none;
   word-break: break-word;
+  font-weight: 500;
 }
 body:not([class*="theme-"]) li.wishlist-item a:hover {
+  color: #1E88E5;
   text-decoration: underline;
 }
 
@@ -1556,7 +1565,7 @@ body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
   min-height: 48px;
   font-size: 14px;
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: 8px;
   color: white;
   border: none;
   cursor: pointer;
@@ -1566,45 +1575,46 @@ body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
 
 /* Buy Now */
 body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
-  background-color: #2563eb;
+  background-color: #FF6F61;
 }
 body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn:hover {
-  background-color: #1e4fc6;
+  background-color: #e85c4a;
   transform: translateY(-2px);
 }
 
 /* Edit */
 body:not([class*="theme-"]) li.wishlist-item button.edit-btn {
-  background-color: #3da5f4;
+  background-color: #7DC4EE;
 }
 body:not([class*="theme-"]) li.wishlist-item button.edit-btn:hover {
-  background-color: #2b93e3;
+  background-color: #68B1E0;
 }
 
 /* Remove */
 body:not([class*="theme-"]) li.wishlist-item button.remove-btn {
-  background-color: #6c757d;
+  background-color: #9EA4AA;
 }
 body:not([class*="theme-"]) li.wishlist-item button.remove-btn:hover {
-  background-color: #555b61;
+  background-color: #7F8489;
 }
 
 /* Purchased */
 body:not([class*="theme-"]) li.wishlist-item button.purchased-btn {
-  background-color: #9ea4aa;
+  background-color: #C9E3F5;
+  color: #2c2c2c;
 }
 body:not([class*="theme-"]) li.wishlist-item button.purchased-btn:hover {
-  background-color: #7f8489;
+  background-color: #B3D6F0;
 }
 
 /* Purchased State */
 body:not([class*="theme-"]) li.wishlist-item.purchased {
-  background-color: #f0f4fa;
+  background-color: #FFF2ED;
   color: #2c2c2c;
-  border-left: 6px solid #2563eb;
+  border-left: 6px solid #C9E3F5;
 }
 body:not([class*="theme-"]) li.wishlist-item.purchased .purchased-btn {
-  background-color: #2563eb;
+  background-color: #FF6F61;
   color: #fff;
 }
 
@@ -1615,18 +1625,18 @@ body:not([class*="theme-"]) #shareList {
   font-size: 16px;
   border: none;
   border-radius: 8px;
-  background-color: #2563eb;
+  background-color: #FF6F61;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 body:not([class*="theme-"]) #shareList:hover {
-  background-color: #1e4fc6;
+  background-color: #e85c4a;
 }
 body:not([class*="theme-"]) #shareMessage {
   margin-top: 12px;
   font-weight: bold;
-  color: #2563eb;
+  color: #FF6F61;
   word-break: break-word;
 }
 
@@ -1651,7 +1661,7 @@ body:not([class*="theme-"]) .spinner {
   width: 20px;
   height: 20px;
   border: 3px solid #ddd;
-  border-top-color: #2563eb;
+  border-top-color: #FF6F61;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -1665,11 +1675,11 @@ body:not([class*="theme-"]) .toast {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #2563eb;
+  background-color: #FF6F61;
   color: white;
   padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   font-weight: bold;
   z-index: 1000;
   animation: fadeInOut 3s forwards;
@@ -1683,7 +1693,7 @@ body:not([class*="theme-"]) .toast {
 /* === Forms & Menus === */
 body:not([class*="theme-"]) .menu-buttons button,
 body:not([class*="theme-"]) .form-stack button {
-  background-color: #2563eb;
+  background-color: #FF6F61;
   color: white;
   border: none;
   border-radius: 8px;
@@ -1693,7 +1703,7 @@ body:not([class*="theme-"]) .form-stack button {
 }
 body:not([class*="theme-"]) .menu-buttons button:hover,
 body:not([class*="theme-"]) .form-stack button:hover {
-  background-color: #1e4fc6;
+  background-color: #e85c4a;
   transform: translateY(-2px);
 }
 body:not([class*="theme-"]) .form-stack input[type="text"],
@@ -1701,7 +1711,7 @@ body:not([class*="theme-"]) .form-stack input[type="password"],
 body:not([class*="theme-"]) .form-stack input[type="email"],
 body:not([class*="theme-"]) .form-stack select {
   background-color: #ffffff;
-  border: 2px solid #d0d6e2;
+  border: 2px solid #C9E3F5;
   border-radius: 8px;
   padding: 10px;
   text-align: center;
@@ -1711,8 +1721,8 @@ body:not([class*="theme-"]) .form-stack select {
 body:not([class*="theme-"]) .form-stack input:focus,
 body:not([class*="theme-"]) .form-stack select:focus {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
+  border-color: #FF6F61;
+  box-shadow: 0 0 6px rgba(255,111,97,0.3);
 }
 body:not([class*="theme-"]) .error-text {
   color: #c0392b;
@@ -1743,6 +1753,372 @@ body:not([class*="theme-"]) .error-text {
     font-size: 15px;
   }
 }
+
+/* === Accent Variables === */
+body:not([class*="theme-"]) {
+  --themeColor: #FF6F61;
+  --logoGlow: rgba(255, 111, 97, 0.5);
+}
+
+
+/* ==========================================================
+   💙 BOY BORING THEME — formerly the Modern Neutral Default
+   ========================================================== */
+
+/* === Global Base === */
+body.theme-boyboring {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background: linear-gradient(to bottom right, #f9fafc, #eef1f5);
+  color: #2c2c2c;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* === Logo === */
+body.theme-boyboring #logo-container {
+  text-align: center;
+  margin: 30px 0;
+}
+body.theme-boyboring #site-logo {
+  max-width: 280px;
+  width: 50%;
+  height: auto;
+}
+@media (max-width: 600px) {
+  body.theme-boyboring #site-logo {
+    max-width: 200px;
+    width: 70%;
+  }
+}
+
+/* === Titles === */
+body.theme-boyboring h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1f2d3d;
+  letter-spacing: 0.5px;
+}
+
+/* === Navigation === */
+body.theme-boyboring nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+body.theme-boyboring nav button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 6px;
+  transition: background 0.2s, transform 0.1s;
+  cursor: pointer;
+}
+body.theme-boyboring nav button:hover {
+  background: #1e4fc6;
+  transform: translateY(-2px);
+}
+
+/* === Input Section === */
+body.theme-boyboring .input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+body.theme-boyboring .input-container input[type="text"] {
+  flex: 1 1 60%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #d0d6e2;
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+body.theme-boyboring .input-container input[type="text"]:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
+}
+body.theme-boyboring .input-container button {
+  flex: 1 1 35%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #2563eb;
+  color: white;
+  transition: background-color 0.2s, transform 0.1s;
+}
+body.theme-boyboring .input-container button:hover {
+  background-color: #1e4fc6;
+  transform: translateY(-2px);
+}
+
+/* === Wishlist Items === */
+body.theme-boyboring ul#wishlistContainer {
+  list-style: none;
+  padding: 0;
+}
+body.theme-boyboring li.wishlist-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  margin-bottom: 12px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.2s ease;
+  gap: 12px;
+  min-height: 100px;
+  opacity: 1;
+}
+body.theme-boyboring li.wishlist-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+body.theme-boyboring li.wishlist-item.removing {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+body.theme-boyboring li.wishlist-item .item-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 12px;
+}
+body.theme-boyboring li.wishlist-item img.product-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+body.theme-boyboring li.wishlist-item a {
+  flex: 1;
+  color: #2563eb;
+  text-decoration: none;
+  word-break: break-word;
+}
+body.theme-boyboring li.wishlist-item a:hover {
+  text-decoration: underline;
+}
+
+/* === Wishlist Item Buttons === */
+body.theme-boyboring li.wishlist-item .button-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 130px;
+}
+body.theme-boyboring li.wishlist-item button,
+body.theme-boyboring li.wishlist-item a.buy-now-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  min-height: 48px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color 0.2s, transform 0.1s ease;
+}
+
+/* Buy Now */
+body.theme-boyboring li.wishlist-item a.buy-now-btn {
+  background-color: #2563eb;
+}
+body.theme-boyboring li.wishlist-item a.buy-now-btn:hover {
+  background-color: #1e4fc6;
+  transform: translateY(-2px);
+}
+
+/* Edit */
+body.theme-boyboring li.wishlist-item button.edit-btn {
+  background-color: #3da5f4;
+}
+body.theme-boyboring li.wishlist-item button.edit-btn:hover {
+  background-color: #2b93e3;
+}
+
+/* Remove */
+body.theme-boyboring li.wishlist-item button.remove-btn {
+  background-color: #6c757d;
+}
+body.theme-boyboring li.wishlist-item button.remove-btn:hover {
+  background-color: #555b61;
+}
+
+/* Purchased */
+body.theme-boyboring li.wishlist-item button.purchased-btn {
+  background-color: #9ea4aa;
+}
+body.theme-boyboring li.wishlist-item button.purchased-btn:hover {
+  background-color: #7f8489;
+}
+
+/* Purchased State */
+body.theme-boyboring li.wishlist-item.purchased {
+  background-color: #f0f4fa;
+  color: #2c2c2c;
+  border-left: 6px solid #2563eb;
+}
+body.theme-boyboring li.wishlist-item.purchased .purchased-btn {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+/* === Share Button & Message === */
+body.theme-boyboring #shareList {
+  margin-top: 20px;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #2563eb;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+body.theme-boyboring #shareList:hover {
+  background-color: #1e4fc6;
+}
+body.theme-boyboring #shareMessage {
+  margin-top: 12px;
+  font-weight: bold;
+  color: #2563eb;
+  word-break: break-word;
+}
+
+/* === Empty State === */
+body.theme-boyboring #emptyMessage {
+  text-align: center;
+  color: #555;
+  font-style: italic;
+  margin-top: 15px;
+}
+
+/* === Loading Spinner === */
+body.theme-boyboring .loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  color: #555;
+  margin: 12px 0 16px;
+}
+body.theme-boyboring .spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #ddd;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* === Toast === */
+body.theme-boyboring .toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #2563eb;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  font-weight: bold;
+  z-index: 1000;
+  animation: fadeInOut 3s forwards;
+}
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
+  10%, 90% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
+}
+
+/* === Forms & Menus === */
+body.theme-boyboring .menu-buttons button,
+body.theme-boyboring .form-stack button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  transition: background-color 0.2s, transform 0.1s;
+}
+body.theme-boyboring .menu-buttons button:hover,
+body.theme-boyboring .form-stack button:hover {
+  background-color: #1e4fc6;
+  transform: translateY(-2px);
+}
+body.theme-boyboring .form-stack input[type="text"],
+body.theme-boyboring .form-stack input[type="password"],
+body.theme-boyboring .form-stack input[type="email"],
+body.theme-boyboring .form-stack select {
+  background-color: #ffffff;
+  border: 2px solid #d0d6e2;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+body.theme-boyboring .form-stack input:focus,
+body.theme-boyboring .form-stack select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
+}
+body.theme-boyboring .error-text {
+  color: #c0392b;
+  text-align: center;
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+  body.theme-boyboring .input-container {
+    flex-direction: column;
+  }
+  body.theme-boyboring .input-container input,
+  body.theme-boyboring .input-container button {
+    flex: 1 1 100%;
+  }
+  body.theme-boyboring li.wishlist-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  body.theme-boyboring li.wishlist-item .button-group {
+    width: 100%;
+    gap: 8px;
+  }
+  body.theme-boyboring li.wishlist-item button,
+  body.theme-boyboring li.wishlist-item a.buy-now-btn {
+    width: 100%;
+    height: 44px;
+    font-size: 15px;
+  }
+}
+
+
+
 /* ==============================
    LOGO STYLING + GLOW EFFECT
    ============================== */
