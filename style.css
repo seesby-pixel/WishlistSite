@@ -2334,3 +2334,70 @@ body.theme-babyshower .affiliate-bubble {
   line-height: 1.6;
   color: #333;
 }
+/* ==========================================================
+   FULLSCREEN BACKGROUNDS (Laptop + Mobile) — OVERRIDE LAYER
+   Paste at the VERY BOTTOM of style.css
+   ========================================================== */
+
+/* 1) The content column stays 700px, but the body is transparent,
+      so the page background from <html> can fill the viewport */
+body,
+body.theme-christmas,
+body.theme-elegant,
+body.theme-bubblegum,
+body.theme-pastel,
+body.theme-babyshower {
+  background: transparent !important;
+}
+
+/* 2) Make the viewport background behave the same everywhere */
+html {
+  min-height: 100dvh;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+}
+
+/* 3) Put each theme background on <html> so it fills the screen */
+html:not([class*="theme-"]) {                          /* Default */
+  background-image: url("./assets/default-bg.png");
+  background-color: #ffffff;           /* neutral fallback */
+  background-attachment: fixed;
+}
+
+html.theme-christmas {
+  background-image: url("./assets/xmas-bg.png?v=9");
+  background-color: #0f0f0f;
+  background-attachment: fixed;
+}
+
+html.theme-elegant {
+  background-image: url("./assets/elegant-bg.png");
+  background-color: #ffffff;
+  background-attachment: fixed;
+}
+
+html.theme-pastel {
+  background-image: url("./assets/pastel-bg.svg");
+  background-color: #fff8f6;
+  background-attachment: fixed;
+}
+
+html.theme-babyshower {
+  /* If you want the star pattern to fill the screen rather than tile: */
+  background-image: url("./assets/babyshower-stars.png");
+  background-color: #ffffff;
+  background-attachment: fixed;
+}
+
+html.theme-bubblegum {
+  background-image: url("./assets/bubblegum-bg.png");
+  background-color: #ffffff;
+  background-attachment: fixed;
+}
+
+/* 4) Mobile/WebView quirk: 'fixed' causes cropping/jumpiness.
+      Keep the same full-bleed look but disable the fixed attachment on small screens. */
+@media (max-width: 1024px) {
+  html { background-attachment: scroll !important; }
+}
