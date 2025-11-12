@@ -1390,26 +1390,28 @@ body.theme-babyshower .form-stack button:hover {
 }
 
 /* ==========================================================
-   🌈 NEW DEFAULT THEME — Peach + Powder Blue
+   🌈 DEFAULT THEME — Fullscreen Background (Peach + Blue)
    ========================================================== */
 
-/* === Global Base === */
-body:not([class*="theme-"]) {
-  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100vh;
-
-  /* 👇 Full-screen fixed background */
+/* The background belongs to the HTML element so it fills 100% of viewport */
+html:not([class*="theme-"]) {
   background: url("./assets/default-bg.png") center center / cover no-repeat fixed;
-  background-color: #FEE1C8;
+  background-attachment: fixed;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #FEE1C8; /* fallback color */
 }
 
-main, .page-content, .menu-buttons, #app {
+/* Body remains transparent and centered */
+body:not([class*="theme-"]) {
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-width: 700px;
   margin: 40px auto;
   padding: 0 20px;
+  background: transparent !important;
+  color: #2c2c2c;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 
