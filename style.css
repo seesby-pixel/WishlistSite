@@ -1399,10 +1399,37 @@ body:not([class*="theme-"]) {
   max-width: 700px;
   margin: 40px auto;
   padding: 0 20px;
-  background: linear-gradient(to bottom, #FEDCC5 50%, #C9E3F5 50%);
+
+  /* 👇 BACKGROUND IMAGE SETTINGS 👇 */
+  background: url("assets/default-bg.png") center center / cover no-repeat fixed;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: #2c2c2c;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
+
+/* === Ensure full viewport coverage and responsive center === */
+html, body {
+  height: 100%;
+  min-height: 100vh;
+  background-color: #FEE1C8; /* fallback peach color if image loads slowly */
+}
+
+/* === Keep swoop centered on all devices === */
+@media (max-aspect-ratio: 3/4) {
+  body:not([class*="theme-"]) {
+    background-position: center top;
+  }
+}
+
+@media (min-aspect-ratio: 4/3) {
+  body:not([class*="theme-"]) {
+    background-position: center center;
+  }
+}
+
 
 /* === Logo === */
 body:not([class*="theme-"]) #logo-container {
