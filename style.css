@@ -2418,3 +2418,41 @@ body.theme-babyshower .affiliate-bubble {
     background-image: none !important;
   }
 }
+/* ==========================================================
+   ✅ FINAL STABLE BACKGROUND FIX — Desktop Safe + Mobile Fixed
+   ========================================================== */
+
+/* 1️⃣  Revert desktop behaviour: make all body backgrounds normal again */
+body::before { content: none !important; }
+
+/* 2️⃣  True mobile-only pinned backgrounds */
+@media screen and (max-width: 1024px) {
+  @supports (-webkit-touch-callout: none) {
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    /* Default theme image */
+    body:not([class*="theme-"])::before {
+      background-image: url("./assets/default-bg.png");
+      background-color: #ffffff; /* white fallback */
+    }
+
+    /* Boy Boring — solid neutral gray, no image */
+    body.theme-boyboring::before {
+      background: #f1f3f5 !important;
+      background-image: none !important;
+    }
+  }
+}
+
+/* 3️⃣  Desktop fallback color for Boy Boring */
+body.theme-boyboring {
+  background: #f1f3f5 !important;
+}
