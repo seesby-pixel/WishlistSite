@@ -1396,19 +1396,22 @@ body.theme-babyshower .form-stack button:hover {
 /* === Global Base === */
 body:not([class*="theme-"]) {
   font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+
+  /* 👇 Full-screen fixed background */
+  background: url("./assets/default-bg.png") center center / cover no-repeat fixed;
+  background-color: #FEE1C8;
+}
+
+main, .page-content, .menu-buttons, #app {
   max-width: 700px;
   margin: 40px auto;
   padding: 0 20px;
-
-  /* 👇 BACKGROUND IMAGE SETTINGS 👇 */
-  background-image: url("./assets/default-bg.png");
-  background-size: cover;              /* fills the entire viewport */
-  background-repeat: no-repeat;        /* prevents tiling */
-  background-position: center center;  /* pins to the center */
-  background-attachment: fixed;        /* stays fixed on scroll */
-  background-color: #FEE1C8;           /* fallback peach if image fails */
-
 }
+
 
 /* === Ensure full viewport coverage and responsive center === */
 html, body {
