@@ -2336,13 +2336,10 @@ body.theme-babyshower .affiliate-bubble {
 }
 
 /* ==========================================================
-   📱 MOBILE BACKGROUND FIX — Keeps all theme backgrounds fixed
+   📱 FIX: Mobile Background Behavior (Without Breaking Desktop)
    ========================================================== */
-@media (max-width: 1024px) {
-  html[class*="theme-"],
-  html:not([class*="theme-"]) {
-    background-attachment: scroll !important;
-  }
+@supports (-webkit-touch-callout: none) {
+  /* This only triggers on mobile Safari / iOS & Android WebKit */
 
   body::before {
     content: "";
@@ -2354,12 +2351,12 @@ body.theme-babyshower .affiliate-bubble {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: inherit;
   }
 
   /* === Default Theme === */
   body:not([class*="theme-"])::before {
     background-image: url('./assets/default-bg.png');
+    background-color: #FCBE77;
   }
 
   /* === Christmas === */
@@ -2389,21 +2386,35 @@ body.theme-babyshower .affiliate-bubble {
 
   /* === Boy Boring === */
   body.theme-boyboring::before {
-    background-image: none;
-    background-color: #ffffff;
+    background: #f9fafc !important;
+    background-image: none !important;
   }
 }
-/* === Boy Boring Theme: Force clean white/gray background === */
-html.theme-boyboring,
-body.theme-boyboring {
-  background: #f9fafc !important; /* soft neutral gray-white */
-  background-image: none !important;
-  background-color: #f9fafc !important;
-}
+/* ==========================================================
+   ✅ MOBILE BACKGROUND FIX + FINAL COLOR ADJUSTMENTS
+   ========================================================== */
 
-@media (max-width: 1024px) {
+/* Mobile & WebView fix — prevents backgrounds from scrolling away */
+@supports (-webkit-touch-callout: none) {
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  /* Default theme (no theme class) */
+  body:not([class*="theme-"])::before {
+    background-image: url("./assets/default-bg.png");
+    background-color: #ffffff; /* white fallback behind image */
+  }
+
+  /* Boy Boring — solid gray background, no image */
   body.theme-boyboring::before {
-    background: #f9fafc !important;
+    background: #f1f3f5 !important;
     background-image: none !important;
   }
 }
