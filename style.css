@@ -1460,7 +1460,7 @@ body:not([class*="theme-"]) h1 {
   margin-bottom: 30px;
   font-size: 2rem;
   font-weight: 700;
-  color: #FF6F61;
+  color: #FCBE77;
   letter-spacing: 0.5px;
 }
 
@@ -1472,7 +1472,7 @@ body:not([class*="theme-"]) nav {
   margin-bottom: 25px;
 }
 body:not([class*="theme-"]) nav button {
-  background: #FF6F61;
+  background: #FCBE77;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -1482,7 +1482,7 @@ body:not([class*="theme-"]) nav button {
   cursor: pointer;
 }
 body:not([class*="theme-"]) nav button:hover {
-  background: #e85c4a;
+  background: #fbb45f;
   transform: translateY(-2px);
 }
 
@@ -1505,7 +1505,7 @@ body:not([class*="theme-"]) .input-container input[type="text"] {
 }
 body:not([class*="theme-"]) .input-container input[type="text"]:focus {
   outline: none;
-  border-color: #FF6F61;
+  border-color: #FCBE77;
   box-shadow: 0 0 6px rgba(255,111,97,0.3);
 }
 body:not([class*="theme-"]) .input-container button {
@@ -1515,12 +1515,12 @@ body:not([class*="theme-"]) .input-container button {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background-color: #FF6F61;
+  background-color: #FCBE77;
   color: white;
   transition: background-color 0.2s, transform 0.1s;
 }
 body:not([class*="theme-"]) .input-container button:hover {
-  background-color: #e85c4a;
+  background-color: #fbb45f;
   transform: translateY(-2px);
 }
 
@@ -1542,7 +1542,7 @@ body:not([class*="theme-"]) li.wishlist-item {
   gap: 12px;
   min-height: 100px;
   opacity: 1;
-  border-left: 6px solid #FF6F61;
+  border-left: 6px solid #FCBE77;
 }
 body:not([class*="theme-"]) li.wishlist-item:hover {
   transform: translateY(-2px);
@@ -1569,7 +1569,7 @@ body:not([class*="theme-"]) li.wishlist-item img.product-image {
 }
 body:not([class*="theme-"]) li.wishlist-item a {
   flex: 1;
-  color: #FF6F61;
+  color: #FCBE77;
   text-decoration: none;
   word-break: break-word;
   font-weight: 500;
@@ -1607,10 +1607,10 @@ body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
 
 /* Buy Now */
 body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
-  background-color: #FF6F61;
+  background-color: #FCBE77;
 }
 body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn:hover {
-  background-color: #e85c4a;
+  background-color: #fbb45f;
   transform: translateY(-2px);
 }
 
@@ -1646,7 +1646,7 @@ body:not([class*="theme-"]) li.wishlist-item.purchased {
   border-left: 6px solid #C9E3F5;
 }
 body:not([class*="theme-"]) li.wishlist-item.purchased .purchased-btn {
-  background-color: #FF6F61;
+  background-color: #FCBE77;
   color: #fff;
 }
 
@@ -1657,18 +1657,18 @@ body:not([class*="theme-"]) #shareList {
   font-size: 16px;
   border: none;
   border-radius: 8px;
-  background-color: #FF6F61;
+  background-color: #FCBE77;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 body:not([class*="theme-"]) #shareList:hover {
-  background-color: #e85c4a;
+  background-color: #fbb45f;
 }
 body:not([class*="theme-"]) #shareMessage {
   margin-top: 12px;
   font-weight: bold;
-  color: #FF6F61;
+  color: #FCBE77;
   word-break: break-word;
 }
 
@@ -1693,7 +1693,7 @@ body:not([class*="theme-"]) .spinner {
   width: 20px;
   height: 20px;
   border: 3px solid #ddd;
-  border-top-color: #FF6F61;
+  border-top-color: #FCBE77;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -1707,7 +1707,7 @@ body:not([class*="theme-"]) .toast {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #FF6F61;
+  background-color: #FCBE77;
   color: white;
   padding: 12px 20px;
   border-radius: 10px;
@@ -1725,7 +1725,7 @@ body:not([class*="theme-"]) .toast {
 /* === Forms & Menus === */
 body:not([class*="theme-"]) .menu-buttons button,
 body:not([class*="theme-"]) .form-stack button {
-  background-color: #FF6F61;
+  background-color: #FCBE77;
   color: white;
   border: none;
   border-radius: 8px;
@@ -1735,7 +1735,7 @@ body:not([class*="theme-"]) .form-stack button {
 }
 body:not([class*="theme-"]) .menu-buttons button:hover,
 body:not([class*="theme-"]) .form-stack button:hover {
-  background-color: #e85c4a;
+  background-color: #fbb45f;
   transform: translateY(-2px);
 }
 body:not([class*="theme-"]) .form-stack input[type="text"],
@@ -1753,7 +1753,7 @@ body:not([class*="theme-"]) .form-stack select {
 body:not([class*="theme-"]) .form-stack input:focus,
 body:not([class*="theme-"]) .form-stack select:focus {
   outline: none;
-  border-color: #FF6F61;
+  border-color: #FCBE77;
   box-shadow: 0 0 6px rgba(255,111,97,0.3);
 }
 body:not([class*="theme-"]) .error-text {
@@ -1788,7 +1788,7 @@ body:not([class*="theme-"]) .error-text {
 
 /* === Accent Variables === */
 body:not([class*="theme-"]) {
-  --themeColor: #FF6F61;
+  --themeColor: #FCBE77;
   --logoGlow: rgba(255, 111, 97, 0.5);
 }
 
