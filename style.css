@@ -321,12 +321,12 @@ body:not([class*="theme-"]) #shareList:hover {
     font-size: 16px;
     border: none;
     border-radius: 6px;
-    background-color: #007bff;
+    background-color: #db9a4d;
     color: #fff;
     cursor: pointer;
     transition: background-color .2s;
   }
-  .menu-buttons button:hover { background-color: #0056b3; }
+  .menu-buttons button:hover { background-color: #eba654; }
   
   .form-stack {
     display: flex;
