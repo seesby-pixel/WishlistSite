@@ -862,12 +862,12 @@ body.theme-christmas li.wishlist-item.purchased .purchased-btn:hover {
   body.theme-pastel .remove-btn:hover { background: #eeb8b8 !important; }
   
   body.theme-pastel .edit-btn {
-    background: #d8a8e3 !important;
+    background: #98dced !important;
     color: #ffffff !important;
     border-radius: 14px !important;
     box-shadow: 0 3px 5px rgba(0,0,0,0.05);
   }
-  body.theme-pastel .edit-btn:hover { background: #c78fd4 !important; }
+  body.theme-pastel .edit-btn:hover { background: #8fcddb !important; }
   
   /* Global buttons within pastel sections */
   body.theme-pastel #addItemBtn,
@@ -2015,11 +2015,11 @@ body.theme-wisharu a.buy-now-btn:hover {
 }
 
 body.theme-wisharu .edit-btn {
-  background-color: #d8a8e3 !important;
+  background-color: #98dced !important;
   color: #ffffff !important;
 }
 body.theme-wisharu .edit-btn:hover {
-  background-color: #c78fd4 !important;
+  background-color: #8fcddb !important;
 }
 
 body.theme-wisharu .remove-btn {
@@ -2305,11 +2305,11 @@ body:not([class*="theme-"]) a.buy-now-btn:hover {
 
 /* Edit */
 body:not([class*="theme-"]) .edit-btn {
-  background-color: #d8a8e3 !important;
+  background-color: #98dced !important;
   color: #ffffff !important;
 }
 body:not([class*="theme-"]) .edit-btn:hover {
-  background-color: #c78fd4 !important;
+  background-color: #8fcddb !important;
 }
 
 /* Remove */
