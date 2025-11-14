@@ -2048,7 +2048,7 @@ body.theme-wisharu .spinner {
   border-top-color: #fcbe77 !important;
 }
 /* ==========================================================
-   💙 BOY BORING THEME (Old Default Styles)
+   💙 BOY BORING THEME — FIXED & COMPLETE
    ========================================================== */
 
 body.theme-boyboring {
@@ -2058,162 +2058,122 @@ body.theme-boyboring {
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
+/* Titles */
 body.theme-boyboring h1 {
   color: #1f2937;
   font-weight: 700;
 }
 
+/* NAV — remove the blue bar */
 body.theme-boyboring nav {
-  background-color: #2563EB;
-  color: white;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+  background: none !important;
+  box-shadow: none !important;
 }
 
-body.theme-boyboring nav button {
-  background: white;
-  color: #2563EB;
-  border-radius: 10px;
+/* Back / Home Buttons */
+body.theme-boyboring nav button,
+body.theme-boyboring .back-btn,
+body.theme-boyboring .home-btn {
+  background-color: #2563EB !important; /* Wisharu blue */
+  color: #ffffff !important;
+  border-radius: 10px !important;
+  border: none !important;
+  padding: 10px 20px;
   transition: filter 0.2s ease;
 }
-
-body.theme-boyboring nav button:hover {
+body.theme-boyboring nav button:hover,
+body.theme-boyboring .back-btn:hover,
+body.theme-boyboring .home-btn:hover {
   filter: brightness(0.9);
 }
 
-/* ===========================
-   Buttons
-   =========================== */
-
+/* GLOBAL BUTTONS (Add, Share, Edit, Remove) */
 body.theme-boyboring button,
 body.theme-boyboring #addItemBtn,
 body.theme-boyboring #shareList,
 body.theme-boyboring .menu-buttons button,
 body.theme-boyboring .input-container button {
-  background-color: #2563EB;
-  color: #ffffff;
-  border-radius: 10px;
-  border: none;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  background-color: #2563EB !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+  border: none !important;
   transition: filter 0.2s ease;
 }
-
 body.theme-boyboring button:hover,
 body.theme-boyboring #addItemBtn:hover,
 body.theme-boyboring #shareList:hover,
 body.theme-boyboring .menu-buttons button:hover,
 body.theme-boyboring .input-container button:hover {
-  filter: brightness(0.92);
+  filter: brightness(0.9);
 }
 
-body.theme-boyboring a {
-  color: #2563EB;
-  font-weight: 600;
-}
-
-body.theme-boyboring a:hover {
-  opacity: 0.85;
-}
-
-/* ===========================
-   Inputs
-   =========================== */
-
-body.theme-boyboring input,
-body.theme-boyboring select {
-  border: 2px solid #2563EB;
-  background: #ffffff;
-  color: #1f2937;
-  border-radius: 10px;
-}
-
-body.theme-boyboring input::placeholder {
-  color: #8fa7cc;
-}
-
-/* ===========================
-   Wishlist Items
-   =========================== */
-
-body.theme-boyboring li.wishlist-item {
-  background: #ffffff;
-  border-left: 6px solid #2563EB;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
+/* Buy Now Button */
 body.theme-boyboring a.buy-now-btn {
   background-color: #2563EB !important;
-  color: white !important;
-  border-radius: 10px;
+  color: #ffffff !important;
+  border-radius: 10px !important;
   transition: filter 0.2s ease;
 }
-
 body.theme-boyboring a.buy-now-btn:hover {
   filter: brightness(0.9);
 }
 
+/* Edit Button */
 body.theme-boyboring .edit-btn {
-  background-color: #6366F1 !important;
+  background-color: #3da5f4 !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+}
+body.theme-boyboring .edit-btn:hover {
+  background-color: #2b93e3 !important;
+}
+
+/* Remove Button */
+body.theme-boyboring .remove-btn {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+}
+body.theme-boyboring .remove-btn:hover {
+  background-color: #b91c1c !important;
+}
+
+/* Purchased Button */
+body.theme-boyboring .purchased-btn {
+  background-color: #6c757d !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+}
+body.theme-boyboring .purchased-btn:hover {
+  background-color: #5a6268 !important;
+}
+
+/* Purchased ITEM STATE — FIXED */
+body.theme-boyboring li.wishlist-item.purchased {
+  background-color: #e2e8f0 !important;
+  color: #1f2937 !important;
+  border-left: 6px solid #2563EB !important;
+}
+body.theme-boyboring li.wishlist-item.purchased .purchased-btn {
+  background-color: #2563EB !important;
   color: #ffffff !important;
 }
 
-body.theme-boyboring .edit-btn:hover {
-  filter: brightness(0.9);
+/* Inputs */
+body.theme-boyboring input,
+body.theme-boyboring select {
+  border: 2px solid #d0d6e2 !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border-radius: 10px !important;
 }
 
-body.theme-boyboring .remove-btn {
-  background-color: #EF4444 !important;
-  color: white !important;
-}
-
-body.theme-boyboring .remove-btn:hover {
-  filter: brightness(0.9);
-}
-
-body.theme-boyboring .purchased-btn {
-  background-color: #10B981 !important;
-  color: white !important;
-}
-
-body.theme-boyboring .purchased-btn:hover {
-  filter: brightness(0.9);
-}
-
-/* ===========================
-   Toast + Spinner
-   =========================== */
-
+/* Toast */
 body.theme-boyboring .toast {
   background-color: #2563EB !important;
-  color: white;
-  font-weight: 600;
+  color: white !important;
 }
 
-body.theme-boyboring .spinner {
-  border-top-color: #2563EB !important;
-}
-
-/* ===========================
-   Affiliate Bubble
-   =========================== */
-
-body.theme-boyboring .affiliate-bubble {
-  background-color: #eef3ff;
-  border-left: 4px solid #2563EB;
-  color: #1f2937;
-}
-
-body.theme-boyboring .affiliate-footer {
-  color: #2563EB;
-}
-
-/* ===========================
-   Theme Accent Variables
-   =========================== */
-
-body.theme-boyboring {
-  --themeColor: #2563EB;
-  --logoGlow: rgba(37, 99, 235, 0.5);
-}
 /* ==========================================================
    ✅ DEFAULT LOOKS LIKE WISHARU (OVERRIDES)
    ========================================================== */
@@ -2341,12 +2301,4 @@ body:not([class*="theme-"]) .toast {
 }
 body:not([class*="theme-"]) .spinner {
   border-top-color: #fcbe77 !important;
-}
-/* Force Boy Boring nav + menu buttons to use blue */
-body.theme-boyboring nav button,
-body.theme-boyboring .menu-buttons button,
-body.theme-boyboring #backBtn,
-body.theme-boyboring #homeBtn {
-  background-color: #2563eb;  /* blue */
-  color: #ffffff;
 }
