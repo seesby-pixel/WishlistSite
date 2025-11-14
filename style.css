@@ -1438,7 +1438,7 @@ body:not([class*="theme-"]) nav {
   margin-bottom: 25px;
 }
 body:not([class*="theme-"]) nav button {
-  background: #2563eb;
+  background: #fbb45f;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -1448,7 +1448,7 @@ body:not([class*="theme-"]) nav button {
   cursor: pointer;
 }
 body:not([class*="theme-"]) nav button:hover {
-  background: #1e4fc6;
+  background: #eba654;
   transform: translateY(-2px);
 }
 
@@ -1469,7 +1469,7 @@ body:not([class*="theme-"]) .input-container input[type="text"] {
 }
 body:not([class*="theme-"]) .input-container input[type="text"]:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: #eba654;
   box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
 }
 body:not([class*="theme-"]) .input-container button {
@@ -1479,12 +1479,12 @@ body:not([class*="theme-"]) .input-container button {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background-color: #2563eb;
+  background-color: #fbb45f;
   color: white;
   transition: background-color 0.2s, transform 0.1s;
 }
 body:not([class*="theme-"]) .input-container button:hover {
-  background-color: #1e4fc6;
+  background-color: #eba654;
   transform: translateY(-2px);
 }
 
