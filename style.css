@@ -1388,53 +1388,20 @@ body.theme-babyshower .form-stack button {
 body.theme-babyshower .form-stack button:hover {
   background-color: #8cc8e9;
 }
-
 /* ==========================================================
-   🌈 DEFAULT THEME — Fullscreen Background (Peach + Blue)
+   🌊 MODERN NEUTRAL DEFAULT THEME — Full Replacement
    ========================================================== */
 
-/* The background belongs to the HTML element so it fills 100% of viewport */
-html:not([class*="theme-"]) {
-  background: url("./assets/default-bg.png") center center / cover no-repeat fixed;
-  background-attachment: fixed;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #FEE1C8; /* fallback color */
-}
-
-/* Body remains transparent and centered */
+/* === Global Base === */
 body:not([class*="theme-"]) {
-  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   max-width: 700px;
   margin: 40px auto;
   padding: 0 20px;
-  background: transparent !important;
+  background: linear-gradient(to bottom right, #f9fafc, #eef1f5);
   color: #2c2c2c;
-  transition: background-color 0.4s ease, color 0.4s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-
-/* === Ensure full viewport coverage and responsive center === */
-html, body {
-  height: 100%;
-  min-height: 100vh;
-  background-color: #FEE1C8; /* fallback peach color if image loads slowly */
-}
-
-/* === Keep swoop centered on all devices === */
-@media (max-aspect-ratio: 3/4) {
-  body:not([class*="theme-"]) {
-    background-position: center top;
-  }
-}
-
-@media (min-aspect-ratio: 4/3) {
-  body:not([class*="theme-"]) {
-    background-position: center center;
-  }
-}
-
 
 /* === Logo === */
 body:not([class*="theme-"]) #logo-container {
@@ -1445,7 +1412,6 @@ body:not([class*="theme-"]) #site-logo {
   max-width: 280px;
   width: 50%;
   height: auto;
-  filter: drop-shadow(0 0 10px rgba(255, 111, 97, 0.4));
 }
 @media (max-width: 600px) {
   body:not([class*="theme-"]) #site-logo {
@@ -1459,8 +1425,8 @@ body:not([class*="theme-"]) h1 {
   text-align: center;
   margin-bottom: 30px;
   font-size: 2rem;
-  font-weight: 700;
-  color: #FCBE77;
+  font-weight: 600;
+  color: #1f2d3d;
   letter-spacing: 0.5px;
 }
 
@@ -1472,17 +1438,17 @@ body:not([class*="theme-"]) nav {
   margin-bottom: 25px;
 }
 body:not([class*="theme-"]) nav button {
-  background: #FCBE77;
+  background: #2563eb;
   color: white;
   border: none;
   padding: 10px 20px;
   font-size: 14px;
-  border-radius: 8px;
+  border-radius: 6px;
   transition: background 0.2s, transform 0.1s;
   cursor: pointer;
 }
 body:not([class*="theme-"]) nav button:hover {
-  background: #fbb45f;
+  background: #1e4fc6;
   transform: translateY(-2px);
 }
 
@@ -1497,16 +1463,14 @@ body:not([class*="theme-"]) .input-container input[type="text"] {
   flex: 1 1 60%;
   padding: 12px;
   font-size: 16px;
-  border: 2px solid #C9E3F5;
+  border: 2px solid #d0d6e2;
   border-radius: 8px;
-  background-color: #fff;
-  color: #2c2c2c;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 body:not([class*="theme-"]) .input-container input[type="text"]:focus {
   outline: none;
-  border-color: #FCBE77;
-  box-shadow: 0 0 6px rgba(255,111,97,0.3);
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
 }
 body:not([class*="theme-"]) .input-container button {
   flex: 1 1 35%;
@@ -1515,12 +1479,12 @@ body:not([class*="theme-"]) .input-container button {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  background-color: #FCBE77;
+  background-color: #2563eb;
   color: white;
   transition: background-color 0.2s, transform 0.1s;
 }
 body:not([class*="theme-"]) .input-container button:hover {
-  background-color: #fbb45f;
+  background-color: #1e4fc6;
   transform: translateY(-2px);
 }
 
@@ -1536,17 +1500,16 @@ body:not([class*="theme-"]) li.wishlist-item {
   background-color: white;
   margin-bottom: 12px;
   padding: 12px 15px;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.2s ease;
   gap: 12px;
   min-height: 100px;
   opacity: 1;
-  border-left: 6px solid #FCBE77;
 }
 body:not([class*="theme-"]) li.wishlist-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 body:not([class*="theme-"]) li.wishlist-item.removing {
   opacity: 0;
@@ -1563,19 +1526,15 @@ body:not([class*="theme-"]) li.wishlist-item img.product-image {
   width: 80px;
   height: 80px;
   object-fit: contain;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  border-radius: 6px;
 }
 body:not([class*="theme-"]) li.wishlist-item a {
   flex: 1;
-  color: #FCBE77;
+  color: #2563eb;
   text-decoration: none;
   word-break: break-word;
-  font-weight: 500;
 }
 body:not([class*="theme-"]) li.wishlist-item a:hover {
-  color: #1E88E5;
   text-decoration: underline;
 }
 
@@ -1597,7 +1556,7 @@ body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
   min-height: 48px;
   font-size: 14px;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: 6px;
   color: white;
   border: none;
   cursor: pointer;
@@ -1607,46 +1566,45 @@ body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
 
 /* Buy Now */
 body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
-  background-color: #FCBE77;
+  background-color: #2563eb;
 }
 body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn:hover {
-  background-color: #fbb45f;
+  background-color: #1e4fc6;
   transform: translateY(-2px);
 }
 
 /* Edit */
 body:not([class*="theme-"]) li.wishlist-item button.edit-btn {
-  background-color: #7DC4EE;
+  background-color: #3da5f4;
 }
 body:not([class*="theme-"]) li.wishlist-item button.edit-btn:hover {
-  background-color: #68B1E0;
+  background-color: #2b93e3;
 }
 
 /* Remove */
 body:not([class*="theme-"]) li.wishlist-item button.remove-btn {
-  background-color: #9EA4AA;
+  background-color: #6c757d;
 }
 body:not([class*="theme-"]) li.wishlist-item button.remove-btn:hover {
-  background-color: #7F8489;
+  background-color: #555b61;
 }
 
 /* Purchased */
 body:not([class*="theme-"]) li.wishlist-item button.purchased-btn {
-  background-color: #C9E3F5;
-  color: #2c2c2c;
+  background-color: #9ea4aa;
 }
 body:not([class*="theme-"]) li.wishlist-item button.purchased-btn:hover {
-  background-color: #B3D6F0;
+  background-color: #7f8489;
 }
 
 /* Purchased State */
 body:not([class*="theme-"]) li.wishlist-item.purchased {
-  background-color: #FFF2ED;
+  background-color: #f0f4fa;
   color: #2c2c2c;
-  border-left: 6px solid #C9E3F5;
+  border-left: 6px solid #2563eb;
 }
 body:not([class*="theme-"]) li.wishlist-item.purchased .purchased-btn {
-  background-color: #FCBE77;
+  background-color: #2563eb;
   color: #fff;
 }
 
@@ -1657,18 +1615,18 @@ body:not([class*="theme-"]) #shareList {
   font-size: 16px;
   border: none;
   border-radius: 8px;
-  background-color: #FCBE77;
+  background-color: #2563eb;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 body:not([class*="theme-"]) #shareList:hover {
-  background-color: #fbb45f;
+  background-color: #1e4fc6;
 }
 body:not([class*="theme-"]) #shareMessage {
   margin-top: 12px;
   font-weight: bold;
-  color: #FCBE77;
+  color: #2563eb;
   word-break: break-word;
 }
 
@@ -1693,7 +1651,7 @@ body:not([class*="theme-"]) .spinner {
   width: 20px;
   height: 20px;
   border: 3px solid #ddd;
-  border-top-color: #FCBE77;
+  border-top-color: #2563eb;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -1707,11 +1665,11 @@ body:not([class*="theme-"]) .toast {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #FCBE77;
+  background-color: #2563eb;
   color: white;
   padding: 12px 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   font-weight: bold;
   z-index: 1000;
   animation: fadeInOut 3s forwards;
@@ -1725,7 +1683,7 @@ body:not([class*="theme-"]) .toast {
 /* === Forms & Menus === */
 body:not([class*="theme-"]) .menu-buttons button,
 body:not([class*="theme-"]) .form-stack button {
-  background-color: #FCBE77;
+  background-color: #2563eb;
   color: white;
   border: none;
   border-radius: 8px;
@@ -1735,7 +1693,7 @@ body:not([class*="theme-"]) .form-stack button {
 }
 body:not([class*="theme-"]) .menu-buttons button:hover,
 body:not([class*="theme-"]) .form-stack button:hover {
-  background-color: #fbb45f;
+  background-color: #1e4fc6;
   transform: translateY(-2px);
 }
 body:not([class*="theme-"]) .form-stack input[type="text"],
@@ -1743,7 +1701,7 @@ body:not([class*="theme-"]) .form-stack input[type="password"],
 body:not([class*="theme-"]) .form-stack input[type="email"],
 body:not([class*="theme-"]) .form-stack select {
   background-color: #ffffff;
-  border: 2px solid #C9E3F5;
+  border: 2px solid #d0d6e2;
   border-radius: 8px;
   padding: 10px;
   text-align: center;
@@ -1753,8 +1711,8 @@ body:not([class*="theme-"]) .form-stack select {
 body:not([class*="theme-"]) .form-stack input:focus,
 body:not([class*="theme-"]) .form-stack select:focus {
   outline: none;
-  border-color: #FCBE77;
-  box-shadow: 0 0 6px rgba(255,111,97,0.3);
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
 }
 body:not([class*="theme-"]) .error-text {
   color: #c0392b;
@@ -1785,372 +1743,6 @@ body:not([class*="theme-"]) .error-text {
     font-size: 15px;
   }
 }
-
-/* === Accent Variables === */
-body:not([class*="theme-"]) {
-  --themeColor: #FCBE77;
-  --logoGlow: rgba(255, 111, 97, 0.5);
-}
-
-
-/* ==========================================================
-   💙 BOY BORING THEME — formerly the Modern Neutral Default
-   ========================================================== */
-
-/* === Global Base === */
-body.theme-boyboring {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 0 20px;
-  background: linear-gradient(to bottom right, #f9fafc, #eef1f5);
-  color: #2c2c2c;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* === Logo === */
-body.theme-boyboring #logo-container {
-  text-align: center;
-  margin: 30px 0;
-}
-body.theme-boyboring #site-logo {
-  max-width: 280px;
-  width: 50%;
-  height: auto;
-}
-@media (max-width: 600px) {
-  body.theme-boyboring #site-logo {
-    max-width: 200px;
-    width: 70%;
-  }
-}
-
-/* === Titles === */
-body.theme-boyboring h1 {
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 2rem;
-  font-weight: 600;
-  color: #1f2d3d;
-  letter-spacing: 0.5px;
-}
-
-/* === Navigation === */
-body.theme-boyboring nav {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 25px;
-}
-body.theme-boyboring nav button {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 14px;
-  border-radius: 6px;
-  transition: background 0.2s, transform 0.1s;
-  cursor: pointer;
-}
-body.theme-boyboring nav button:hover {
-  background: #1e4fc6;
-  transform: translateY(-2px);
-}
-
-/* === Input Section === */
-body.theme-boyboring .input-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-body.theme-boyboring .input-container input[type="text"] {
-  flex: 1 1 60%;
-  padding: 12px;
-  font-size: 16px;
-  border: 2px solid #d0d6e2;
-  border-radius: 8px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-body.theme-boyboring .input-container input[type="text"]:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
-}
-body.theme-boyboring .input-container button {
-  flex: 1 1 35%;
-  padding: 12px 15px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: #2563eb;
-  color: white;
-  transition: background-color 0.2s, transform 0.1s;
-}
-body.theme-boyboring .input-container button:hover {
-  background-color: #1e4fc6;
-  transform: translateY(-2px);
-}
-
-/* === Wishlist Items === */
-body.theme-boyboring ul#wishlistContainer {
-  list-style: none;
-  padding: 0;
-}
-body.theme-boyboring li.wishlist-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: white;
-  margin-bottom: 12px;
-  padding: 12px 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.2s ease;
-  gap: 12px;
-  min-height: 100px;
-  opacity: 1;
-}
-body.theme-boyboring li.wishlist-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-body.theme-boyboring li.wishlist-item.removing {
-  opacity: 0;
-  transform: translateX(50px);
-}
-
-body.theme-boyboring li.wishlist-item .item-info {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  gap: 12px;
-}
-body.theme-boyboring li.wishlist-item img.product-image {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  border-radius: 6px;
-}
-body.theme-boyboring li.wishlist-item a {
-  flex: 1;
-  color: #2563eb;
-  text-decoration: none;
-  word-break: break-word;
-}
-body.theme-boyboring li.wishlist-item a:hover {
-  text-decoration: underline;
-}
-
-/* === Wishlist Item Buttons === */
-body.theme-boyboring li.wishlist-item .button-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-width: 130px;
-}
-body.theme-boyboring li.wishlist-item button,
-body.theme-boyboring li.wishlist-item a.buy-now-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 130px;
-  min-height: 48px;
-  font-size: 14px;
-  font-weight: 600;
-  border-radius: 6px;
-  color: white;
-  border: none;
-  cursor: pointer;
-  box-sizing: border-box;
-  transition: background-color 0.2s, transform 0.1s ease;
-}
-
-/* Buy Now */
-body.theme-boyboring li.wishlist-item a.buy-now-btn {
-  background-color: #2563eb;
-}
-body.theme-boyboring li.wishlist-item a.buy-now-btn:hover {
-  background-color: #1e4fc6;
-  transform: translateY(-2px);
-}
-
-/* Edit */
-body.theme-boyboring li.wishlist-item button.edit-btn {
-  background-color: #3da5f4;
-}
-body.theme-boyboring li.wishlist-item button.edit-btn:hover {
-  background-color: #2b93e3;
-}
-
-/* Remove */
-body.theme-boyboring li.wishlist-item button.remove-btn {
-  background-color: #6c757d;
-}
-body.theme-boyboring li.wishlist-item button.remove-btn:hover {
-  background-color: #555b61;
-}
-
-/* Purchased */
-body.theme-boyboring li.wishlist-item button.purchased-btn {
-  background-color: #9ea4aa;
-}
-body.theme-boyboring li.wishlist-item button.purchased-btn:hover {
-  background-color: #7f8489;
-}
-
-/* Purchased State */
-body.theme-boyboring li.wishlist-item.purchased {
-  background-color: #f0f4fa;
-  color: #2c2c2c;
-  border-left: 6px solid #2563eb;
-}
-body.theme-boyboring li.wishlist-item.purchased .purchased-btn {
-  background-color: #2563eb;
-  color: #fff;
-}
-
-/* === Share Button & Message === */
-body.theme-boyboring #shareList {
-  margin-top: 20px;
-  padding: 12px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  background-color: #2563eb;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-body.theme-boyboring #shareList:hover {
-  background-color: #1e4fc6;
-}
-body.theme-boyboring #shareMessage {
-  margin-top: 12px;
-  font-weight: bold;
-  color: #2563eb;
-  word-break: break-word;
-}
-
-/* === Empty State === */
-body.theme-boyboring #emptyMessage {
-  text-align: center;
-  color: #555;
-  font-style: italic;
-  margin-top: 15px;
-}
-
-/* === Loading Spinner === */
-body.theme-boyboring .loading {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: center;
-  color: #555;
-  margin: 12px 0 16px;
-}
-body.theme-boyboring .spinner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid #ddd;
-  border-top-color: #2563eb;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-/* === Toast === */
-body.theme-boyboring .toast {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #2563eb;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  font-weight: bold;
-  z-index: 1000;
-  animation: fadeInOut 3s forwards;
-}
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
-  10%, 90% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
-  100% { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
-}
-
-/* === Forms & Menus === */
-body.theme-boyboring .menu-buttons button,
-body.theme-boyboring .form-stack button {
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 16px;
-  transition: background-color 0.2s, transform 0.1s;
-}
-body.theme-boyboring .menu-buttons button:hover,
-body.theme-boyboring .form-stack button:hover {
-  background-color: #1e4fc6;
-  transform: translateY(-2px);
-}
-body.theme-boyboring .form-stack input[type="text"],
-body.theme-boyboring .form-stack input[type="password"],
-body.theme-boyboring .form-stack input[type="email"],
-body.theme-boyboring .form-stack select {
-  background-color: #ffffff;
-  border: 2px solid #d0d6e2;
-  border-radius: 8px;
-  padding: 10px;
-  text-align: center;
-  box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-body.theme-boyboring .form-stack input:focus,
-body.theme-boyboring .form-stack select:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
-}
-body.theme-boyboring .error-text {
-  color: #c0392b;
-  text-align: center;
-}
-
-/* === Responsive === */
-@media (max-width: 600px) {
-  body.theme-boyboring .input-container {
-    flex-direction: column;
-  }
-  body.theme-boyboring .input-container input,
-  body.theme-boyboring .input-container button {
-    flex: 1 1 100%;
-  }
-  body.theme-boyboring li.wishlist-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  body.theme-boyboring li.wishlist-item .button-group {
-    width: 100%;
-    gap: 8px;
-  }
-  body.theme-boyboring li.wishlist-item button,
-  body.theme-boyboring li.wishlist-item a.buy-now-btn {
-    width: 100%;
-    height: 44px;
-    font-size: 15px;
-  }
-}
-
-
-
 /* ==============================
    LOGO STYLING + GLOW EFFECT
    ============================== */
@@ -2335,165 +1927,290 @@ body.theme-babyshower .affiliate-bubble {
   color: #333;
 }
 /* ==========================================================
-   FULLSCREEN BACKGROUNDS (Laptop + Mobile) — OVERRIDE LAYER
-   Paste at the VERY BOTTOM of style.css
+   🌟 WISHARU THEME (Peach Modern Neutral)
    ========================================================== */
 
-/* 1) The content column stays 700px, but the body is transparent,
-      so the page background from <html> can fill the viewport */
-body,
-body.theme-christmas,
-body.theme-elegant,
-body.theme-bubblegum,
-body.theme-pastel,
-body.theme-babyshower {
-  background: transparent !important;
+body.theme-wisharu {
+  background: url('assets/default-bg.png') center center / cover no-repeat fixed;
+  background-color: #fff8f3; /* fallback neutral tone */
+  color: #4e4137;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* 2) Make the viewport background behave the same everywhere */
-html {
-  min-height: 100dvh;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-position: center center !important;
+/* Title */
+body.theme-wisharu h1 {
+  color: #c57a3a;
+  text-align: center;
+  font-weight: 700;
 }
 
-/* 3) Put each theme background on <html> so it fills the screen */
-html:not([class*="theme-"]) {                          /* Default */
-  background-image: url("./assets/default-bg.png");
-  background-color: #ffffff;           /* neutral fallback */
-  background-attachment: fixed;
+/* Links */
+body.theme-wisharu a {
+  color: #c57a3a;
+  font-weight: 600;
+}
+body.theme-wisharu a:hover {
+  color: #a9642f;
 }
 
-html.theme-christmas {
-  background-image: url("./assets/xmas-bg.png?v=9");
-  background-color: #0f0f0f;
-  background-attachment: fixed;
+/* ===========================
+   Buttons + Inputs
+   =========================== */
+
+body.theme-wisharu button,
+body.theme-wisharu .menu-buttons button,
+body.theme-wisharu #addItemBtn,
+body.theme-wisharu #shareList,
+body.theme-wisharu nav button,
+body.theme-wisharu .input-container button {
+  background-color: #fcbe77;
+  color: #ffffff;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  transition: background-color 0.2s ease, filter 0.2s ease;
 }
 
-html.theme-elegant {
-  background-image: url("./assets/elegant-bg.png");
-  background-color: #ffffff;
-  background-attachment: fixed;
+body.theme-wisharu button:hover,
+body.theme-wisharu .menu-buttons button:hover,
+body.theme-wisharu #addItemBtn:hover,
+body.theme-wisharu #shareList:hover,
+body.theme-wisharu nav button:hover,
+body.theme-wisharu .input-container button:hover {
+  filter: brightness(0.92);
 }
 
-html.theme-pastel {
-  background-image: url("./assets/pastel-bg.svg");
-  background-color: #fff8f6;
-  background-attachment: fixed;
+/* Inputs */
+body.theme-wisharu input,
+body.theme-wisharu select {
+  border: 2px solid #f3c095;
+  background: #ffffff;
+  color: #4e4137;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(252,190,119,0.15);
+}
+body.theme-wisharu input::placeholder {
+  color: #d89f6f;
 }
 
-html.theme-babyshower {
-  /* If you want the star pattern to fill the screen rather than tile: */
-  background-image: url("./assets/babyshower-stars.png");
-  background-color: #ffffff;
-  background-attachment: fixed;
+/* ===========================
+   Wishlist Items
+   =========================== */
+
+body.theme-wisharu li.wishlist-item {
+  background: #ffffff;
+  border-left: 6px solid #fcbe77;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
-html.theme-bubblegum {
-  background-image: url("./assets/bubblegum-bg.png");
-  background-color: #ffffff;
-  background-attachment: fixed;
+body.theme-wisharu a.buy-now-btn {
+  background-color: #fcbe77 !important;
+  color: white !important;
+  border-radius: 10px;
+  transition: background-color 0.25s ease;
+}
+body.theme-wisharu a.buy-now-btn:hover {
+  background-color: #e6a662 !important;
 }
 
-/* 4) Mobile/WebView quirk: 'fixed' causes cropping/jumpiness.
-      Keep the same full-bleed look but disable the fixed attachment on small screens. */
-@media (max-width: 1024px) {
-  html { background-attachment: scroll !important; }
+body.theme-wisharu .edit-btn {
+  background-color: #d8a8e3 !important;
+  color: #ffffff !important;
+}
+body.theme-wisharu .edit-btn:hover {
+  background-color: #c78fd4 !important;
+}
+
+body.theme-wisharu .remove-btn {
+  background-color: #f4c9c9 !important;
+  color: #4e4137 !important;
+}
+body.theme-wisharu .remove-btn:hover {
+  background-color: #eeb7b7 !important;
+}
+
+body.theme-wisharu .purchased-btn {
+  background-color: #c8ded9 !important;
+  color: #3c3c3c !important;
+}
+body.theme-wisharu .purchased-btn:hover {
+  background-color: #b8ccc5 !important;
+}
+
+/* Toast + Spinner */
+body.theme-wisharu .toast {
+  background-color: #fcbe77 !important;
+  color: white;
+  font-weight: 600;
+}
+body.theme-wisharu .spinner {
+  border-top-color: #fcbe77 !important;
 }
 /* ==========================================================
-   FINAL FIX — Every Theme Background Fills Full Screen (All Devices)
+   💙 BOY BORING THEME (Old Default Styles)
    ========================================================== */
 
-/* Reset */
-body::before { content: none !important; }
-body { background: transparent !important; }
-
-/* Ensure full coverage */
-html, body {
-  min-height: 100vh;
-  width: 100%;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-position: center center !important;
+body.theme-boyboring {
+  background: linear-gradient(to bottom right, #f9fafc, #eef1f5);
+  color: #1f2937;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* === Default (no theme class) === */
-html:not([class*="theme-"]) {
-  background-image: url("./assets/default-bg.png");
-  background-color: #ffffff;
+body.theme-boyboring h1 {
+  color: #1f2937;
+  font-weight: 700;
 }
 
-/* === Christmas === */
-html.theme-christmas {
-  background-image: url("./assets/xmas-bg.png?v=9");
-  background-color: #ffffff;
+body.theme-boyboring nav {
+  background-color: #2563EB;
+  color: white;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
 }
 
-/* === Elegant === */
-html.theme-elegant {
-  background-image: url("./assets/elegant-bg.png");
-  background-color: #ffffff;
+body.theme-boyboring nav button {
+  background: white;
+  color: #2563EB;
+  border-radius: 10px;
+  transition: filter 0.2s ease;
 }
 
-/* === Pastel === */
-html.theme-pastel {
-  background-image: url("./assets/pastel-bg.svg");
-  background-color: #ffffff;
+body.theme-boyboring nav button:hover {
+  filter: brightness(0.9);
 }
 
-/* === Baby Shower === */
-html.theme-babyshower {
-  background-image: url("./assets/babyshower-stars.png");
-  background-color: #ffffff;
+/* ===========================
+   Buttons
+   =========================== */
+
+body.theme-boyboring button,
+body.theme-boyboring #addItemBtn,
+body.theme-boyboring #shareList,
+body.theme-boyboring .menu-buttons button,
+body.theme-boyboring .input-container button {
+  background-color: #2563EB;
+  color: #ffffff;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: filter 0.2s ease;
 }
 
-/* === Bubblegum === */
-html.theme-bubblegum {
-  background-image: url("./assets/bubblegum-bg.png");
-  background-color: #ffffff;
+body.theme-boyboring button:hover,
+body.theme-boyboring #addItemBtn:hover,
+body.theme-boyboring #shareList:hover,
+body.theme-boyboring .menu-buttons button:hover,
+body.theme-boyboring .input-container button:hover {
+  filter: brightness(0.92);
 }
 
-/* === Boy Boring (no image) === */
-html.theme-boyboring {
-  background: #f1f3f5 !important;
-  background-image: none !important;
+body.theme-boyboring a {
+  color: #2563EB;
+  font-weight: 600;
 }
 
-/* === Mobile fix: remove fixed-attachment conflicts === */
-@media (max-width: 1024px) {
-  html {
-    background-attachment: scroll !important;
-  }
-}
-/* ==========================================================
-   FULLSCREEN BACKGROUNDS (works when themes are on <body>)
-   ========================================================== */
-
-/* The content column can stay 700px — make body transparent */
-body { background: transparent !important; }
-
-/* Full-bleed background behavior on the viewport element */
-html {
-  min-height: 100dvh;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-position: center center !important;
-  background-attachment: scroll !important; /* consistent on mobile/desktop */
+body.theme-boyboring a:hover {
+  opacity: 0.85;
 }
 
-/* DEFAULT (no theme on body) */
-html:not(:has(body[class*="theme-"])) {
-  background-image: url("./assets/default-bg.png");
-  background-color: #ffffff;
+/* ===========================
+   Inputs
+   =========================== */
+
+body.theme-boyboring input,
+body.theme-boyboring select {
+  border: 2px solid #2563EB;
+  background: #ffffff;
+  color: #1f2937;
+  border-radius: 10px;
 }
 
-/* THEMES — select html based on body’s theme class */
-html:has(body.theme-christmas)   { background-image: url("./assets/xmas-bg.png?v=9");  background-color:#ffffff; }
-html:has(body.theme-elegant)     { background-image: url("./assets/elegant-bg.png");   background-color:#ffffff; }
-html:has(body.theme-pastel)      { background-image: url("./assets/pastel-bg.svg");    background-color:#ffffff; }
-html:has(body.theme-babyshower)  { background-image: url("./assets/babyshower-stars.png"); background-color:#ffffff; }
-html:has(body.theme-bubblegum)   { background-image: url("./assets/bubblegum-bg.png"); background-color:#ffffff; }
+body.theme-boyboring input::placeholder {
+  color: #8fa7cc;
+}
 
-/* Boy Boring = solid neutral background (no image) */
-html:has(body.theme-boyboring)   { background-image: none !important; background-color: #f1f3f5 !important; }
+/* ===========================
+   Wishlist Items
+   =========================== */
+
+body.theme-boyboring li.wishlist-item {
+  background: #ffffff;
+  border-left: 6px solid #2563EB;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+body.theme-boyboring a.buy-now-btn {
+  background-color: #2563EB !important;
+  color: white !important;
+  border-radius: 10px;
+  transition: filter 0.2s ease;
+}
+
+body.theme-boyboring a.buy-now-btn:hover {
+  filter: brightness(0.9);
+}
+
+body.theme-boyboring .edit-btn {
+  background-color: #6366F1 !important;
+  color: #ffffff !important;
+}
+
+body.theme-boyboring .edit-btn:hover {
+  filter: brightness(0.9);
+}
+
+body.theme-boyboring .remove-btn {
+  background-color: #EF4444 !important;
+  color: white !important;
+}
+
+body.theme-boyboring .remove-btn:hover {
+  filter: brightness(0.9);
+}
+
+body.theme-boyboring .purchased-btn {
+  background-color: #10B981 !important;
+  color: white !important;
+}
+
+body.theme-boyboring .purchased-btn:hover {
+  filter: brightness(0.9);
+}
+
+/* ===========================
+   Toast + Spinner
+   =========================== */
+
+body.theme-boyboring .toast {
+  background-color: #2563EB !important;
+  color: white;
+  font-weight: 600;
+}
+
+body.theme-boyboring .spinner {
+  border-top-color: #2563EB !important;
+}
+
+/* ===========================
+   Affiliate Bubble
+   =========================== */
+
+body.theme-boyboring .affiliate-bubble {
+  background-color: #eef3ff;
+  border-left: 4px solid #2563EB;
+  color: #1f2937;
+}
+
+body.theme-boyboring .affiliate-footer {
+  color: #2563EB;
+}
+
+/* ===========================
+   Theme Accent Variables
+   =========================== */
+
+body.theme-boyboring {
+  --themeColor: #2563EB;
+  --logoGlow: rgba(37, 99, 235, 0.5);
+}
