@@ -2214,3 +2214,131 @@ body.theme-boyboring {
   --themeColor: #2563EB;
   --logoGlow: rgba(37, 99, 235, 0.5);
 }
+/* ==========================================================
+   ✅ DEFAULT LOOKS LIKE WISHARU (OVERRIDES)
+   ========================================================== */
+
+/* Base body: same as Wisharu */
+body:not([class*="theme-"]) {
+  background: url('assets/default-bg.png') center center / cover no-repeat fixed;
+  background-color: #fff8f3; /* fallback peachy tone */
+  color: #4e4137;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Title */
+body:not([class*="theme-"]) h1 {
+  color: #c57a3a;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* Links */
+body:not([class*="theme-"]) a {
+  color: #c57a3a;
+  font-weight: 600;
+}
+body:not([class*="theme-"]) a:hover {
+  color: #a9642f;
+}
+
+/* ===========================
+   Buttons + Inputs (Wisharu colours)
+   =========================== */
+
+body:not([class*="theme-"]) button,
+body:not([class*="theme-"]) .menu-buttons button,
+body:not([class*="theme-"]) #addItemBtn,
+body:not([class*="theme-"]) #shareList,
+body:not([class*="theme-"]) nav button,
+body:not([class*="theme-"]) .input-container button {
+  background-color: #fcbe77;
+  color: #ffffff;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+  transition: background-color 0.2s ease, filter 0.2s ease;
+}
+
+body:not([class*="theme-"]) button:hover,
+body:not([class*="theme-"]) .menu-buttons button:hover,
+body:not([class*="theme-"]) #addItemBtn:hover,
+body:not([class*="theme-"]) #shareList:hover,
+body:not([class*="theme-"]) nav button:hover,
+body:not([class*="theme-"]) .input-container button:hover {
+  filter: brightness(0.92);
+}
+
+/* Inputs */
+body:not([class*="theme-"]) input,
+body:not([class*="theme-"]) select {
+  border: 2px solid #f3c095;
+  background: #ffffff;
+  color: #4e4137;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(252,190,119,0.15);
+}
+body:not([class*="theme-"]) input::placeholder {
+  color: #d89f6f;
+}
+
+/* ===========================
+   Wishlist Items
+   =========================== */
+
+body:not([class*="theme-"]) li.wishlist-item {
+  background: #ffffff;
+  border-left: 6px solid #fcbe77;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Buy Now */
+body:not([class*="theme-"]) a.buy-now-btn {
+  background-color: #fcbe77 !important;
+  color: white !important;
+  border-radius: 10px;
+  transition: background-color 0.25s ease;
+}
+body:not([class*="theme-"]) a.buy-now-btn:hover {
+  background-color: #e6a662 !important;
+}
+
+/* Edit */
+body:not([class*="theme-"]) .edit-btn {
+  background-color: #d8a8e3 !important;
+  color: #ffffff !important;
+}
+body:not([class*="theme-"]) .edit-btn:hover {
+  background-color: #c78fd4 !important;
+}
+
+/* Remove */
+body:not([class*="theme-"]) .remove-btn {
+  background-color: #f4c9c9 !important;
+  color: #4e4137 !important;
+}
+body:not([class*="theme-"]) .remove-btn:hover {
+  background-color: #eeb7b7 !important;
+}
+
+/* Purchased */
+body:not([class*="theme-"]) .purchased-btn {
+  background-color: #c8ded9 !important;
+  color: #3c3c3c !important;
+}
+body:not([class*="theme-"]) .purchased-btn:hover {
+  background-color: #b8ccc5 !important;
+}
+
+/* ===========================
+   Toast + Spinner
+   =========================== */
+
+body:not([class*="theme-"]) .toast {
+  background-color: #fcbe77 !important;
+  color: white;
+  font-weight: 600;
+}
+body:not([class*="theme-"]) .spinner {
+  border-top-color: #fcbe77 !important;
+}
