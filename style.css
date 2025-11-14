@@ -2342,3 +2342,11 @@ body:not([class*="theme-"]) .toast {
 body:not([class*="theme-"]) .spinner {
   border-top-color: #fcbe77 !important;
 }
+/* Force Boy Boring nav + menu buttons to use blue */
+body.theme-boyboring nav button,
+body.theme-boyboring .menu-buttons button,
+body.theme-boyboring #backBtn,
+body.theme-boyboring #homeBtn {
+  background-color: #2563eb;  /* blue */
+  color: #ffffff;
+}
