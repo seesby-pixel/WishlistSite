@@ -74,12 +74,12 @@ h1 {
     font-size: 14px;
     border: none;
     border-radius: 6px;
-    background-color: #007bff;
+    background-color: #fbb45f;
     color: white;
     cursor: pointer;
     transition: background-color 0.2s;
   }
-  nav button:hover { background-color: #0056b3; }
+  nav button:hover { background-color: #fbb45f; }
   
   .input-container {
     display: flex;
@@ -1530,7 +1530,7 @@ body:not([class*="theme-"]) li.wishlist-item img.product-image {
 }
 body:not([class*="theme-"]) li.wishlist-item a {
   flex: 1;
-  color: #2563eb;
+  color: #fbb45f;
   text-decoration: none;
   word-break: break-word;
 }
@@ -1566,7 +1566,7 @@ body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
 
 /* Buy Now */
 body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn {
-  background-color: #2563eb;
+  background-color: #fbb45f;
 }
 body:not([class*="theme-"]) li.wishlist-item a.buy-now-btn:hover {
   background-color: #1e4fc6;
@@ -1601,10 +1601,10 @@ body:not([class*="theme-"]) li.wishlist-item button.purchased-btn:hover {
 body:not([class*="theme-"]) li.wishlist-item.purchased {
   background-color: #f0f4fa;
   color: #2c2c2c;
-  border-left: 6px solid #2563eb;
+  border-left: 6px solid #fbb45f;
 }
 body:not([class*="theme-"]) li.wishlist-item.purchased .purchased-btn {
-  background-color: #2563eb;
+  background-color: #fbb45f;
   color: #fff;
 }
 
@@ -1615,7 +1615,7 @@ body:not([class*="theme-"]) #shareList {
   font-size: 16px;
   border: none;
   border-radius: 8px;
-  background-color: #2563eb;
+  background-color: #fbb45f;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -1626,7 +1626,7 @@ body:not([class*="theme-"]) #shareList:hover {
 body:not([class*="theme-"]) #shareMessage {
   margin-top: 12px;
   font-weight: bold;
-  color: #2563eb;
+  color: #fbb45f;
   word-break: break-word;
 }
 
@@ -1651,7 +1651,7 @@ body:not([class*="theme-"]) .spinner {
   width: 20px;
   height: 20px;
   border: 3px solid #ddd;
-  border-top-color: #2563eb;
+  border-top-color: #fbb45f;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -1665,7 +1665,7 @@ body:not([class*="theme-"]) .toast {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #2563eb;
+  background-color: #fbb45f;
   color: white;
   padding: 12px 20px;
   border-radius: 8px;
@@ -1683,7 +1683,7 @@ body:not([class*="theme-"]) .toast {
 /* === Forms & Menus === */
 body:not([class*="theme-"]) .menu-buttons button,
 body:not([class*="theme-"]) .form-stack button {
-  background-color: #2563eb;
+  background-color: #fbb45f;
   color: white;
   border: none;
   border-radius: 8px;
@@ -1711,7 +1711,7 @@ body:not([class*="theme-"]) .form-stack select {
 body:not([class*="theme-"]) .form-stack input:focus,
 body:not([class*="theme-"]) .form-stack select:focus {
   outline: none;
-  border-color: #2563eb;
+  border-color: #fbb45f;
   box-shadow: 0 0 6px rgba(37, 99, 235, 0.2);
 }
 body:not([class*="theme-"]) .error-text {
@@ -1761,7 +1761,7 @@ body:not([class*="theme-"]) .error-text {
    THEME COLORS & GLOW
    ============================== */
 body:not([class*="theme-"]) {
-  --themeColor: #2563EB;
+  --themeColor: #fbb45f;
   --logoGlow: rgba(37, 99, 235, 0.5);
 }
 
