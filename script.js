@@ -290,94 +290,114 @@ async function fetchAmazonInfo(url) {
 async function processAmazonLink(inputUrl) {
   const affiliateTag = "giftwishlis01-20";
 
-  // ✅ EARLY REJECTION FOR MISSION/PROMO LINKS
+  let original;
   try {
-    const uMission = new URL(inputUrl);
-    const path = uMission.pathname.toLowerCase();
-    const looksLikeMission = path.includes("/hz/") && path.includes("mission");
-    if (looksLikeMission) {
-      throw new Error("This is a special link, Please enter a standard Amazon link.");
-    }
+    original = new URL(inputUrl.trim());
   } catch {
-    // If URL is invalid or fails parsing
-    throw new Error("This is a special link, Please enter a standard Amazon link.");
+    throw new Error("Please enter a valid Amazon link.");
   }
 
-  // ✅ FAST-PATH ASIN DETECTION
-  try {
-    const u0 = new URL(inputUrl);
-    if (u0.hostname.includes("amazon.")) {
-      u0.hostname = "www.amazon.com"; // normalize all Amazon domains to .com
+  const host = original.hostname.toLowerCase();
+  const isAmazonDomain = host.includes("amazon.");
+  const isShortAmazon = host === "a.co" || host.endsWith("amzn.to");
 
-      const m0 = u0.pathname.match(/\/(?:dp|gp\/product|product)\/([A-Z0-9]{10})/i);
-      if (m0) {
-        const origin0 = `${u0.protocol}//${u0.host}`;
-        const clean0 = new URL(`/dp/${m0[1]}`, origin0);
-        clean0.search = "";
-        clean0.hash = "";
-        clean0.searchParams.set("tag", affiliateTag);
-        return clean0.toString();
-      }
+  // 🚫 Block mission / promo links only on full amazon.* URLs
+  if (isAmazonDomain) {
+    const path = original.pathname.toLowerCase();
+    if (path.includes("/hz/") && path.includes("mission")) {
+      throw new Error("This is a special link. Please enter a standard Amazon product link.");
     }
-  } catch {
-    // ignore and fall back
   }
 
-  // ⬇️ the rest of your existing logic with fetch...
-  let finalURL = inputUrl;
+  // ⚡ Fast path: normal amazon.* URL that already has an ASIN in the path
+  if (isAmazonDomain) {
+    const m0 = original.pathname.match(/\/(?:dp|gp\/product|product)\/([A-Z0-9]{10})/i);
+    if (m0) {
+      const clean = new URL(`/dp/${m0[1]}`, "https://www.amazon.com");
+      clean.search = "";
+      clean.hash = "";
+      clean.searchParams.set("tag", affiliateTag);
+      return clean.toString();
+    }
+  }
+
+  // 🧵 Resolve short / weird URLs (a.co, amzn.to, etc.) via AllOrigins
+  let finalURL = original.href;
   let resolvedHtml = "";
   try {
-    const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(inputUrl)}`);
+    const res = await fetch(
+      `https://api.allorigins.win/get?url=${encodeURIComponent(original.href)}`
+    );
     const data = await res.json();
     resolvedHtml = data?.contents || "";
+
     if (resolvedHtml) {
       const doc = new DOMParser().parseFromString(resolvedHtml, "text/html");
-      const c = doc.querySelector('link[rel="canonical"]')?.getAttribute("href") || "";
-      if (c) finalURL = c;
+
+      // Prefer canonical if available
+      const canonicalHref =
+        doc.querySelector('link[rel="canonical"]')?.getAttribute("href") || "";
+      if (canonicalHref) {
+        finalURL = canonicalHref;
+      } else if (isShortAmazon) {
+        // Fallback for some short pages: grab any amazon.* link on the page
+        const anchor = doc.querySelector('a[href*="amazon."]');
+        if (anchor?.href) finalURL = anchor.href;
+      }
     }
   } catch {
-    // ignore; fallback to input URL
+    // ignore; we'll fall back to whatever we already have
   }
 
+  let u;
   try {
-    const u = new URL(finalURL);
-    if (!u.hostname.includes("amazon.")) throw new Error();
-
-    let asin = getAsin(u);
-    if (!asin) {
-      const iu = new URL(inputUrl);
-      asin = getAsin(iu) || null;
-      if (!asin && resolvedHtml) {
-        const m =
-          resolvedHtml.match(/\/dp\/([A-Z0-9]{10})/i) ||
-          resolvedHtml.match(/"asin"\s*:\s*"([A-Z0-9]{10})"/i) ||
-          resolvedHtml.match(/data-asin="([A-Z0-9]{10})"/i);
-        if (m) asin = m[1];
-      }
-    }
-
-    if (!asin) {
-      const path = new URL(finalURL).pathname.toLowerCase();
-      const looksLikeMission = path.includes("/hz/") && path.includes("mission");
-      if (looksLikeMission && !asin) {
-        throw new Error("This is a special link, Please enter a standard Amazon link.");
-      }
-
-      const u2 = new URL(finalURL);
-      if (!u2.hostname.includes("amazon.")) throw new Error("This is a special link, Please enter a standard Amazon link..");
-      u2.hash = "";
-      u2.search = "";
-      u2.searchParams.set("tag", affiliateTag);
-      return u2.toString();
-    }
-
-    const origin = `${u.protocol}//${u.host}`;
-    const clean = new URL(`/dp/${asin}`, origin);
-    clean.searchParams.set("tag", affiliateTag);
-    return clean.toString();
+    u = new URL(finalURL);
   } catch {
-    throw new Error("This is a special link. Please enter a standard Amazon link.");
+    // Last-resort: if it was an Amazon shortener, just let the raw short link through
+    if (isShortAmazon) return original.toString();
+    throw new Error("This is a special link. Please enter a standard Amazon product link.");
   }
+
+  // Must end up on a real Amazon domain, otherwise treat non-short as invalid
+  const finalHost = u.hostname.toLowerCase();
+  if (!finalHost.includes("amazon.")) {
+    if (isShortAmazon) return original.toString();
+    throw new Error("This is a special link. Please enter a standard Amazon product link.");
+  }
+
+  // 🔍 Try hard to extract an ASIN
+  let asin = null;
+
+  // From path
+  const pathMatch = u.pathname.match(/\/(?:dp|gp\/product|product)\/([A-Z0-9]{10})/i);
+  if (pathMatch) asin = pathMatch[1];
+
+  // From query string (asin=)
+  if (!asin) {
+    const qpMatch = u.search.match(/[?&]asin=([A-Z0-9]{10})/i);
+    if (qpMatch) asin = qpMatch[1];
+  }
+
+  // From HTML content (if we fetched a page)
+  if (!asin && resolvedHtml) {
+    const m =
+      resolvedHtml.match(/\/dp\/([A-Z0-9]{10})/i) ||
+      resolvedHtml.match(/"asin"\s*:\s*"([A-Z0-9]{10})"/i) ||
+      resolvedHtml.match(/data-asin="([A-Z0-9]{10})"/i);
+    if (m) asin = m[1];
+  }
+
+  // If still no ASIN, just add the tag to whatever Amazon URL we have
+  if (!asin) {
+    u.hash = "";
+    u.searchParams.set("tag", affiliateTag);
+    return u.toString();
+  }
+
+  // ✅ Final normalized URL: always /dp/ASIN on amazon.com with tag
+  const clean = new URL(`/dp/${asin}`, "https://www.amazon.com");
+  clean.searchParams.set("tag", affiliateTag);
+  return clean.toString();
 }
 
 window.processAmazonLink = processAmazonLink;
@@ -390,7 +410,10 @@ window.processAmazonLink = processAmazonLink;
   const affiliateTag = "giftwishlis01-20";
 
 document.addEventListener("click", async (ev) => {
-  const a = ev.target.closest && ev.target.closest('a[href*="amazon."], a[href*="amzn.to"]');
+  const a = ev.target.closest && ev.target.closest(
+  'a[href*="amazon."], a[href*="amzn.to"], a[href*="a.co"]'
+);
+
   if (!a) return;
 // ✅ Prevent already-invalid links from firing processAmazonLink again
 if (a.hasAttribute("data-invalid")) {
@@ -546,7 +569,7 @@ enforceAffiliateOnRenderedLinks();
 }
 function enforceAffiliateOnRenderedLinks() {
   const affiliateTag = "giftwishlis01-20";
-  document.querySelectorAll('a[href*="amazon."], a[href*="amzn.to"]').forEach(a => {
+  document.querySelectorAll('a[href*="amazon."], a[href*="amzn.to"], a[href*="a.co"]').forEach(a => {
     const href = a.getAttribute("href");
     if (!href) return;
 
