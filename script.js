@@ -290,6 +290,29 @@ async function fetchAmazonInfo(url) {
 async function processAmazonLink(inputUrl) {
   const affiliateTag = "giftwishlis01-20";
 
+  // 🚀 SHORT-LINK DIRECT RESOLUTION (a.co / amzn.to)
+  const shortHost = inputUrl.toLowerCase();
+  if (shortHost.includes("a.co") || shortHost.includes("amzn.to")) {
+    try {
+      // Fast follow redirect (HEAD) instead of slow AllOrigins
+      const res = await fetch(inputUrl, { method: "HEAD", redirect: "follow" });
+      const resolved = res.url;
+
+      // Extract ASIN from resolved URL
+      const asinMatch = resolved.match(/\/([A-Z0-9]{10})(?:[/?]|$)/i);
+      if (asinMatch) {
+        const asin = asinMatch[1];
+        return `https://www.amazon.com/dp/${asin}?tag=${affiliateTag}`;
+      }
+
+      // If no ASIN found, still force US homepage with tag
+      return `https://www.amazon.com/?tag=${affiliateTag}`;
+    } catch (e) {
+      // If redirect fails, let existing logic continue
+    }
+  }
+
+  
   let original;
   try {
     original = new URL(inputUrl.trim());
