@@ -295,7 +295,7 @@ async function processAmazonLink(inputUrl) {
   if (shortHost.includes("a.co") || shortHost.includes("amzn.to")) {
     try {
       // Fast follow redirect (HEAD) instead of slow AllOrigins
-      const res = await fetch(inputUrl, { method: "HEAD", redirect: "follow" });
+      const res = await fetch(inputUrl, {redirect: "follow" });
       const resolved = res.url;
 
       // Extract ASIN from resolved URL
