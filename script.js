@@ -360,17 +360,22 @@ if (!cleanURL.startsWith("http")) {
     }
   }
 
-  // ⚡ Fast path: normal amazon.* URL that already has an ASIN in the path
-  if (isAmazonDomain) {
-    const m0 = original.pathname.match(/\/(?:dp|gp\/product|product)\/([A-Z0-9]{10})/i);
-    if (m0) {
-      const clean = new URL(`/dp/${m0[1]}`, "https://www.amazon.com");
-      clean.search = "";
-      clean.hash = "";
-      clean.searchParams.set("tag", affiliateTag);
-      return clean.toString();
-    }
+ // ⚡ Fast path: normal amazon.* URL that already has an ASIN
+if (isAmazonDomain) {
+  const m0 = original.pathname.match(/\/(?:dp|gp\/product|product)\/([A-Z0-9]{10})/i);
+  if (m0) {
+    const asin = m0[1];
+
+    // Determine domain region
+    const domain = host.includes("amazon.ca") ? "amazon.ca" : "amazon.com";
+
+    const tag = domain === "amazon.ca"
+      ? "giftwishlis08-20"
+      : "giftwishlis01-20";
+
+    return `https://${domain}/dp/${asin}?tag=${tag}`;
   }
+}
 
   // 🧵 Resolve short / weird URLs (a.co, amzn.to, etc.) via AllOrigins
   let finalURL = original.href;
@@ -439,16 +444,20 @@ if (!cleanURL.startsWith("http")) {
   }
 
   // If still no ASIN, just add the tag to whatever Amazon URL we have
-  if (!asin) {
-    u.hash = "";
-    u.searchParams.set("tag", affiliateTag);
-    return u.toString();
-  }
+if (!asin) {
+  throw new Error("No Product Found — Please Paste the Full Amazon Product Link");
+}
 
-  // ✅ Final normalized URL: always /dp/ASIN on amazon.com with tag
-  const clean = new URL(`/dp/${asin}`, "https://www.amazon.com");
-  clean.searchParams.set("tag", affiliateTag);
-  return clean.toString();
+
+// Final normalized URL using correct domain
+const domain = finalHost.includes("amazon.ca") ? "amazon.ca" : "amazon.com";
+
+const tag = domain === "amazon.ca"
+  ? "giftwishlis08-20"
+  : "giftwishlis01-20";
+
+return `https://${domain}/dp/${asin}?tag=${tag}`;
+
 }
 
 window.processAmazonLink = processAmazonLink;
