@@ -304,13 +304,32 @@ async function processAmazonLink(inputUrl) {
 
     const resolvedURL = data.finalURL;
 
+// ⭐ Clean the resolved URL to remove tracking parameters
+let cleanURL = resolvedURL;
+
+// Remove everything after the ASIN
+cleanURL = cleanURL.replace(/(\/dp\/[A-Z0-9]{10}).*$/i, "$1");
+
+// Handle /gp/product/ASIN → convert to /dp/ASIN
+cleanURL = cleanURL.replace(/(\/gp\/product\/([A-Z0-9]{10})).*$/i, (match, full, asin) => {
+  return `/dp/${asin}`;
+});
+
+// If for some reason the URL lost the prefix, restore the domain
+if (!cleanURL.startsWith("http")) {
+  const domain = resolvedURL.split("/")[2];   // amazon.ca or amazon.com
+  const asin = resolvedURL.match(/[A-Z0-9]{10}/i)?.[0];
+  cleanURL = `https://${domain}/dp/${asin}`;
+}
+
+
     // Apply CA or US tag based on domain
     if (resolvedURL.includes("amazon.ca")) {
-      return resolvedURL + (resolvedURL.includes("?") ? "&" : "?") + "tag=giftwishlis08-20";
+      return cleanURL + "?tag=giftwishlis08-20";
     }
 
     if (resolvedURL.includes("amazon.com")) {
-      return resolvedURL + (resolvedURL.includes("?") ? "&" : "?") + "tag=giftwishlis01-20";
+      return cleanURL + "?tag=giftwishlis01-20";
     }
 
     // Other countries → convert to .com
