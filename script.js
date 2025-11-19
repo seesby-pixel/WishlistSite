@@ -462,27 +462,35 @@ window.processAmazonLink = processAmazonLink;
 
 document.addEventListener("click", async (ev) => {
   const a = ev.target.closest && ev.target.closest(
-  'a[href*="amazon."], a[href*="amzn.to"], a[href*="a.co"]'
-);
-
+    'a[href*="amazon."], a[href*="amzn.to"], a[href*="a.co"]'
+  );
   if (!a) return;
-// ✅ Prevent already-invalid links from firing processAmazonLink again
-if (a.hasAttribute("data-invalid")) {
-  ev.preventDefault();
-  return;
-}
 
   ev.preventDefault();
-  try {
-    const fixed = await cachedProcess(a.href);
-    window.open(fixed, "_blank");
- } catch (e) {
-  // Block mission/promo links (no ASIN) and show message
-//showToast(e?.message || "This is a special link. Please share the standard Amazon product link.");
-return; // do not navigate
-}
 
+  // Open window immediately (prevents popup blocking)
+  const w = window.open("", "_blank");
+  if (!w) {
+    alert("Please allow pop-ups to open this link.");
+    return;
+  }
+
+  let finalURL = a.href;
+
+  // If link already has a tag, don't reprocess it
+  if (!a.href.includes("?tag=")) {
+    try {
+      finalURL = await cachedProcess(a.href);
+    } catch (e) {
+      console.error("Amazon link failed:", e);
+      return;
+    }
+  }
+
+  // Now safely redirect
+  w.location = finalURL;
 }, true);
+
 
 })();
 
