@@ -288,31 +288,37 @@ async function fetchAmazonInfo(url) {
 // 🛒 Clean + attach affiliate tag (normalize to /dp/ASIN)
 // ==============================
 async function processAmazonLink(inputUrl) {
-  const affiliateTag = "giftwishlis01-20";
+    // Handle Amazon short links using Netlify serverless function
+  const lower = inputUrl.toLowerCase();
+  if (lower.includes("a.co") || lower.includes("amzn.to")) {
+    const res = await fetch("/.netlify/functions/resolve-amazon", {
+      method: "POST",
+      body: JSON.stringify({ url: inputUrl })
+    });
 
-  // 🚀 SHORT-LINK DIRECT RESOLUTION (a.co / amzn.to)
-  const shortHost = inputUrl.toLowerCase();
-  if (shortHost.includes("a.co") || shortHost.includes("amzn.to")) {
-    try {
-      // Fast follow redirect (HEAD) instead of slow AllOrigins
-      const res = await fetch(inputUrl, {redirect: "follow" });
-      const resolved = res.url;
+    const data = await res.json();
 
-      // Extract ASIN from resolved URL
-      const asinMatch = resolved.match(/\/([A-Z0-9]{10})(?:[/?]|$)/i);
-      if (asinMatch) {
-        const asin = asinMatch[1];
-        return `https://www.amazon.com/dp/${asin}?tag=${affiliateTag}`;
-      }
-
-      // If no ASIN found, still force US homepage with tag
-      return `https://www.amazon.com/?tag=${affiliateTag}`;
-    } catch (e) {
-      // If redirect fails, let existing logic continue
+    if (!data.finalURL) {
+      throw new Error("Could not resolve short Amazon link");
     }
+
+    const resolvedURL = data.finalURL;
+
+    // Apply CA or US tag based on domain
+    if (resolvedURL.includes("amazon.ca")) {
+      return resolvedURL + (resolvedURL.includes("?") ? "&" : "?") + "tag=giftwishlis08-20";
+    }
+
+    if (resolvedURL.includes("amazon.com")) {
+      return resolvedURL + (resolvedURL.includes("?") ? "&" : "?") + "tag=giftwishlis01-20";
+    }
+
+    // Other countries → convert to .com
+    return "https://www.amazon.com/?tag=giftwishlis01-20";
   }
 
-  
+  const affiliateTag = "giftwishlis01-20";
+
   let original;
   try {
     original = new URL(inputUrl.trim());
