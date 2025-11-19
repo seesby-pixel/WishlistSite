@@ -316,8 +316,11 @@ async function processAmazonLink(inputUrl) {
     // Other countries → convert to .com
     return "https://www.amazon.com/?tag=giftwishlis01-20";
   }
+  return; // stop further processing after a.co resolution
 
   const affiliateTag = "giftwishlis01-20";
+
+
 
   let original;
   try {
