@@ -256,208 +256,121 @@ setTimeout(() => {
 ========================================================= */
 async function fetchAmazonInfo(url) {
   try {
-    const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-    const data = await response.json();
-    const parser = new DOMParser();
-    const docHtml = parser.parseFromString(data.contents, "text/html");
+    // 1) Try /dp/ASIN extraction FIRST (fast + reliable)
+    const asin = extractASIN(url);
+    if (asin) {
+      const productUrl = `https://www.amazon.ca/dp/${asin}`;
+      const response = await fetch(
+        `https://api.allorigins.win/get?url=${encodeURIComponent(productUrl)}`
+      );
+      const data = await response.json();
+      const docHtml = new DOMParser().parseFromString(data.contents, "text/html");
 
-    // --- Product Title ---
-    const title = docHtml.querySelector("#productTitle")?.textContent?.trim() || "Unnamed Product";
+      const title = docHtml.querySelector("#productTitle")?.textContent?.trim();
+      if (title) {
+        // Get image exactly the same way
+        const imgEl = docHtml.querySelector("#landingImage");
+        const image =
+          imgEl?.src ||
+          imgEl?.getAttribute("data-old-hires") ||
+          `https://images-na.ssl-images-amazon.com/images/P/${asin}.jpg`;
 
-    // --- Try all known image selectors ---
-    const imgEl = docHtml.querySelector("#imgTagWrapperId img, #landingImage, img[data-old-hires]");
-    let image = imgEl ? (imgEl.src || imgEl.getAttribute("data-old-hires") || "") : "";
-
-    // --- Fallback: search page HTML for JSON image URLs ---
-    if (!image) {
-      const htmlText = data.contents;
-      const match = htmlText.match(/https:\/\/m\.media-amazon\.com\/images\/I\/[A-Za-z0-9._%-]+\.jpg/);
-      if (match && match[0]) {
-        image = match[0];
+        return { title, image };
       }
     }
 
-    return { title, image };
-  } catch (e) {
-    console.warn("Amazon fetch failed:", e);
-    return { title: "Unnamed Product", image: "" };
+    // 2) Fallback
+    return { title: "Unknown Product", image: "" };
+  } catch {
+    return { title: "Unknown Product", image: "" };
   }
 }
+
 
 // ==============================
 // 🛒 Clean + attach affiliate tag (normalize to /dp/ASIN)
 // ==============================
 async function processAmazonLink(inputUrl) {
-    // Handle Amazon short links using Netlify serverless function
-  const lower = inputUrl.toLowerCase();
-  if (lower.includes("a.co") || lower.includes("amzn.to")) {
-    const res = await fetch("/.netlify/functions/resolve-amazon", {
-      method: "POST",
-      body: JSON.stringify({ url: inputUrl })
-    });
+  const raw = (inputUrl || "").trim();
 
-    const data = await res.json();
-
-    if (!data.finalURL) {
-      throw new Error("Could not resolve short Amazon link");
-    }
-
-    const resolvedURL = data.finalURL;
-
-// ⭐ Clean the resolved URL to remove tracking parameters
-let cleanURL = resolvedURL;
-
-// Remove everything after the ASIN
-cleanURL = cleanURL.replace(/(\/dp\/[A-Z0-9]{10}).*$/i, "$1");
-
-// Handle /gp/product/ASIN → convert to /dp/ASIN
-cleanURL = cleanURL.replace(/(\/gp\/product\/([A-Z0-9]{10})).*$/i, (match, full, asin) => {
-  return `/dp/${asin}`;
-});
-
-// If for some reason the URL lost the prefix, restore the domain
-if (!cleanURL.startsWith("http")) {
-  const domain = resolvedURL.split("/")[2];   // amazon.ca or amazon.com
-  const asin = resolvedURL.match(/[A-Z0-9]{10}/i)?.[0];
-  cleanURL = `https://${domain}/dp/${asin}`;
-}
-
-
-    // Apply CA or US tag based on domain
-    if (resolvedURL.includes("amazon.ca")) {
-      return cleanURL + "?tag=giftwishlis08-20";
-    }
-
-    if (resolvedURL.includes("amazon.com")) {
-      return cleanURL + "?tag=giftwishlis01-20";
-    }
-
-    // Other countries → convert to .com
-    return "https://www.amazon.com/?tag=giftwishlis01-20";
-  }
-  return; // stop further processing after a.co resolution
-
-  const affiliateTag = "giftwishlis01-20";
-
-
-
-  let original;
+  // Basic validation
+  let urlObj;
   try {
-    original = new URL(inputUrl.trim());
+    urlObj = new URL(raw);
   } catch {
     throw new Error("Please enter a valid Amazon link.");
   }
 
-  const host = original.hostname.toLowerCase();
-  const isAmazonDomain = host.includes("amazon.");
-  const isShortAmazon = host === "a.co" || host.endsWith("amzn.to");
+  let href = urlObj.href;
+  let host = urlObj.hostname.toLowerCase();
 
-  // 🚫 Block mission / promo links only on full amazon.* URLs
-  if (isAmazonDomain) {
-    const path = original.pathname.toLowerCase();
-    if (path.includes("/hz/") && path.includes("mission")) {
-      throw new Error("This is a special link. Please enter a standard Amazon product link.");
-    }
-  }
+  // 1) Handle short links (a.co / amzn.to) via Netlify function
+  const isShortAmazon =
+    host === "a.co" || host.endsWith("amzn.to");
 
- // ⚡ Fast path: normal amazon.* URL that already has an ASIN
-if (isAmazonDomain) {
-  const m0 = original.pathname.match(/\/(?:dp|gp\/product|product)\/([A-Z0-9]{10})/i);
-  if (m0) {
-    const asin = m0[1];
+  if (isShortAmazon) {
+    const res = await fetch("/.netlify/functions/resolve-amazon", {
+      method: "POST",
+      body: JSON.stringify({ url: href })
+    });
 
-    // Determine domain region
-    const domain = host.includes("amazon.ca") ? "amazon.ca" : "amazon.com";
-
-    const tag = domain === "amazon.ca"
-      ? "giftwishlis08-20"
-      : "giftwishlis01-20";
-
-    return `https://${domain}/dp/${asin}?tag=${tag}`;
-  }
-}
-
-  // 🧵 Resolve short / weird URLs (a.co, amzn.to, etc.) via AllOrigins
-  let finalURL = original.href;
-  let resolvedHtml = "";
-  try {
-    const res = await fetch(
-      `https://api.allorigins.win/get?url=${encodeURIComponent(original.href)}`
-    );
     const data = await res.json();
-    resolvedHtml = data?.contents || "";
-
-    if (resolvedHtml) {
-      const doc = new DOMParser().parseFromString(resolvedHtml, "text/html");
-
-      // Prefer canonical if available
-      const canonicalHref =
-        doc.querySelector('link[rel="canonical"]')?.getAttribute("href") || "";
-      if (canonicalHref) {
-        finalURL = canonicalHref;
-      } else if (isShortAmazon) {
-        // Fallback for some short pages: grab any amazon.* link on the page
-        const anchor = doc.querySelector('a[href*="amazon."]');
-        if (anchor?.href) finalURL = anchor.href;
-      }
+    if (!data.finalURL) {
+      throw new Error("Could not resolve short Amazon link");
     }
-  } catch {
-    // ignore; we'll fall back to whatever we already have
+
+    href = data.finalURL;
+    host = new URL(href).hostname.toLowerCase();
   }
 
-  let u;
-  try {
-    u = new URL(finalURL);
-  } catch {
-    // Last-resort: if it was an Amazon shortener, just let the raw short link through
-    if (isShortAmazon) return original.toString();
+  // 2) Must end up on an Amazon domain
+  if (!host.includes("amazon.")) {
     throw new Error("This is a special link. Please enter a standard Amazon product link.");
   }
 
-  // Must end up on a real Amazon domain, otherwise treat non-short as invalid
-  const finalHost = u.hostname.toLowerCase();
-  if (!finalHost.includes("amazon.")) {
-    if (isShortAmazon) return original.toString();
+  const finalUrl = new URL(href);
+
+  // Block /hz/mission etc. on full Amazon URLs
+  const pathLower = finalUrl.pathname.toLowerCase();
+  if (pathLower.includes("/hz/") && pathLower.includes("mission")) {
     throw new Error("This is a special link. Please enter a standard Amazon product link.");
   }
 
-  // 🔍 Try hard to extract an ASIN
+  // 3) Extract ASIN
   let asin = null;
 
-  // From path
-  const pathMatch = u.pathname.match(/\/(?:dp|gp\/product|product)\/([A-Z0-9]{10})/i);
-  if (pathMatch) asin = pathMatch[1];
+  // From path: /dp/ASIN, /gp/product/ASIN, /product/ASIN
+  const pathMatch = finalUrl.pathname.match(
+    /\/(?:dp|gp\/product|product)\/([A-Z0-9]{10})/i
+  );
+  if (pathMatch) {
+    asin = pathMatch[1];
+  }
 
-  // From query string (asin=)
+  // From query string: ?asin=ASIN
   if (!asin) {
-    const qpMatch = u.search.match(/[?&]asin=([A-Z0-9]{10})/i);
-    if (qpMatch) asin = qpMatch[1];
+    const qpMatch = finalUrl.search.match(
+      /[?&]asin=([A-Z0-9]{10})/i
+    );
+    if (qpMatch) {
+      asin = qpMatch[1];
+    }
   }
 
-  // From HTML content (if we fetched a page)
-  if (!asin && resolvedHtml) {
-    const m =
-      resolvedHtml.match(/\/dp\/([A-Z0-9]{10})/i) ||
-      resolvedHtml.match(/"asin"\s*:\s*"([A-Z0-9]{10})"/i) ||
-      resolvedHtml.match(/data-asin="([A-Z0-9]{10})"/i);
-    if (m) asin = m[1];
+  if (!asin) {
+    throw new Error("No Product Found — Please Paste the Full Amazon Product Link");
   }
 
-  // If still no ASIN, just add the tag to whatever Amazon URL we have
-if (!asin) {
-  throw new Error("No Product Found — Please Paste the Full Amazon Product Link");
-}
+  // 4) Normalize domain + attach correct tag
+  const domain = host.includes("amazon.ca")
+    ? "amazon.ca"
+    : "amazon.com";
 
+  const tag = domain === "amazon.ca"
+    ? "giftwishlis08-20"
+    : "giftwishlis01-20";
 
-// Final normalized URL using correct domain
-const domain = finalHost.includes("amazon.ca") ? "amazon.ca" : "amazon.com";
-
-const tag = domain === "amazon.ca"
-  ? "giftwishlis08-20"
-  : "giftwishlis01-20";
-
-return `https://${domain}/dp/${asin}?tag=${tag}`;
-
+  return `https://${domain}/dp/${asin}?tag=${tag}`;
 }
 
 window.processAmazonLink = processAmazonLink;
@@ -503,16 +416,19 @@ document.addEventListener("click", async (ev) => {
 
 })();
 
-/* ======================================================
-   ➕ Add new item (owner only) — with affiliate tag
-========================================================= */
 if (addBtn) {
 
   addBtn.addEventListener("click", async () => {
+    const typedName = nameInput.value.trim();
     let url = urlInput.value.trim();
 
+    if (!url) {
+      console.warn("No URL entered.");
+      return;
+    }
+
     try {
-      // 🧼 1. Clean the link and add affiliate tag
+      // 1) Clean the link and add affiliate tag (handles a.co + full links)
       url = await processAmazonLink(url);
     } catch (e) {
       console.warn("Amazon link error:", e.message);
@@ -520,31 +436,45 @@ if (addBtn) {
       return;
     }
 
-    // 🛍 2. Fetch product title & image as usual
-    const { title, image } = await fetchAmazonInfo(url);
+    // 2) Build a simple image URL from the ASIN (no HTML scraping)
+    const asin = extractASIN(url);
+    const image = asin
+      ? `https://images-na.ssl-images-amazon.com/images/P/${asin}.jpg`
+      : "";
 
-    // 📝 3. Save the cleaned, affiliate-tagged URL
-    wishlistItems.push({ name: title, url, image, purchased: false });
+    // 3) Final name = what you typed, or fallback
+    const finalName = typedName || "Unknown Product";
+
+    // 4) Save the item
+    wishlistItems.push({
+      name: finalName,
+      url,
+      image,
+      purchased: false
+    });
     await renderWishlist();
 
-    // ✅ AUTO-SAVE WISHLIST TO FIRESTORE
-if (listsRef) {
-  const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js");
-  const code = localStorage.getItem("ownerCode") || crypto.randomUUID(); // generate code if not already saved
-  localStorage.setItem("ownerCode", code);
-  const docRef = doc(listsRef, code);
-  await setDoc(docRef, {
-    wishlist: wishlistItems,
-    updated: new Date().toISOString(),
-  });
-}
+    // 5) Auto-save to Firestore (unchanged)
+    if (listsRef) {
+      const { doc, setDoc } = await import(
+        "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js"
+      );
+      const code =
+        localStorage.getItem("ownerCode") || crypto.randomUUID(); // generate code if not already saved
+      localStorage.setItem("ownerCode", code);
+      const docRef = doc(listsRef, code);
+      await setDoc(docRef, {
+        wishlist: wishlistItems,
+        updated: new Date().toISOString()
+      });
+    }
 
-
-    // 🧽 4. Clear inputs
+    // 6) Clear inputs
     nameInput.value = "";
     urlInput.value = "";
   });
 }
+
 
 /* ======================================================
    🖼️ Render wishlist (different for owner vs guest)

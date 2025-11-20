@@ -263,14 +263,28 @@
 const link = document.createElement("a");
 
 try {
-  let url = new URL(item.url);
-  if (url.hostname.includes("amazon.")) {
-    url.hostname = "www.amazon.com";
-    if (!url.searchParams.has("tag")) {
-      url.searchParams.set("tag", "giftwishlis01-20");
+let finalURL = item.url;
+
+// Do NOT overwrite amazon.ca → keep original region
+
+// If missing tag, add correct one based on domain
+try {
+  const u = new URL(finalURL);
+  const host = u.hostname.toLowerCase();
+
+  if (!u.searchParams.has("tag")) {
+    if (host.includes("amazon.ca")) {
+      u.searchParams.set("tag", "giftwishlis08-20");
+    } else if (host.includes("amazon.com")) {
+      u.searchParams.set("tag", "giftwishlis01-20");
     }
   }
-  link.href = url.toString();
+
+  finalURL = u.toString();
+} catch {}
+
+link.href = finalURL;
+
 } catch (err) {
   link.href = item.url;
 }
