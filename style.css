@@ -2302,3 +2302,73 @@ body:not([class*="theme-"]) .toast {
 body:not([class*="theme-"]) .spinner {
   border-top-color: #fcbe77 !important;
 }
+/* ==========================================================
+   📢 THEME-AWARE APP BANNER ("Also check out our mobile app!")
+   ========================================================== */
+
+#app-banner {
+  text-align: center;
+  padding: 12px 18px;
+  margin: 0 auto 20px auto;
+  width: fit-content;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* === Default (no theme) === */
+body:not([class*="theme-"]) #app-banner {
+  background-color: #fff3d8;
+  color: #a86b26;
+  border: 2px solid #fbb45f;
+}
+
+/* === 🎄 Christmas === */
+body.theme-christmas #app-banner {
+  background-color: #fff5f5;
+  color: #b71c1c;
+  border: 2px solid #2e7d32;
+}
+
+/* === ✨ Elegant === */
+body.theme-elegant #app-banner {
+  background-color: #faf7ef;
+  color: #000;
+  border: 2px solid #D4AF37;
+}
+
+/* === 🍬 Bubblegum === */
+body.theme-bubblegum #app-banner {
+  background-color: #fff0f7;
+  color: #e84a9e;
+  border: 2px solid #f497b6;
+}
+
+/* === 🌸 Pastel === */
+body.theme-pastel #app-banner {
+  background-color: #fff4f6;
+  color: #e49c9c;
+  border: 2px solid #f0b6c1;
+}
+
+/* === 🍼 Baby Shower === */
+body.theme-babyshower #app-banner {
+  background-color: #f0f9ff;
+  color: #7dbce2;
+  border: 2px solid #A7D8F2;
+}
+
+/* === 🌟 Wisharu (default peach) === */
+body.theme-wisharu #app-banner {
+  background-color: #ffe8d1;
+  color: #c57a3a;
+  border: 2px solid #fcbe77;
+}
+
+/* === 💙 Boy Boring === */
+body.theme-boyboring #app-banner {
+  background-color: #e6efff;
+  color: #2563EB;
+  border: 2px solid #2563EB;
+}
