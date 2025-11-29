@@ -2372,3 +2372,67 @@ body.theme-boyboring #app-banner {
   color: #2563EB;
   border: 2px solid #2563EB;
 }
+/* ==========================================================
+   📌 INFO BUBBLE (THEME-AWARE)
+   ========================================================== */
+.info-bubble {
+  background: rgba(255,255,255,0.92);
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  line-height: 1.35rem;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+  border-left: 4px solid #fbb45f; /* default border */
+  color: #333;
+}
+
+/* 🎄 Christmas Theme */
+body.theme-christmas .info-bubble {
+  border-left-color: #2e7d32;
+  color: #b71c1c;
+  background: rgba(255,255,255,0.9);
+}
+
+/* ✨ Elegant Theme */
+body.theme-elegant .info-bubble {
+  border-left-color: #D4AF37;
+  color: #000;
+  background: rgba(255,255,255,0.88);
+}
+
+/* 🍬 Bubblegum Theme */
+body.theme-bubblegum .info-bubble {
+  border-left-color: #f497b6;
+  color: #e84a9e;
+  background: rgba(255,255,255,0.9);
+}
+
+/* 🌸 Pastel Theme */
+body.theme-pastel .info-bubble {
+  border-left-color: #e49c9c;
+  color: #594f4f;
+  background: rgba(255,255,255,0.92);
+}
+
+/* 🍼 Baby Shower Theme */
+body.theme-babyshower .info-bubble {
+  border-left-color: #A7D8F2;
+  color: #4a4a4a;
+  background: rgba(255,255,255,0.92);
+}
+
+/* 🍑 Wisharu Theme */
+body.theme-wisharu .info-bubble {
+  border-left-color: #fcbe77;
+  color: #4e4137;
+  background: rgba(255,255,255,0.92);
+}
+
+/* 💙 Boy Boring Theme */
+body.theme-boyboring .info-bubble {
+  border-left-color: #2563EB; /* theme blue */
+  color: #1f2937;
+  background: rgba(255,255,255,0.95);
+}
